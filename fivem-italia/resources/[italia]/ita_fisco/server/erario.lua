@@ -55,6 +55,11 @@ function Erario.Eroga(voce, importo, citizenid)
           json.encode({ voce = voce, importo = -importo }) })
 end
 
+--- Aliquota IVA applicabile a un oggetto: serve alle casse dei negozi.
+exports('AliquotaItem', function(nomeItem)
+    return FISCO.AliquotaItem(nomeItem)
+end)
+
 exports('ErarioIncassa', Erario.Incassa)
 exports('ErarioEroga', Erario.Eroga)
 exports('ErarioSaldo', Erario.Saldo)
