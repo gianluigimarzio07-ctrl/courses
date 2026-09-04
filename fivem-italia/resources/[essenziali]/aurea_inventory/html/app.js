@@ -19,7 +19,7 @@ const escape = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
 const ICONE_CATEGORIA = {
   documenti: '🪪', elettronica: '📱', cibo: '🍽', bevande: '🥤', alcolici: '🍷',
   materiali: '📦', sanita: '💊', servizio: '🚔', illegale: '🚫', attrezzi: '🔧',
-  contenitori: '🎒', moda: '👔', varie: '📎',
+  contenitori: '🎒', moda: '👔', varie: '📎', armi: '🔫',
 };
 
 const ICONE_OGGETTO = {

@@ -227,6 +227,12 @@ Usa.Registra('manette', function(g)
     return false
 end)
 
+--- Impugnare o riporre un'arma: la matricola resta legata all'istanza.
+Usa.Registra('arma', function(g, riga)
+    TriggerClientEvent('arm:impugna', g.source, riga.metadata)
+    return false
+end)
+
 --- Radio di servizio.
 Usa.Registra('radio', function(g)
     TriggerClientEvent('aurea:ui:notifica', g.source, {

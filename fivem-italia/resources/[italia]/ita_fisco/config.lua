@@ -32,6 +32,7 @@ FISCO.Iva = {
     perCategoria = {
         cibo = 4, bevande = 10, alcolici = 22, materiali = 22, sanita = 10,
         elettronica = 22, moda = 22, attrezzi = 22, documenti = 0, varie = 22,
+        armi = 22, contenitori = 22, servizio = 22, illegale = 22,
     },
     -- Liquidazione periodica
     periodicitaMinuti = 180,

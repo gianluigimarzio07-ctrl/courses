@@ -1,0 +1,182 @@
+/* ==========================================================================
+   AUREA · Editor dell'aspetto
+   ========================================================================== */
+
+:root {
+  --vetro:      rgba(13, 14, 19, 0.93);
+  --vetro-alto: rgba(24, 26, 34, 0.95);
+  --bordo:      rgba(255, 255, 255, 0.08);
+  --bordo-alto: rgba(255, 255, 255, 0.2);
+  --testo:      #f2f3f7;
+  --tenue:      #98a0af;
+  --verde:      #1f9d55;
+  --rosso:      #cf2e2e;
+  --oro:        #d4af37;
+  --font: 'Segoe UI', 'Inter', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100vw; height: 100vh; overflow: hidden;
+  background: transparent; color: var(--testo);
+  font-family: var(--font); user-select: none;
+}
+
+.oculto { display: none !important; }
+
+/* Pannello ---------------------------------------------------------------- */
+.pannello {
+  position: absolute; top: 0; right: 0;
+  width: 420px; height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--vetro);
+  border-left: 1px solid var(--bordo);
+  box-shadow: -24px 0 60px rgba(0,0,0,.55);
+  animation: entra .28s cubic-bezier(.2,.9,.3,1.1);
+}
+
+@keyframes entra { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+
+.tricolore {
+  height: 3px;
+  background: linear-gradient(90deg, var(--verde) 0 33.3%, #f4f4f4 33.3% 66.6%, var(--rosso) 66.6% 100%);
+}
+
+.testata { padding: 18px 22px 14px; }
+.testata h1 { font-size: 18px; font-weight: 700; letter-spacing: .01em; }
+.testata p { font-size: 12px; color: var(--tenue); margin-top: 5px; }
+
+/* Schede ------------------------------------------------------------------ */
+.schede {
+  display: flex; gap: 4px;
+  padding: 0 14px 12px;
+  border-bottom: 1px solid var(--bordo);
+  overflow-x: auto;
+}
+.schede::-webkit-scrollbar { height: 0; }
+
+.scheda {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  border: 1px solid transparent; border-radius: 9px;
+  background: rgba(255,255,255,.04);
+  color: var(--tenue);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  transition: background .13s, color .13s, border-color .13s;
+}
+.scheda:hover { background: rgba(255,255,255,.09); color: var(--testo); }
+.scheda.attiva { background: rgba(31,157,85,.16); border-color: rgba(31,157,85,.5); color: var(--testo); }
+
+/* Controlli --------------------------------------------------------------- */
+.controlli { flex: 1; overflow-y: auto; padding: 14px 18px 20px; }
+.controlli::-webkit-scrollbar { width: 5px; }
+.controlli::-webkit-scrollbar-thumb { background: rgba(255,255,255,.14); border-radius: 5px; }
+
+.gruppo + .gruppo { margin-top: 22px; }
+.gruppo-titolo {
+  font-size: 10px; color: var(--oro);
+  letter-spacing: .13em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.controllo { margin-bottom: 12px; }
+.controllo-etichetta {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 12px; margin-bottom: 6px;
+}
+.controllo-etichetta span { color: var(--tenue); }
+.controllo-etichetta b { font-size: 11.5px; font-variant-numeric: tabular-nums; }
+
+/* Selettore a frecce */
+.selettore {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.045);
+  border: 1px solid var(--bordo); border-radius: 9px;
+  padding: 4px;
+}
+.selettore button {
+  width: 30px; height: 30px; flex: 0 0 30px;
+  border: none; border-radius: 7px;
+  background: rgba(255,255,255,.06); color: var(--testo);
+  font-size: 15px; cursor: pointer;
+  transition: background .12s, transform .1s;
+}
+.selettore button:hover { background: rgba(255,255,255,.14); }
+.selettore button:active { transform: scale(.9); }
+.selettore .valore {
+  flex: 1; text-align: center;
+  font-size: 13px; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Slider */
+.slider { width: 100%; accent-color: var(--verde); cursor: pointer; }
+
+/* Tavolozza colori */
+.tavolozza {
+  display: grid; grid-template-columns: repeat(16, 1fr);
+  gap: 4px; margin-top: 4px;
+}
+.colore {
+  aspect-ratio: 1;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,.14);
+  cursor: pointer;
+  transition: transform .1s, border-color .1s;
+}
+.colore:hover { transform: scale(1.18); }
+.colore.attivo { border-color: var(--verde); border-width: 2px; transform: scale(1.12); }
+
+/* Interruttore tatuaggio */
+.tatuaggio {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; margin-bottom: 6px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--bordo); border-radius: 9px;
+  cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+.tatuaggio:hover { background: rgba(255,255,255,.08); }
+.tatuaggio.scelto { border-color: rgba(31,157,85,.55); background: rgba(31,157,85,.12); }
+.tatuaggio-nome { flex: 1; font-size: 12.5px; }
+.tatuaggio-segno { font-size: 13px; color: var(--verde); }
+
+.vuoto { text-align: center; color: var(--tenue); font-size: 12px; padding: 40px 16px; line-height: 1.7; }
+
+/* Piè di pagina ----------------------------------------------------------- */
+.pie {
+  padding: 14px 20px 18px;
+  border-top: 1px solid var(--bordo);
+  background: var(--vetro-alto);
+}
+.costo { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+.costo span { font-size: 11px; color: var(--tenue); letter-spacing: .06em; text-transform: uppercase; }
+.costo strong { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.azioni { display: flex; gap: 9px; }
+.btn {
+  flex: 1; padding: 10px 16px;
+  border: 1px solid var(--bordo-alto); border-radius: 9px;
+  background: rgba(255,255,255,.05); color: var(--testo);
+  font-family: var(--font); font-size: 13px; font-weight: 620;
+  cursor: pointer; transition: background .13s, transform .1s;
+}
+.btn:hover { background: rgba(255,255,255,.11); }
+.btn:active { transform: scale(.97); }
+.btn-primario { background: var(--verde); border-color: var(--verde); color: #04180d; }
+.btn-primario:hover { background: #26b463; }
+
+/* Suggerimenti ------------------------------------------------------------ */
+.suggerimenti {
+  position: absolute; bottom: 26px; left: 40px;
+  display: flex; gap: 18px;
+  font-size: 11px; color: var(--tenue);
+}
+.suggerimenti b {
+  display: inline-grid; place-items: center;
+  min-width: 20px; height: 20px; padding: 0 5px;
+  background: rgba(255,255,255,.1); border-radius: 5px;
+  color: var(--testo); font-size: 10px;
+}

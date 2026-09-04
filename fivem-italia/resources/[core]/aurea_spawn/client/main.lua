@@ -113,10 +113,19 @@ RegisterNUICallback('crea', function(dati, cb)
     local risposta = AUREA.Callback.Attendi('core:creaPersonaggio', dati)
     cb(risposta or { ok = false, errore = 'Il server non ha risposto.' })
 
-    if risposta and risposta.ok then
+    if not (risposta and risposta.ok) then return end
+
+    CreateThread(function()
+        -- Anagrafe registrata: ora si dà un volto al personaggio
+        SetNuiFocus(false, false)
+        SendNUIMessage({ azione = 'chiudi' })
+
+        local aspetto = exports.aurea_aspetto:CreaAspetto(dati.sesso)
+        TriggerServerEvent('asp:salvaCreazione', aspetto)
         Wait(200)
-        CreateThread(function() entraInGioco(risposta.citizenid) end)
-    end
+
+        entraInGioco(risposta.citizenid)
+    end)
 end)
 
 RegisterNUICallback('elimina', function(dati, cb)
@@ -161,16 +170,21 @@ function entraInGioco(citizenid)
     local pos = risultato.posizione
     local ped = PlayerPedId()
 
-    -- Modello base in attesa dell'editor aspetto
-    local modello = risultato.pacchetto.sesso == 'F' and `mp_f_freemode_01` or `mp_m_freemode_01`
-    RequestModel(modello)
-    local scadenza = GetGameTimer() + 6000
-    while not HasModelLoaded(modello) and GetGameTimer() < scadenza do Wait(10) end
-    if HasModelLoaded(modello) then
-        SetPlayerModel(PlayerId(), modello)
-        SetModelAsNoLongerNeeded(modello)
+    -- L'aspetto salvato porta con sé il modello; senza, si usa quello base
+    if risultato.aspetto then
+        exports.aurea_aspetto:Applica(risultato.aspetto)
         ped = PlayerPedId()
-        SetPedDefaultComponentVariation(ped)
+    else
+        local modello = risultato.pacchetto.sesso == 'F' and `mp_f_freemode_01` or `mp_m_freemode_01`
+        RequestModel(modello)
+        local scadenza = GetGameTimer() + 6000
+        while not HasModelLoaded(modello) and GetGameTimer() < scadenza do Wait(10) end
+        if HasModelLoaded(modello) then
+            SetPlayerModel(PlayerId(), modello)
+            SetModelAsNoLongerNeeded(modello)
+            ped = PlayerPedId()
+            SetPedDefaultComponentVariation(ped)
+        end
     end
 
     SetEntityCoords(ped, pos.x, pos.y, pos.z, false, false, false, false)
