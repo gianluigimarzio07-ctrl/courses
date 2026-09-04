@@ -22,3 +22,7 @@ client_scripts {
 server_scripts {
     'server/main.lua',
 }
+
+dependencies {
+    'aurea_core',
+}

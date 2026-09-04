@@ -2,12 +2,11 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-name        'ita_economia'
+name        'aurea_admin'
 author      'AUREA · Italia Roleplay'
-description 'Motore economico: domanda e offerta, indice dei prezzi, inflazione, listino'
+description 'Strumenti di staff: sanzioni, segnalazioni, modalità servizio, gestione giocatori'
 version     '1.0.0'
 
-shared_scripts { 'config.lua' }
 client_scripts { 'client/main.lua' }
 server_scripts { '@oxmysql/lib/MySQL.lua', 'server/main.lua' }
 

@@ -16,4 +16,7 @@ server_scripts {
     'server/main.lua',
 }
 
-dependencies { 'aurea_core', 'aurea_ui' }
+dependencies {
+    'aurea_core',
+    'aurea_ui',
+}

@@ -11,4 +11,10 @@ shared_scripts { 'config.lua' }
 client_scripts { 'client/main.lua', 'client/carcere.lua' }
 server_scripts { '@oxmysql/lib/MySQL.lua', 'server/main.lua', 'server/detenzione.lua' }
 
-dependencies { 'aurea_core', 'aurea_ui' }
+dependencies {
+    'aurea_core',
+    'aurea_ui',
+    'aurea_inventory',
+    'ita_codicestrada',
+    'ita_fisco',
+}

@@ -15,4 +15,8 @@ server_scripts {
     'server/scadenze.lua',
 }
 
-dependencies { 'aurea_core', 'aurea_ui' }
+dependencies {
+    'aurea_core',
+    'aurea_ui',
+    'ita_codicestrada',
+}

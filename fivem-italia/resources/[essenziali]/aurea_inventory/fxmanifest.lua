@@ -24,4 +24,7 @@ server_scripts {
     'server/usa.lua',
 }
 
-dependencies { 'aurea_core', 'aurea_ui' }
+dependencies {
+    'aurea_core',
+    'aurea_ui',
+}
