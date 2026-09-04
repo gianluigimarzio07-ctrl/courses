@@ -20,4 +20,5 @@ client_scripts { 'client/main.lua' }
 dependencies {
     'aurea_core',
     'aurea_ui',
+    'aurea_aspetto',
 }

@@ -201,8 +201,35 @@ CDS.SportelloVerbali = {
     blip = { sprite = 498, colore = 5, scala = 0.75, nome = 'Ufficio Verbali' },
 }
 
+--- Il Comune può stringere o allargare le fasce della ZTL: la delibera del
+--- sindaco arriva qui come stato globale, così client e server leggono lo
+--- stesso valore e il verbale resta verificabile.
+CDS.BandeZTL = {
+    ridotta   = -2,
+    ordinaria = 0,
+    estesa    = 2,
+}
+
+function CDS.FasceEffettive(fasce)
+    if not fasce or #fasce == 0 then return fasce end
+
+    local scarto = CDS.BandeZTL[GlobalState.ztlBanda or 'ordinaria'] or 0
+    if scarto == 0 then return fasce end
+
+    local out = {}
+    for n, f in ipairs(fasce) do
+        local inizio = (f[1] - scarto) % 24
+        local fine = (f[2] + scarto) % 24
+        -- Se stringendo la fascia si annulla, la zona resta chiusa un'ora
+        if scarto < 0 and ((fine - inizio) % 24) < 1 then fine = (inizio + 1) % 24 end
+        out[n] = { inizio, fine }
+    end
+    return out
+end
+
 --- Verifica se un'ora rientra in una delle fasce configurate.
 function CDS.InFascia(fasce, ora)
+    fasce = CDS.FasceEffettive(fasce)
     if not fasce or #fasce == 0 then return true end
     for _, f in ipairs(fasce) do
         local inizio, fine = f[1], f[2]

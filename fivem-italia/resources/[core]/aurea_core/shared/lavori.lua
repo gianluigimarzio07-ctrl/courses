@@ -72,7 +72,7 @@ L('giornalista', {
     etichetta = 'Redazione',
     tipo = 'civile',
     gradi = {
-        [0] = { etichetta = 'Praticante',     stipendio = 9500 },
+        [0] = { etichetta = 'Praticante',     stipendio = 9500,  permessi = { 'pubblica' } },
         [1] = { etichetta = 'Cronista',       stipendio = 14000, permessi = { 'pubblica' } },
         [2] = { etichetta = 'Caporedattore',  stipendio = 20000, permessi = { 'pubblica', 'diretta', 'assumi' } },
     },

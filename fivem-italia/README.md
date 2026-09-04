@@ -32,6 +32,23 @@ DOCG — e la certificazione moltiplica il valore fino a 2,2 volte.
 soglia arrivano i controlli, oltre un'altra si apre d'ufficio il fascicolo per
 associazione a carico di tutti gli affiliati.
 
+**Il crimine ha bisogno di qualcuno che risponda.** Nessuna rapina parte se
+non ci sono abbastanza agenti in servizio: il bersaglio scala con il valore
+del colpo — due agenti per un esercizio, sei più tre complici per un
+istituto di credito. Una rapina senza inseguimento non è roleplay, è un
+bancomat.
+
+**Il potere si vota.** Il sindaco lo eleggono i giocatori, e mentre governa
+decide sul serio: la quota di addizionale comunale che resta al Comune
+invece di andare allo Stato, la TARI iscritta a ruolo su ogni immobile, le
+fasce orarie della ZTL, l'importo del sussidio di disoccupazione.
+
+**La cronaca esiste.** La testata pubblica, tutti leggono in edicola o dal
+telefono, e chi viene raccontato male ha gli strumenti che gli dà la legge
+italiana: la rettifica ex art. 8 legge 47/1948 — che se la redazione non
+pubblica nei termini le costa — e la querela per diffamazione a mezzo stampa
+ex art. 595 c.p., che apre un fascicolo a carico di chi ha firmato il pezzo.
+
 ---
 
 ## Struttura
@@ -56,6 +73,10 @@ fivem-italia/
 | `aurea_ui` | Toolkit condiviso: notifiche, menu, dialoghi, barre di avanzamento, prompt |
 | `aurea_hud` | Tachimetro con limiti di velocità contestuali, stato vitale, patente a punti, indicatore ZTL |
 | `aurea_spawn` | Selezione e creazione personaggio con anagrafe reale |
+| `aurea_aspetto` | Editor del personaggio, barbiere, tatuatore, chirurgia estetica, armadio dei completi, divise di servizio |
+| `aurea_chat` | Chat di prossimità con portate reali, `/me`, `/fai`, `/tentativo`, dadi, radio a frequenze riservate |
+| `aurea_emote` | Circa sessanta emote con oggetti in mano, emote a due, dieci andature |
+| `aurea_scoreboard` | Presenze e servizi attivi, senza rivelare chi è in partita |
 
 ### `[essenziali]`
 
@@ -69,6 +90,8 @@ fivem-italia/
 | `aurea_medico` | Ferite localizzate, emorragie, incoscienza, 118, ospedale |
 | `aurea_case` | Immobili con interni istanziati, locazione, deposito domestico |
 | `aurea_garage` | Garage, carburante con consumo per classe, usura, distributori |
+| `aurea_armi` | Registro nazionale delle armi con matricola, porto d'armi per titolo, denuncia di detenzione, controlli e sequestri |
+| `aurea_tuning` | Elaborazioni estetiche libere e meccaniche soggette a omologazione, officina clandestina, art. 78 CdS |
 
 ### `[italia]`
 
@@ -83,6 +106,11 @@ fivem-italia/
 | `ita_famiglie` | Organizzazioni criminali, territori, pizzo, riciclaggio, calore investigativo |
 | `ita_ambiente` | Meteo stagionale, tempo sincronizzato, festività, eventi dinamici |
 | `ita_economia` | Motore di domanda e offerta, indice dei prezzi, Borsa Merci |
+| `ita_comune` | Anagrafe, residenza, matrimoni civili con regime patrimoniale, divorzio, elezioni comunali, leve del sindaco |
+| `ita_media` | Testata giornalistica: cronaca, archivio, rettifiche, querele, dirette televisive, inserzioni |
+| `ita_attivita` | Pesca con taglie minime, caccia a stagione aperta e carniere, cava, raccolta di funghi e tartufi, licenze |
+| `ita_illegale` | Coltivazione, raffinazione in laboratorio, spaccio con agenti sotto copertura, smontaggio, mercato nero itinerante |
+| `ita_rapine` | Colpi a scaglioni, dal negozio all'istituto di credito, praticabili solo con abbastanza agenti in servizio |
 
 ### `[admin]`
 
@@ -140,6 +168,15 @@ mysql -u root -p aurea < sql/02_dati_iniziali.sql
 | `/org` | Pannello dell'organizzazione |
 | `/tempo` | Ora, stagione, meteo, eventi |
 | `/report <testo>` | Segnalazione allo staff |
+| `F3` `/e <nome>` | Menu emote ed emote diretta |
+| `F10` | Presenze e servizi attivi |
+| `/me` `/fai` `/tentativo` `/dado` | Azioni interpretate e tiri |
+| `/grida` `/sussurra` `/ooc` | Portate di voce e canale fuori personaggio |
+| `/radio <frequenza>` `/r <testo>` | Radio ricetrasmittente |
+| `/giornale` | L'edizione del giorno, l'archivio, le inserzioni |
+| `/colpi` | Stato dei bersagli e agenti in servizio |
+| `/miearmi` `/portoarmi` | Le tue armi registrate e il titolo di porto |
+| `/licenze` | Pesca, caccia, raccolta |
 
 ### Servizio (forze dell'ordine, 118, VVF)
 
@@ -156,6 +193,11 @@ mysql -u root -p aurea < sql/02_dati_iniziali.sql
 | `/trascina` | Accompagnamento coattivo |
 | `/cartella <cf>` | Cartella clinica (personale medico) |
 | `/verificafiscale <cf>` | Posizione fiscale (GdF, Agenzia Entrate) |
+| `/controlloarmi` | Armi registrate e titolo di porto del soggetto |
+| `/controllomodifiche` `/verbalemodifiche` | Elaborazioni non omologate, art. 78 CdS |
+| `/controllolicenze` | Licenze di pesca, caccia e raccolta |
+| `/istanze` | Istanze in esame agli uffici comunali (personale del Comune) |
+| `/redazione` | Redazione, rettifiche, dirette (giornalisti) |
 
 ### Staff
 
@@ -166,6 +208,7 @@ mysql -u root -p aurea < sql/02_dati_iniziali.sql
 | `/ban` `/sbanna` `/setlavoro` `/registro` `/economia` `/evento` | admin |
 | `/dammi` `/dammiitem` | gestore |
 | `/setgruppo` | fondatore |
+| `/elezioni <apri\|voto\|spoglio\|chiudi>` | admin |
 
 ---
 
@@ -180,6 +223,9 @@ mysql -u root -p aurea < sql/02_dati_iniziali.sql
   sempre il `source` come primo parametro. Nessun `citizenid` arrivato dal
   client viene mai considerato valido.
 - **I webhook non stanno nel codice**: si leggono dalle convar di `server.cfg`.
+- **L'ordine di avvio in `server.cfg` è un ordinamento topologico** delle
+  `dependencies` dichiarate nei manifest. Se aggiungi un modulo che usa gli
+  export di un altro, dichiaralo e inseriscilo dopo di quello.
 
 ---
 

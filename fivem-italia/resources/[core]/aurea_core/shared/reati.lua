@@ -37,6 +37,8 @@ R('605',  { articolo = 'art. 605 c.p.',   nome = 'Sequestro di persona',        
 R('610',  { articolo = 'art. 610 c.p.',   nome = 'Violenza privata',               gravita = 2, pena = 22,  ammenda = 50000 })
 R('612',  { articolo = 'art. 612 c.p.',   nome = 'Minaccia',                       gravita = 1, pena = 8,   ammenda = 20000 })
 R('612b', { articolo = 'art. 612-bis c.p.', nome = 'Atti persecutori',             gravita = 3, pena = 45,  ammenda = 100000 })
+R('594',  { articolo = 'art. 594 c.p.',   nome = 'Ingiuria',                       gravita = 1, pena = 5,   ammenda = 12000 })
+R('595',  { articolo = 'art. 595 c.3 c.p.', nome = 'Diffamazione a mezzo stampa',  gravita = 2, pena = 18,  ammenda = 65000 })
 
 -- Contro la pubblica amministrazione
 R('336',  { articolo = 'art. 336 c.p.',   nome = 'Violenza a pubblico ufficiale',  gravita = 3, pena = 40,  ammenda = 90000 })

@@ -38,6 +38,20 @@ mysql -u aurea -p aurea < sql/02_dati_iniziali.sql
 Il charset `utf8mb4` non è opzionale: senza, accenti e apostrofi nei nomi
 italiani si corrompono.
 
+### Aggiornamento da una installazione precedente
+
+`sql/01_schema.sql` è già completo: su un database nuovo non serve altro.
+Se invece hai già un database della prima versione, esegui anche:
+
+```bash
+mysql -u aurea -p aurea < sql/03_espansione.sql
+```
+
+Aggiunge le tabelle dei moduli introdotti dopo — armadio dei completi,
+registro delle armi e porto d'armi, licenze di pesca e caccia, stato civile
+ed elezioni comunali, testata giornalistica. Usa `CREATE TABLE IF NOT
+EXISTS`, quindi rieseguirlo non fa danni.
+
 ---
 
 ## 3. Dipendenza esterna
@@ -262,3 +276,22 @@ Con il server vuoto il listino resta fermo, ed è corretto che sia così.
 **Accenti sbagliati nei nomi.**
 Il database non è in `utf8mb4`. Va ricreato: cambiare charset a tabelle già
 popolate non recupera i dati già corrotti.
+
+**`Unknown table 'articoli'` (o `armi`, `matrimoni`, `licenze`, `completi`).**
+Manca la migrazione: esegui `sql/03_espansione.sql`.
+
+**Le rapine non partono mai.**
+È voluto. Ogni bersaglio richiede un numero minimo di agenti in servizio —
+due per un esercizio, sei per un istituto di credito. Con `/colpi` si vede
+quanti ne servono e quanti ce ne sono. La soglia si cambia in
+`ita_rapine/config.lua`.
+
+**Il sindaco non riesce a deliberare.**
+Le leve le manovra solo chi è stato proclamato: serve una tornata completa,
+`/elezioni apri` → `/elezioni voto` → `/elezioni spoglio`. Senza spoglio non
+c'è sindaco in carica e la sala della giunta resta in sola lettura.
+
+**Nessuno riesce a pubblicare sul giornale.**
+Serve il lavoro `giornalista`: si assegna dal Centro per l'Impiego o con
+`/setlavoro <id> giornalista <grado>`. Il compenso a pezzo scala con il
+grado, e la diretta televisiva la apre solo il Caporedattore (grado 2).

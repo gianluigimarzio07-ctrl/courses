@@ -2,9 +2,9 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-name        'aurea_chat'
+name        'ita_rapine'
 author      'AUREA · Italia Roleplay'
-description 'Chat di ruolo a prossimità: /me, /do, /ooc, tentativi, dadi, radio di servizio'
+description 'Rapine a esercizi, gioiellerie, portavalori e istituti di credito'
 version     '1.0.0'
 
 shared_scripts { 'config.lua' }
@@ -15,4 +15,6 @@ dependencies {
     'aurea_core',
     'aurea_ui',
     'aurea_inventory',
+    'ita_giustizia',
+    'ita_famiglie',
 }

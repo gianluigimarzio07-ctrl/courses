@@ -37,6 +37,8 @@ I('tesserino',        { etichetta = 'Tesserino di servizio', peso = 5, impilabil
 I('visura',           { etichetta = 'Visura camerale',     peso = 20, impilabile = false, unico = true, usabile = true, categoria = 'documenti' })
 I('fattura',          { etichetta = 'Fattura',             peso = 5,  impilabile = false, unico = true, usabile = true, categoria = 'documenti' })
 I('verbale',          { etichetta = 'Verbale di contestazione', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti' })
+I('tesserino_stampa', { etichetta = 'Tesserino da giornalista', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Iscrizione all\'ordine. Apre porte e ne chiude altre.' })
+I('giornale',         { etichetta = 'Quotidiano',          peso = 60, impilabile = true,  usabile = true, categoria = 'documenti', descrizione = 'L\'edizione del giorno. Si legge, e a volte fa arrabbiare qualcuno.' })
 
 -- ---------------------------------------------------------------------------
 --  ELETTRONICA
@@ -93,6 +95,40 @@ I('plastica',         { etichetta = 'Plastica', peso = 200, categoria = 'materia
 I('vetro',            { etichetta = 'Vetro', peso = 500, categoria = 'materiali' })
 
 -- ---------------------------------------------------------------------------
+--  PESCA, CACCIA, CAVA E RACCOLTA
+-- ---------------------------------------------------------------------------
+I('canna_pesca',      { etichetta = 'Canna da pesca', peso = 1400, impilabile = false, unico = true, usabile = true, categoria = 'attrezzi' })
+I('esca_semplice',    { etichetta = 'Esca',           peso = 30, categoria = 'materiali' })
+I('esca_pregiata',    { etichetta = 'Esca artificiale', peso = 40, categoria = 'materiali' })
+I('piccone',          { etichetta = 'Piccone',        peso = 3200, impilabile = false, unico = true, usabile = true, categoria = 'attrezzi' })
+
+I('orata',            { etichetta = 'Orata',      peso = 600,  categoria = 'cibo', degrada = 1440 })
+I('branzino',         { etichetta = 'Branzino',   peso = 700,  categoria = 'cibo', degrada = 1440 })
+I('sgombro',          { etichetta = 'Sgombro',    peso = 400,  categoria = 'cibo', degrada = 1080 })
+I('tonno',            { etichetta = 'Tonno',      peso = 9000, impilabile = false, unico = true, categoria = 'cibo', degrada = 2880 })
+I('polpo',            { etichetta = 'Polpo',      peso = 900,  categoria = 'cibo', degrada = 1440 })
+I('trota',            { etichetta = 'Trota',      peso = 500,  categoria = 'cibo', degrada = 1440 })
+I('luccio',           { etichetta = 'Luccio',     peso = 1800, categoria = 'cibo', degrada = 1440 })
+I('carpa',            { etichetta = 'Carpa',      peso = 1500, categoria = 'cibo', degrada = 1440 })
+I('dattero',          { etichetta = 'Dattero di mare', peso = 120, categoria = 'illegale', descrizione = 'La raccolta è vietata per legge.' })
+
+I('carne_cinghiale',  { etichetta = 'Carne di cinghiale', peso = 2500, categoria = 'cibo', degrada = 2880 })
+I('carne_cervo',      { etichetta = 'Carne di cervo',     peso = 3000, categoria = 'cibo', degrada = 2880 })
+I('carne_lepre',      { etichetta = 'Carne di lepre',     peso = 900,  categoria = 'cibo', degrada = 2880 })
+
+I('pietra',           { etichetta = 'Pietrisco',   peso = 1500, categoria = 'materiali' })
+I('quarzo',           { etichetta = 'Quarzo',      peso = 800,  categoria = 'materiali' })
+I('oro_grezzo',       { etichetta = 'Oro grezzo',  peso = 400,  categoria = 'materiali' })
+
+I('porcini',          { etichetta = 'Funghi porcini',  peso = 350, categoria = 'cibo', degrada = 2880 })
+I('tartufo_nero',     { etichetta = 'Tartufo nero',    peso = 90,  categoria = 'cibo', degrada = 4320 })
+I('tartufo_bianco',   { etichetta = 'Tartufo bianco d\'Alba', peso = 80, impilabile = false, unico = true, categoria = 'cibo', degrada = 2880 })
+I('castagne',         { etichetta = 'Castagne',        peso = 700, categoria = 'cibo', degrada = 7200 })
+I('erbe_officinali',  { etichetta = 'Erbe officinali', peso = 120, categoria = 'materiali' })
+
+I('licenza',          { etichetta = 'Licenza', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti' })
+
+-- ---------------------------------------------------------------------------
 --  SANITÀ
 -- ---------------------------------------------------------------------------
 I('kit_medico',       { etichetta = 'Kit medico', peso = 1200, usabile = true, categoria = 'sanita', descrizione = 'Riporta la salute a livello stabile. Uso professionale.' })
@@ -123,6 +159,8 @@ I('cartuccia',        { etichetta = 'Cartucce', peso = 12, categoria = 'armi' })
 I('cartuccia_caccia', { etichetta = 'Cartucce da caccia', peso = 20, categoria = 'armi' })
 I('arma',             { etichetta = 'Arma da fuoco', peso = 1200, impilabile = false, unico = true, usabile = true, categoria = 'armi', descrizione = 'Ogni arma ha la sua matricola ed è iscritta al registro nazionale.' })
 I('sostanza_grezza',  { etichetta = 'Sostanza grezza', peso = 30, categoria = 'illegale' })
+I('seme',             { etichetta = 'Semi', peso = 15, categoria = 'illegale' })
+I('annaffiatoio',     { etichetta = 'Annaffiatoio', peso = 900, impilabile = false, unico = true, usabile = true, categoria = 'attrezzi' })
 I('sostanza_raffinata',{ etichetta = 'Sostanza raffinata', peso = 25, categoria = 'illegale' })
 I('documento_falso',  { etichetta = 'Documento contraffatto', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'illegale' })
 I('targa_clonata',    { etichetta = 'Targa clonata', peso = 300, impilabile = false, unico = true, usabile = true, categoria = 'illegale' })

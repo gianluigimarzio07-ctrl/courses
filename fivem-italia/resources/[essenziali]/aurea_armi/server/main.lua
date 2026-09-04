@@ -134,8 +134,11 @@ AUREA.Callback.Registra('arm:richiediTitolo', function(src, rispondi, tipo)
         return rispondi(false, ('I diritti di rilascio sono %s.'):format(U.Euro(t.costo)))
     end
 
-    MySQL.insert.await([[
+    -- Il rinnovo riusa la riga esistente: un cittadino ha un solo titolo per tipo.
+    MySQL.query.await([[
         INSERT INTO porto_armi (citizenid, tipo, rilascio, scadenza) VALUES (?, ?, CURDATE(), ?)
+        ON DUPLICATE KEY UPDATE rilascio = CURDATE(), scadenza = VALUES(scadenza),
+                                revocato = 0, motivo_revoca = NULL
     ]], { g.citizenid, tipo, U.DataPiuGiorni(t.validitaGiorni) })
 
     if t.costo > 0 then

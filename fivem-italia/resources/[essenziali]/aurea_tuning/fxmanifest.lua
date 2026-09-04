@@ -2,9 +2,9 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-name        'aurea_chat'
+name        'aurea_tuning'
 author      'AUREA · Italia Roleplay'
-description 'Chat di ruolo a prossimità: /me, /do, /ooc, tentativi, dadi, radio di servizio'
+description 'Elaborazione dei veicoli, omologazione delle modifiche e nulla osta della Motorizzazione'
 version     '1.0.0'
 
 shared_scripts { 'config.lua' }
@@ -14,5 +14,7 @@ server_scripts { '@oxmysql/lib/MySQL.lua', 'server/main.lua' }
 dependencies {
     'aurea_core',
     'aurea_ui',
-    'aurea_inventory',
+    'ita_veicoli',
+    'ita_codicestrada',
+    'ita_fisco',
 }
