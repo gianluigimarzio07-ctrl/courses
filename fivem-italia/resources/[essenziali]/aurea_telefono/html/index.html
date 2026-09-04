@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>AUREA · Telefono</title>
+  <link rel="stylesheet" href="stile.css">
+</head>
+<body class="oculto" id="radice">
+
+  <div class="telefono">
+    <div class="scocca">
+      <div class="notch"></div>
+
+      <div class="schermo">
+        <!-- Barra di stato -->
+        <div class="barra-stato">
+          <span id="ora">08:00</span>
+          <span class="operatore">AUREA</span>
+          <span class="segnale">▮▮▮▯ 78%</span>
+        </div>
+
+        <!-- Schermata home -->
+        <section class="vista attiva" id="vista-home">
+          <div class="intestazione-home">
+            <h1 id="home-nome">—</h1>
+            <p id="home-numero">—</p>
+          </div>
+          <div class="app-griglia" id="app-griglia"></div>
+        </section>
+
+        <!-- Contatti -->
+        <section class="vista" id="vista-contatti">
+          <header class="testata-app">
+            <button class="indietro">‹</button><h2>Rubrica</h2>
+            <button class="azione" id="nuovo-contatto">＋</button>
+          </header>
+          <div class="lista" id="lista-contatti"></div>
+        </section>
+
+        <!-- Messaggi -->
+        <section class="vista" id="vista-messaggi">
+          <header class="testata-app">
+            <button class="indietro">‹</button><h2>Messaggi</h2>
+            <button class="azione" id="nuovo-messaggio">✎</button>
+          </header>
+          <div class="lista" id="lista-conversazioni"></div>
+        </section>
+
+        <!-- Conversazione -->
+        <section class="vista" id="vista-conversazione">
+          <header class="testata-app">
+            <button class="indietro" data-torna="vista-messaggi">‹</button>
+            <h2 id="titolo-conversazione">—</h2>
+          </header>
+          <div class="bolle" id="bolle"></div>
+          <form class="composizione" id="form-messaggio">
+            <input type="text" id="testo-messaggio" placeholder="Scrivi un messaggio" maxlength="300" autocomplete="off">
+            <button type="submit">➤</button>
+          </form>
+        </section>
+
+        <!-- SPID -->
+        <section class="vista" id="vista-spid">
+          <header class="testata-app"><button class="indietro">‹</button><h2>Identità digitale</h2></header>
+          <div class="spid">
+            <div class="spid-tessera">
+              <div class="spid-tricolore"></div>
+              <div class="spid-corpo">
+                <span class="spid-etichetta">Identità digitale</span>
+                <h3 id="spid-nome">—</h3>
+                <dl>
+                  <div><dt>Codice fiscale</dt><dd id="spid-cf">—</dd></div>
+                  <div><dt>Nato il</dt><dd id="spid-nascita">—</dd></div>
+                  <div><dt>Luogo</dt><dd id="spid-luogo">—</dd></div>
+                  <div><dt>Codice cittadino</dt><dd id="spid-citizenid">—</dd></div>
+                </dl>
+              </div>
+            </div>
+            <div class="lista" id="spid-documenti"></div>
+          </div>
+        </section>
+
+        <!-- Banca -->
+        <section class="vista" id="vista-banca">
+          <header class="testata-app"><button class="indietro">‹</button><h2>Banca</h2></header>
+          <div class="saldo-card">
+            <span>Saldo disponibile</span>
+            <strong id="banca-saldo">0,00 €</strong>
+            <small id="banca-iban">—</small>
+          </div>
+          <div class="lista" id="banca-movimenti"></div>
+        </section>
+
+        <!-- Fisco -->
+        <section class="vista" id="vista-fisco">
+          <header class="testata-app"><button class="indietro">‹</button><h2>Cassetto fiscale</h2></header>
+          <div class="lista" id="fisco-lista"></div>
+        </section>
+
+        <!-- Annunci -->
+        <section class="vista" id="vista-annunci">
+          <header class="testata-app">
+            <button class="indietro">‹</button><h2>Annunci</h2>
+            <button class="azione" id="nuovo-annuncio">＋</button>
+          </header>
+          <div class="lista" id="lista-annunci"></div>
+        </section>
+
+        <!-- Emergenze -->
+        <section class="vista" id="vista-112">
+          <header class="testata-app"><button class="indietro">‹</button><h2>Emergenze</h2></header>
+          <div class="emergenze">
+            <button class="emergenza rossa" data-numero="112">
+              <strong>112</strong><span>Numero Unico Emergenze</span>
+            </button>
+            <button class="emergenza" data-numero="113"><strong>113</strong><span>Polizia di Stato</span></button>
+            <button class="emergenza" data-numero="115"><strong>115</strong><span>Vigili del Fuoco</span></button>
+            <button class="emergenza" data-numero="117"><strong>117</strong><span>Guardia di Finanza</span></button>
+            <button class="emergenza" data-numero="118"><strong>118</strong><span>Emergenza Sanitaria</span></button>
+            <p class="avvertenza">Le chiamate infondate sono punite ai sensi dell'art. 658 c.p.</p>
+          </div>
+        </section>
+
+        <!-- Barra inferiore -->
+        <div class="barra-home"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
