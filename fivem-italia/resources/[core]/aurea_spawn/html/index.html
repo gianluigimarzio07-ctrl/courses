@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>AUREA · Selezione personaggio</title>
+  <link rel="stylesheet" href="stile.css">
+</head>
+<body class="oculto" id="radice">
+
+  <div class="vignetta"></div>
+
+  <!-- Intestazione -->
+  <header class="testata">
+    <div class="marchio">
+      <div class="tricolore"></div>
+      <div>
+        <h1>AUREA</h1>
+        <p>Italia Roleplay</p>
+      </div>
+    </div>
+    <div class="stagione" id="stagione"></div>
+  </header>
+
+  <!-- Elenco personaggi -->
+  <main class="pannello" id="pannello-elenco">
+    <h2>I tuoi personaggi</h2>
+    <p class="guida">Scegli chi vuoi interpretare oggi.</p>
+    <div class="schede" id="schede"></div>
+  </main>
+
+  <!-- Creazione -->
+  <main class="pannello oculto" id="pannello-creazione">
+    <h2>Nuova identità</h2>
+    <p class="guida">I dati che inserisci generano il tuo codice fiscale e il codice cittadino.</p>
+
+    <form id="form-creazione" autocomplete="off">
+      <div class="griglia">
+        <div class="campo">
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" maxlength="24" required placeholder="Es. Alessandro">
+        </div>
+        <div class="campo">
+          <label for="cognome">Cognome</label>
+          <input id="cognome" type="text" maxlength="24" required placeholder="Es. Ferrari">
+        </div>
+        <div class="campo">
+          <label for="sesso">Sesso</label>
+          <select id="sesso">
+            <option value="M">Maschile</option>
+            <option value="F">Femminile</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="nascita">Data di nascita</label>
+          <input id="nascita" type="date" required>
+        </div>
+        <div class="campo campo-largo">
+          <label for="comune">Comune di nascita</label>
+          <select id="comune"></select>
+        </div>
+      </div>
+
+      <div class="anteprima">
+        <div class="anteprima-riga"><span>Codice fiscale</span><b id="cf-anteprima">— — —</b></div>
+        <div class="anteprima-riga"><span>Dotazione iniziale</span><b>250,00 € contanti · 1.500,00 € sul conto</b></div>
+        <div class="anteprima-riga"><span>Documenti</span><b>Carta d'identità, tessera sanitaria, smartphone</b></div>
+      </div>
+
+      <div class="azioni">
+        <button type="button" class="btn btn-neutro" id="annulla-creazione">Indietro</button>
+        <button type="submit" class="btn btn-primario">Crea personaggio</button>
+      </div>
+      <p class="errore oculto" id="errore"></p>
+    </form>
+  </main>
+
+  <footer class="pie">
+    <span id="suggerimento"></span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

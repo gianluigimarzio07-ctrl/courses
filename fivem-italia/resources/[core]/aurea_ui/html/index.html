@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>AUREA UI</title>
+  <link rel="stylesheet" href="stile.css">
+</head>
+<body>
+
+  <!-- Notifiche -->
+  <div id="notifiche" class="notifiche"></div>
+
+  <!-- Prompt di interazione (E per ...) -->
+  <div id="prompt" class="prompt oculto">
+    <span class="prompt-tasto" id="prompt-tasto">E</span>
+    <span class="prompt-testo" id="prompt-testo"></span>
+  </div>
+
+  <!-- Barra di avanzamento -->
+  <div id="progresso" class="progresso oculto">
+    <div class="progresso-etichetta" id="progresso-etichetta"></div>
+    <div class="progresso-binario"><div class="progresso-riempimento" id="progresso-riempimento"></div></div>
+    <div class="progresso-annulla">Tieni premuto <b>X</b> per annullare</div>
+  </div>
+
+  <!-- Menu contestuale -->
+  <div id="menu" class="menu oculto">
+    <header class="menu-testata">
+      <div class="menu-tricolore"></div>
+      <h2 id="menu-titolo">Menu</h2>
+      <p id="menu-sottotitolo"></p>
+    </header>
+    <div class="menu-voci" id="menu-voci"></div>
+    <footer class="menu-pie">
+      <span><b>↑ ↓</b> naviga</span><span><b>Invio</b> conferma</span><span><b>Esc</b> chiudi</span>
+    </footer>
+  </div>
+
+  <!-- Dialogo di input -->
+  <div id="dialogo" class="velo oculto">
+    <form class="dialogo" id="dialogo-form" autocomplete="off">
+      <div class="menu-tricolore"></div>
+      <h2 id="dialogo-titolo">Inserisci i dati</h2>
+      <div id="dialogo-campi" class="dialogo-campi"></div>
+      <div class="dialogo-azioni">
+        <button type="button" class="btn btn-neutro" id="dialogo-annulla">Annulla</button>
+        <button type="submit" class="btn btn-primario">Conferma</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

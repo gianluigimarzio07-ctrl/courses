@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>AUREA HUD</title>
+  <link rel="stylesheet" href="stile.css">
+</head>
+<body>
+
+  <!-- Pannello stato in basso a sinistra -->
+  <div id="stato" class="stato oculto">
+    <div class="anelli">
+      <svg viewBox="0 0 44 44" class="anello" data-chiave="salute">
+        <circle class="binario" cx="22" cy="22" r="19"></circle>
+        <circle class="valore salute" cx="22" cy="22" r="19"></circle>
+        <text x="22" y="26" class="glifo">♥</text>
+      </svg>
+      <svg viewBox="0 0 44 44" class="anello" data-chiave="armatura">
+        <circle class="binario" cx="22" cy="22" r="19"></circle>
+        <circle class="valore armatura" cx="22" cy="22" r="19"></circle>
+        <text x="22" y="26" class="glifo">🛡</text>
+      </svg>
+      <svg viewBox="0 0 44 44" class="anello" data-chiave="fame">
+        <circle class="binario" cx="22" cy="22" r="19"></circle>
+        <circle class="valore fame" cx="22" cy="22" r="19"></circle>
+        <text x="22" y="26" class="glifo">🍽</text>
+      </svg>
+      <svg viewBox="0 0 44 44" class="anello" data-chiave="sete">
+        <circle class="binario" cx="22" cy="22" r="19"></circle>
+        <circle class="valore sete" cx="22" cy="22" r="19"></circle>
+        <text x="22" y="26" class="glifo">💧</text>
+      </svg>
+      <svg viewBox="0 0 44 44" class="anello" data-chiave="stress">
+        <circle class="binario" cx="22" cy="22" r="19"></circle>
+        <circle class="valore stress" cx="22" cy="22" r="19"></circle>
+        <text x="22" y="26" class="glifo">⚡</text>
+      </svg>
+      <svg viewBox="0 0 44 44" class="anello oculto" id="anello-ossigeno" data-chiave="ossigeno">
+        <circle class="binario" cx="22" cy="22" r="19"></circle>
+        <circle class="valore ossigeno" cx="22" cy="22" r="19"></circle>
+        <text x="22" y="26" class="glifo">◌</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Denaro e identità in alto a destra -->
+  <div id="portafoglio" class="portafoglio oculto">
+    <div class="riga"><span class="etichetta">Contanti</span><span class="cifra" id="contanti">0,00 €</span></div>
+    <div class="riga"><span class="etichetta">Conto</span><span class="cifra banca" id="banca">0,00 €</span></div>
+    <div class="riga meta"><span id="lavoro">Disoccupato</span><span id="orologio">00:00</span></div>
+    <div class="variazione" id="variazione"></div>
+  </div>
+
+  <!-- Cruscotto veicolo -->
+  <div id="cruscotto" class="cruscotto oculto">
+    <div class="tachimetro">
+      <div class="velocita"><span id="kmh">0</span><small>km/h</small></div>
+      <svg class="arco" viewBox="0 0 120 66">
+        <path class="arco-binario" d="M8 62 A52 52 0 0 1 112 62"></path>
+        <path class="arco-valore" id="arco-valore" d="M8 62 A52 52 0 0 1 112 62"></path>
+      </svg>
+    </div>
+
+    <div class="strumenti">
+      <div class="marcia" id="marcia">N</div>
+      <div class="barra-vert" title="Carburante">
+        <div class="riempimento carburante" id="carburante"></div>
+        <span>⛽</span>
+      </div>
+      <div class="barra-vert" title="Motore">
+        <div class="riempimento motore" id="motore"></div>
+        <span>⚙</span>
+      </div>
+    </div>
+
+    <div class="spie">
+      <div class="spia" id="spia-cinture" title="Cinture di sicurezza">🔒</div>
+      <div class="spia" id="spia-fari" title="Luci">💡</div>
+      <div class="spia" id="spia-motore" title="Avaria motore">⚠</div>
+    </div>
+  </div>
+
+  <!-- Segnale limite di velocità stile italiano -->
+  <div id="limite" class="limite oculto">
+    <div class="cartello"><span id="limite-valore">50</span></div>
+    <div class="limite-nota" id="limite-nota">Limite urbano</div>
+  </div>
+
+  <!-- Banda ZTL -->
+  <div id="ztl" class="ztl oculto">
+    <div class="ztl-disco">ZTL</div>
+    <div class="ztl-corpo">
+      <strong id="ztl-nome">Zona a Traffico Limitato</strong>
+      <span id="ztl-stato">Varco attivo — accesso non autorizzato</span>
+    </div>
+  </div>
+
+  <!-- Patente a punti -->
+  <div id="patente" class="patente oculto">
+    <span class="patente-testa">Patente</span>
+    <span class="patente-punti" id="patente-punti">20</span>
+    <span class="patente-coda">punti</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

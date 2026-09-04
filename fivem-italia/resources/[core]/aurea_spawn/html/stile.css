@@ -1,0 +1,173 @@
+/* ==========================================================================
+   AUREA · Selezione personaggio
+   ========================================================================== */
+
+:root {
+  --vetro:   rgba(12, 13, 18, 0.82);
+  --bordo:   rgba(255, 255, 255, 0.09);
+  --testo:   #f3f4f8;
+  --tenue:   #98a0b0;
+  --verde:   #1f9d55;
+  --rosso:   #cf2e2e;
+  --oro:     #d4af37;
+  --font: 'Segoe UI', 'Inter', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100vw; height: 100vh; overflow: hidden;
+  background: transparent; color: var(--testo);
+  font-family: var(--font);
+  user-select: none;
+}
+
+.oculto { display: none !important; }
+
+.vignetta {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 50%, transparent 30%, rgba(0,0,0,.72) 100%),
+    linear-gradient(90deg, rgba(0,0,0,.85) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* Intestazione ----------------------------------------------------------- */
+.testata {
+  position: fixed; top: 40px; left: 56px; right: 56px;
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+
+.marchio { display: flex; gap: 14px; align-items: center; }
+
+.tricolore {
+  width: 5px; height: 46px; border-radius: 3px;
+  background: linear-gradient(180deg, var(--verde) 0 33.3%, #f4f4f4 33.3% 66.6%, var(--rosso) 66.6% 100%);
+}
+
+.marchio h1 { font-size: 27px; font-weight: 780; letter-spacing: .22em; line-height: 1; }
+.marchio p  { font-size: 11px; color: var(--tenue); letter-spacing: .32em; text-transform: uppercase; margin-top: 5px; }
+
+.stagione {
+  font-size: 11.5px; color: var(--tenue);
+  padding: 7px 14px;
+  border: 1px solid var(--bordo); border-radius: 999px;
+  background: var(--vetro); backdrop-filter: blur(10px);
+}
+
+/* Pannello --------------------------------------------------------------- */
+.pannello {
+  position: fixed; top: 50%; left: 56px;
+  transform: translateY(-50%);
+  width: 480px; max-height: 68vh;
+  display: flex; flex-direction: column;
+  animation: entra .35s cubic-bezier(.2,.9,.3,1.1);
+}
+
+.pannello h2 { font-size: 21px; font-weight: 700; letter-spacing: .01em; }
+.guida { font-size: 12.5px; color: var(--tenue); margin-top: 6px; margin-bottom: 20px; }
+
+@keyframes entra { from { opacity: 0; transform: translate(-18px, -50%); } to { opacity: 1; transform: translate(0, -50%); } }
+
+/* Schede personaggio ----------------------------------------------------- */
+.schede { display: flex; flex-direction: column; gap: 11px; overflow-y: auto; padding-right: 6px; }
+.schede::-webkit-scrollbar { width: 5px; }
+.schede::-webkit-scrollbar-thumb { background: rgba(255,255,255,.14); border-radius: 5px; }
+
+.scheda {
+  display: flex; align-items: center; gap: 15px;
+  padding: 16px 18px;
+  background: var(--vetro);
+  border: 1px solid var(--bordo);
+  border-left: 3px solid transparent;
+  border-radius: 13px;
+  backdrop-filter: blur(14px);
+  cursor: pointer;
+  transition: transform .16s, border-color .16s, background .16s;
+}
+
+.scheda:hover {
+  transform: translateX(6px);
+  border-left-color: var(--verde);
+  background: rgba(22, 24, 32, 0.9);
+}
+
+.scheda.vuota { border-style: dashed; justify-content: center; color: var(--tenue); }
+.scheda.vuota:hover { border-left-color: var(--oro); color: var(--testo); }
+
+.iniziali {
+  flex: 0 0 46px; height: 46px;
+  display: grid; place-items: center;
+  border-radius: 12px;
+  background: linear-gradient(140deg, rgba(31,157,85,.28), rgba(207,46,46,.24));
+  border: 1px solid var(--bordo);
+  font-size: 16px; font-weight: 720; letter-spacing: .04em;
+}
+
+.scheda-corpo { flex: 1; min-width: 0; }
+.scheda-nome { font-size: 15.5px; font-weight: 650; }
+.scheda-meta { font-size: 11.5px; color: var(--tenue); margin-top: 4px; display: flex; gap: 12px; flex-wrap: wrap; }
+.scheda-meta b { color: var(--testo); font-weight: 600; }
+
+.elimina {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  font-size: 11px;
+  border: 1px solid var(--bordo); border-radius: 8px;
+  background: transparent; color: var(--tenue);
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.elimina:hover { color: var(--rosso); border-color: rgba(207,46,46,.5); background: rgba(207,46,46,.1); }
+
+/* Form di creazione ------------------------------------------------------ */
+form { background: var(--vetro); border: 1px solid var(--bordo); border-radius: 15px; padding: 22px; backdrop-filter: blur(14px); overflow-y: auto; }
+
+.griglia { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.campo-largo { grid-column: span 2; }
+
+.campo label { display: block; font-size: 11px; color: var(--tenue); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; }
+
+.campo input, .campo select {
+  width: 100%; padding: 10px 12px;
+  background: rgba(255,255,255,.045);
+  border: 1px solid var(--bordo); border-radius: 9px;
+  color: var(--testo); font-family: var(--font); font-size: 13.5px;
+  outline: none; transition: border-color .15s, background .15s;
+}
+.campo input:focus, .campo select:focus { border-color: var(--verde); background: rgba(255,255,255,.075); }
+.campo select option { background: #14161c; }
+.campo input::-webkit-calendar-picker-indicator { filter: invert(.75); cursor: pointer; }
+
+.anteprima {
+  margin-top: 18px; padding: 14px;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--bordo); border-radius: 11px;
+}
+.anteprima-riga { display: flex; justify-content: space-between; gap: 14px; font-size: 11.5px; }
+.anteprima-riga + .anteprima-riga { margin-top: 8px; }
+.anteprima-riga span { color: var(--tenue); }
+.anteprima-riga b { font-weight: 620; text-align: right; }
+#cf-anteprima { font-family: 'Consolas', monospace; letter-spacing: .09em; color: var(--oro); }
+
+.azioni { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+.btn {
+  padding: 10px 20px;
+  border: 1px solid var(--bordo); border-radius: 9px;
+  background: rgba(255,255,255,.05); color: var(--testo);
+  font-family: var(--font); font-size: 13px; font-weight: 620;
+  cursor: pointer; transition: background .14s, transform .1s;
+}
+.btn:hover { background: rgba(255,255,255,.1); }
+.btn:active { transform: scale(.97); }
+.btn-primario { background: var(--verde); border-color: var(--verde); color: #041a0d; }
+.btn-primario:hover { background: #26b662; }
+
+.errore { margin-top: 12px; font-size: 12px; color: #ff8a7a; }
+
+/* Piè di pagina ---------------------------------------------------------- */
+.pie {
+  position: fixed; bottom: 34px; left: 56px; right: 56px;
+  font-size: 11.5px; color: var(--tenue);
+}
