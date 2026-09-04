@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <title>AUREA · Inventario</title>
+  <link rel="stylesheet" href="stile.css">
+</head>
+<body class="oculto" id="radice">
+
+  <div class="scena">
+
+    <!-- Inventario personale -->
+    <section class="pannello" id="pannello-primario">
+      <header>
+        <div class="tricolore"></div>
+        <div class="testata-corpo">
+          <h2>Tasche</h2>
+          <div class="peso">
+            <div class="peso-barra"><div class="peso-riempimento" id="peso-primario"></div></div>
+            <span id="peso-testo-primario">0 / 30 kg</span>
+          </div>
+        </div>
+      </header>
+      <div class="griglia" id="griglia-primario"></div>
+    </section>
+
+    <!-- Colonna centrale: dettaglio e azioni -->
+    <aside class="dettaglio" id="dettaglio">
+      <div class="dettaglio-vuoto" id="dettaglio-vuoto">
+        <span class="glifo">🎒</span>
+        <p>Seleziona un oggetto<br>per vederne i dettagli</p>
+        <ul class="aiuto">
+          <li><b>Trascina</b> per spostare</li>
+          <li><b>Doppio clic</b> per usare</li>
+          <li><b>Clic destro</b> per le azioni</li>
+          <li><b>Maiusc + trascina</b> per dividere</li>
+        </ul>
+      </div>
+
+      <div class="dettaglio-corpo oculto" id="dettaglio-corpo">
+        <div class="dettaglio-icona" id="dettaglio-icona">📦</div>
+        <h3 id="dettaglio-nome"></h3>
+        <p class="dettaglio-categoria" id="dettaglio-categoria"></p>
+        <p class="dettaglio-descrizione" id="dettaglio-descrizione"></p>
+
+        <div class="freschezza oculto" id="freschezza-blocco">
+          <span>Freschezza</span>
+          <div class="freschezza-barra"><div id="freschezza-riempimento"></div></div>
+        </div>
+
+        <dl class="dettaglio-dati" id="dettaglio-dati"></dl>
+
+        <div class="dettaglio-azioni">
+          <button class="btn btn-primario" id="btn-usa">Usa</button>
+          <button class="btn" id="btn-getta">Getta</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Contenitore secondario -->
+    <section class="pannello oculto" id="pannello-secondario">
+      <header>
+        <div class="tricolore"></div>
+        <div class="testata-corpo">
+          <h2 id="titolo-secondario">Contenitore</h2>
+          <div class="peso">
+            <div class="peso-barra"><div class="peso-riempimento" id="peso-secondario"></div></div>
+            <span id="peso-testo-secondario">0 / 0 kg</span>
+          </div>
+        </div>
+      </header>
+      <div class="griglia" id="griglia-secondario"></div>
+    </section>
+
+  </div>
+
+  <!-- Menu contestuale -->
+  <div class="contestuale oculto" id="contestuale"></div>
+
+  <!-- Divisione pila -->
+  <div class="velo oculto" id="velo-divisione">
+    <div class="dialogo-divisione">
+      <h3>Quante unità spostare?</h3>
+      <input type="range" id="slider-quantita" min="1" value="1">
+      <div class="quantita-mostrata"><span id="quantita-valore">1</span></div>
+      <div class="azioni-dialogo">
+        <button class="btn" id="divisione-annulla">Annulla</button>
+        <button class="btn btn-primario" id="divisione-conferma">Sposta</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="pie">Premi <b>ESC</b> o <b>TAB</b> per chiudere</footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

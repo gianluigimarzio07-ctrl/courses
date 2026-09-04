@@ -1,0 +1,241 @@
+/* ==========================================================================
+   AUREA · Inventario
+   ========================================================================== */
+
+:root {
+  --vetro:      rgba(15, 16, 22, 0.9);
+  --vetro-alto: rgba(24, 26, 34, 0.94);
+  --bordo:      rgba(255, 255, 255, 0.08);
+  --bordo-alto: rgba(255, 255, 255, 0.2);
+  --testo:      #f2f3f7;
+  --tenue:      #99a0af;
+  --verde:      #1f9d55;
+  --rosso:      #cf2e2e;
+  --oro:        #d4af37;
+  --font: 'Segoe UI', 'Inter', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100vw; height: 100vh; overflow: hidden;
+  background: rgba(6, 7, 10, 0.55);
+  backdrop-filter: blur(5px);
+  font-family: var(--font); color: var(--testo);
+  user-select: none;
+}
+
+.oculto { display: none !important; }
+
+.scena {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  gap: 22px;
+  padding: 60px 40px;
+}
+
+/* Pannelli ---------------------------------------------------------------- */
+.pannello {
+  width: 442px;
+  display: flex; flex-direction: column;
+  background: var(--vetro);
+  border: 1px solid var(--bordo);
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.6);
+  overflow: hidden;
+  animation: entra .26s cubic-bezier(.2,.9,.3,1.15);
+}
+
+@keyframes entra { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+
+.tricolore {
+  height: 3px;
+  background: linear-gradient(90deg, var(--verde) 0 33.3%, #f4f4f4 33.3% 66.6%, var(--rosso) 66.6% 100%);
+}
+
+.testata-corpo { padding: 14px 18px 12px; }
+.testata-corpo h2 { font-size: 15px; font-weight: 680; letter-spacing: .02em; }
+
+.peso { display: flex; align-items: center; gap: 10px; margin-top: 9px; }
+.peso-barra { flex: 1; height: 4px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+.peso-riempimento {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--verde), #6fd39d);
+  border-radius: 999px; transition: width .25s ease, background .25s;
+}
+.peso-riempimento.pieno { background: linear-gradient(90deg, #e8b53b, var(--rosso)); }
+.peso span { font-size: 10.5px; color: var(--tenue); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Griglia degli slot ------------------------------------------------------ */
+.griglia {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  padding: 14px 18px 18px;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+.griglia::-webkit-scrollbar { width: 5px; }
+.griglia::-webkit-scrollbar-thumb { background: rgba(255,255,255,.14); border-radius: 5px; }
+
+.slot {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid var(--bordo);
+  border-radius: 10px;
+  background: rgba(255,255,255,.024);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: default;
+  transition: border-color .12s, background .12s, transform .1s;
+}
+
+.slot.pieno { cursor: grab; background: rgba(255,255,255,.05); }
+.slot.pieno:hover { border-color: var(--bordo-alto); background: rgba(255,255,255,.085); transform: translateY(-2px); }
+.slot.pieno:active { cursor: grabbing; }
+.slot.selezionato { border-color: var(--verde); background: rgba(31,157,85,.14); }
+.slot.bersaglio { border-color: var(--oro); background: rgba(212,175,55,.14); border-style: dashed; }
+.slot.trascinato { opacity: .34; }
+
+.slot-numero {
+  position: absolute; top: 3px; left: 5px;
+  font-size: 8.5px; color: rgba(255,255,255,.2);
+  font-variant-numeric: tabular-nums;
+}
+
+.slot-icona { font-size: 22px; line-height: 1; }
+
+.slot-nome {
+  font-size: 8.5px; color: var(--tenue);
+  margin-top: 4px; padding: 0 4px;
+  text-align: center; line-height: 1.2;
+  max-height: 2.4em; overflow: hidden;
+}
+
+.slot-quantita {
+  position: absolute; bottom: 3px; right: 5px;
+  font-size: 10px; font-weight: 700;
+  color: var(--testo);
+  background: rgba(0,0,0,.55);
+  border-radius: 5px; padding: 0 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.slot-freschezza {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px; border-radius: 0 0 9px 9px;
+  background: var(--verde);
+}
+.slot-freschezza.media { background: #e8b53b; }
+.slot-freschezza.bassa { background: var(--rosso); }
+
+.slot-unico { position: absolute; top: 3px; right: 5px; font-size: 8px; color: var(--oro); }
+
+/* Dettaglio --------------------------------------------------------------- */
+.dettaglio {
+  width: 268px;
+  align-self: stretch;
+  max-height: 74vh;
+  display: flex; flex-direction: column;
+  background: var(--vetro-alto);
+  border: 1px solid var(--bordo);
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0,0,0,.55);
+  padding: 22px 20px;
+  overflow-y: auto;
+}
+
+.dettaglio-vuoto { margin: auto 0; text-align: center; color: var(--tenue); }
+.dettaglio-vuoto .glifo { font-size: 38px; opacity: .35; display: block; margin-bottom: 14px; }
+.dettaglio-vuoto p { font-size: 12px; line-height: 1.6; }
+
+.aiuto { list-style: none; margin-top: 24px; text-align: left; font-size: 10.5px; line-height: 2; opacity: .8; }
+.aiuto b { color: var(--testo); }
+
+.dettaglio-icona {
+  width: 62px; height: 62px; margin: 0 auto 14px;
+  display: grid; place-items: center;
+  border-radius: 15px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid var(--bordo);
+  font-size: 30px;
+}
+
+.dettaglio-corpo h3 { font-size: 16px; font-weight: 680; text-align: center; }
+.dettaglio-categoria {
+  font-size: 10px; color: var(--oro); text-align: center;
+  letter-spacing: .1em; text-transform: uppercase; margin-top: 5px;
+}
+.dettaglio-descrizione { font-size: 11.5px; color: var(--tenue); line-height: 1.55; margin-top: 14px; text-align: center; }
+
+.freschezza { margin-top: 16px; }
+.freschezza > span { font-size: 10px; color: var(--tenue); letter-spacing: .06em; text-transform: uppercase; }
+.freschezza-barra { height: 4px; border-radius: 999px; background: rgba(255,255,255,.08); margin-top: 6px; overflow: hidden; }
+.freschezza-barra div { height: 100%; background: var(--verde); border-radius: 999px; transition: width .25s; }
+
+.dettaglio-dati { margin-top: 18px; font-size: 11px; }
+.dettaglio-dati div { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+.dettaglio-dati dt { color: var(--tenue); }
+.dettaglio-dati dd { text-align: right; word-break: break-word; }
+
+.dettaglio-azioni { display: flex; gap: 8px; margin-top: auto; padding-top: 20px; }
+.dettaglio-azioni .btn { flex: 1; }
+
+.btn {
+  padding: 9px 14px;
+  border: 1px solid var(--bordo-alto); border-radius: 9px;
+  background: rgba(255,255,255,.05); color: var(--testo);
+  font-family: var(--font); font-size: 12px; font-weight: 620;
+  cursor: pointer; transition: background .13s, transform .1s;
+}
+.btn:hover { background: rgba(255,255,255,.11); }
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .35; cursor: not-allowed; }
+.btn-primario { background: var(--verde); border-color: var(--verde); color: #04180d; }
+.btn-primario:hover:not(:disabled) { background: #26b463; }
+
+/* Menu contestuale -------------------------------------------------------- */
+.contestuale {
+  position: absolute;
+  min-width: 160px;
+  background: var(--vetro-alto);
+  border: 1px solid var(--bordo-alto);
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.6);
+  padding: 5px;
+  z-index: 50;
+}
+.contestuale div {
+  padding: 8px 12px; border-radius: 7px;
+  font-size: 12px; cursor: pointer;
+  transition: background .1s;
+}
+.contestuale div:hover { background: rgba(255,255,255,.09); }
+
+/* Divisione pila ---------------------------------------------------------- */
+.velo {
+  position: absolute; inset: 0; z-index: 60;
+  display: grid; place-items: center;
+  background: rgba(6,7,10,.6);
+}
+
+.dialogo-divisione {
+  width: 320px; padding: 24px;
+  background: var(--vetro-alto);
+  border: 1px solid var(--bordo-alto);
+  border-radius: 14px;
+  box-shadow: 0 20px 56px rgba(0,0,0,.6);
+  text-align: center;
+}
+.dialogo-divisione h3 { font-size: 14px; font-weight: 650; margin-bottom: 20px; }
+
+#slider-quantita { width: 100%; accent-color: var(--verde); cursor: pointer; }
+.quantita-mostrata { font-size: 26px; font-weight: 720; margin: 14px 0 20px; font-variant-numeric: tabular-nums; }
+.azioni-dialogo { display: flex; gap: 9px; }
+.azioni-dialogo .btn { flex: 1; }
+
+/* Piè di pagina ----------------------------------------------------------- */
+.pie {
+  position: absolute; bottom: 22px; left: 0; right: 0;
+  text-align: center; font-size: 10.5px; color: var(--tenue); letter-spacing: .05em;
+}
+.pie b { color: var(--testo); }
