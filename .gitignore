@@ -139,3 +139,6 @@ dmypy.json
 *.DS_Store
 tmp_*
 examples/fine-tuned_qa/local_cache/*
+# Archivi generati dai sorgenti di fivem-italia (artefatti, non codice)
+AUREA-Italia-Roleplay.zip
+fivem-italia*.zip
