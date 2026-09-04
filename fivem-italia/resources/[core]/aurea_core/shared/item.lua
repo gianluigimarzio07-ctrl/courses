@@ -83,6 +83,7 @@ I('formaggio_fresco', { etichetta = 'Formaggio fresco', peso = 700, categoria = 
 I('caffe_verde',      { etichetta = 'Caffè verde', peso = 500, categoria = 'materiali' })
 I('caffe_tostato',    { etichetta = 'Caffè tostato', peso = 480, categoria = 'materiali' })
 I('farina_00',        { etichetta = 'Farina 00', peso = 1000, categoria = 'materiali' })
+I('impasto_pizza',    { etichetta = 'Panetto di impasto', peso = 280, categoria = 'materiali', degrada = 720 })
 I('pomodoro_san_marzano', { etichetta = 'Pomodoro San Marzano', peso = 800, categoria = 'materiali', degrada = 5760 })
 I('tessuto_pregiato', { etichetta = 'Tessuto pregiato', peso = 600, categoria = 'materiali' })
 I('capo_sartoriale',  { etichetta = 'Capo sartoriale', peso = 900, impilabile = false, unico = true, categoria = 'moda' })
