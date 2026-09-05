@@ -202,6 +202,21 @@ CreateThread(function()
     end
 end)
 
+--- Rilascia (o estende) la patente al superamento dell'esame. Consegna
+--- anche il documento nell'inventario: la patente è un oggetto che si mostra.
+function Patente.Rilascia(citizenid, categoria)
+    local numero = Patente.AggiungiCategoria(citizenid, categoria)
+    local p = Patente.Get(citizenid)
+
+    TriggerEvent('aurea:inventario:aggiungi', citizenid, 'patente', 1, {
+        numero = numero,
+        categorie = p and p.categorie or categoria,
+        punti = p and p.punti or CDS.Regole.puntiIniziali,
+    })
+    return numero
+end
+
+exports('RilasciaPatente', Patente.Rilascia)
 exports('PatenteGet', Patente.Get)
 exports('PatenteHaCategoria', Patente.HaCategoria)
 exports('PatenteDecurta', Patente.Decurta)

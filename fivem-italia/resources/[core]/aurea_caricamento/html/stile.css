@@ -1,0 +1,94 @@
+/*  AUREA · schermata di caricamento
+    Poco: un fondo scuro, il nome, e una cosa da leggere.  */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  color: #efe9df;
+  background: #0b0b0d;
+}
+
+.sfondo {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(1200px 600px at 20% 10%, rgba(139, 30, 30, .22), transparent 60%),
+    radial-gradient(900px 500px at 80% 90%, rgba(200, 165, 90, .14), transparent 60%),
+    #0b0b0d;
+}
+
+.cornice {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6vh 7vw;
+}
+
+header h1 {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 200;
+  letter-spacing: .38em;
+  line-height: 1;
+}
+
+.sottotitolo {
+  margin-top: .9rem;
+  font-size: clamp(.8rem, 1.4vw, 1.05rem);
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: rgba(239, 233, 223, .55);
+}
+
+.consiglio {
+  max-width: 46rem;
+  border-left: 2px solid rgba(200, 165, 90, .65);
+  padding-left: 1.6rem;
+}
+
+.etichetta {
+  display: block;
+  font-size: .68rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: rgba(200, 165, 90, .8);
+  margin-bottom: .85rem;
+}
+
+#consiglio {
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
+  line-height: 1.6;
+  font-weight: 300;
+  transition: opacity .5s ease;
+}
+
+#consiglio.esce { opacity: 0; }
+
+.barra {
+  height: 2px;
+  background: rgba(239, 233, 223, .12);
+  overflow: hidden;
+}
+
+.avanzamento {
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, rgba(200, 165, 90, .9), transparent);
+  animation: scorri 2.4s ease-in-out infinite;
+}
+
+@keyframes scorri {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(360%); }
+}
+
+.nota {
+  margin-top: 1rem;
+  font-size: .78rem;
+  color: rgba(239, 233, 223, .38);
+  letter-spacing: .04em;
+}

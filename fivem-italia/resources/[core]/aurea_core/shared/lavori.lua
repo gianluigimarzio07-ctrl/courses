@@ -201,6 +201,122 @@ L('motorizzazione', {
 --  Helper condivisi
 -- ---------------------------------------------------------------------------
 
+
+-- ---------------------------------------------------------------------------
+--  Servizi pubblici e mestieri
+-- ---------------------------------------------------------------------------
+L('camionista', {
+    etichetta = 'Autotrasporti',
+    tipo = 'civile',
+    gradi = {
+        [0] = { etichetta = 'Autista',         stipendio = 11000 },
+        [1] = { etichetta = 'Autista esperto', stipendio = 15000 },
+        [2] = { etichetta = 'Titolare',        stipendio = 20000, permessi = { 'assumi', 'licenzia' } },
+    },
+})
+
+L('netturbino', {
+    etichetta = 'Nettezza urbana',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Operatore ecologico', stipendio = 10500 },
+        [1] = { etichetta = 'Caposquadra',         stipendio = 14000, permessi = { 'gestione_turni' } },
+    },
+})
+
+L('benzinaio', {
+    etichetta = 'Distribuzione carburanti',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Addetto',         stipendio = 11500 },
+        [1] = { etichetta = 'Autista cisterna',stipendio = 16000 },
+    },
+})
+
+L('elettricista', {
+    etichetta = 'Rete elettrica',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Operaio',         stipendio = 13000 },
+        [1] = { etichetta = 'Tecnico',         stipendio = 18000, permessi = { 'gestione_turni' } },
+    },
+})
+
+L('autista', {
+    etichetta = 'Trasporto pubblico',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Autista di linea', stipendio = 12500 },
+        [1] = { etichetta = 'Controllore',      stipendio = 15000, permessi = { 'controllo_titoli' } },
+        [2] = { etichetta = 'Capo deposito',    stipendio = 19000, permessi = { 'assumi', 'gestione_turni' } },
+    },
+})
+
+L('ausiliario', {
+    etichetta = 'Ausiliari del traffico',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Ausiliario',       stipendio = 11000, permessi = { 'sosta' } },
+        [1] = { etichetta = 'Coordinatore',     stipendio = 15000, permessi = { 'sosta', 'gestione_turni' } },
+    },
+})
+
+L('barista', {
+    etichetta = 'Bar',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Barista',          stipendio = 10000 },
+        [1] = { etichetta = 'Titolare',         stipendio = 16000, permessi = { 'assumi', 'cassa' } },
+    },
+})
+
+L('cuoco', {
+    etichetta = 'Cucina',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Aiuto cuoco',      stipendio = 11000 },
+        [1] = { etichetta = 'Cuoco',            stipendio = 15500 },
+        [2] = { etichetta = 'Chef',             stipendio = 21000, permessi = { 'assumi', 'cassa' } },
+    },
+})
+
+L('medico', {
+    etichetta = 'Medicina di base',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Medico',           stipendio = 22000, permessi = { 'prescrivi', 'cartella' } },
+        [1] = { etichetta = 'Primario',         stipendio = 30000, permessi = { 'tutti' } },
+    },
+})
+
+L('giudice', {
+    etichetta = 'Magistratura',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Magistrato',       stipendio = 30000, permessi = { 'udienza', 'sentenza' } },
+        [1] = { etichetta = 'Presidente',       stipendio = 40000, permessi = { 'tutti' } },
+    },
+})
+
+L('penitenziaria', {
+    etichetta = 'Polizia Penitenziaria',
+    tipo = 'forze_ordine',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Agente',           stipendio = 15000, permessi = { 'fermo', 'perquisizione' } },
+        [1] = { etichetta = 'Sovrintendente',   stipendio = 19000, permessi = { 'fermo', 'perquisizione', 'arresto' } },
+    },
+})
+
 function AUREA.GetLavoro(nome)
     return AUREA.Lavori[nome] or AUREA.Lavori['disoccupato']
 end

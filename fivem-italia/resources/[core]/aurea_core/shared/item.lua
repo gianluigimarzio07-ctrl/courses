@@ -200,6 +200,29 @@ I('lingotto',         { etichetta = 'Lingotto d\'oro', peso = 12000, categoria =
 I('quadro',           { etichetta = 'Dipinto d\'autore', peso = 4000, impilabile = false, unico = true, categoria = 'illegale' })
 I('contabilita',      { etichetta = 'Libro mastro del clan', peso = 800, impilabile = false, unico = true, usabile = true, categoria = 'illegale', descrizione = 'Nomi, cifre, date. Vale molto per chi lo compra e ancora di più per chi indaga.' })
 
+
+-- ---------------------------------------------------------------------------
+--  SERVIZI, TEMPO LIBERO, ANIMALI
+-- ---------------------------------------------------------------------------
+I('boombox',          { etichetta = 'Stereo portatile', peso = 3200, impilabile = false, unico = true, usabile = true, categoria = 'elettronica', descrizione = 'Si posa a terra e suona per chi è nel raggio.' })
+I('fiches',           { etichetta = 'Fiches', peso = 8, categoria = 'varie', descrizione = 'Valgono solo dentro il casinò.' })
+I('guinzaglio',       { etichetta = 'Guinzaglio', peso = 200, impilabile = false, unico = true, usabile = true, categoria = 'varie' })
+I('crocchette',       { etichetta = 'Crocchette', peso = 800, categoria = 'varie', descrizione = 'Un animale che non mangia se ne va.' })
+I('ricetta',          { etichetta = 'Ricetta medica', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Vale 48 ore. Il farmacista la ritira.' })
+I('antibiotico',      { etichetta = 'Antibiotico', peso = 40, usabile = true, categoria = 'sanita' })
+I('ansiolitico',      { etichetta = 'Ansiolitico', peso = 30, usabile = true, categoria = 'sanita', effetto = { stress = -35 } })
+I('disinfettante',    { etichetta = 'Disinfettante', peso = 180, usabile = true, categoria = 'sanita' })
+I('biglietto',        { etichetta = 'Titolo di viaggio', peso = 3, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Va obliterato salendo.' })
+I('tagliando_sosta',  { etichetta = 'Tagliando di sosta', peso = 3, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Si espone sul cruscotto.' })
+
+-- ---------------------------------------------------------------------------
+--  RISTORAZIONE  (materie prime; i piatti finiti stanno più su, fra i cibi)
+-- ---------------------------------------------------------------------------
+I('pizza_marinara',   { etichetta = 'Pizza marinara', peso = 550, usabile = true, categoria = 'cibo', degrada = 90, effetto = { fame = 45 } })
+I('prosciutto',       { etichetta = 'Prosciutto', peso = 300, categoria = 'cibo', degrada = 7200 })
+I('pasta_secca',      { etichetta = 'Pasta secca', peso = 500, categoria = 'cibo' })
+I('caffe_crudo',      { etichetta = 'Caffè in grani', peso = 250, categoria = 'materiali' })
+
 -- ---------------------------------------------------------------------------
 --  ATTREZZI E VARIE
 -- ---------------------------------------------------------------------------
