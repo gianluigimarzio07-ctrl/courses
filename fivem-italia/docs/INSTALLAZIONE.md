@@ -45,9 +45,10 @@ Se invece hai già un database della prima versione, esegui anche:
 
 ```bash
 mysql -u aurea -p aurea < sql/03_espansione.sql
+mysql -u aurea -p aurea < sql/04_servizi.sql
 ```
 
-Aggiunge le tabelle dei moduli introdotti dopo — armadio dei completi,
+Aggiungono le tabelle dei moduli introdotti dopo — armadio dei completi,
 registro delle armi e porto d'armi, licenze di pesca e caccia, stato civile
 ed elezioni comunali, testata giornalistica. Usa `CREATE TABLE IF NOT
 EXISTS`, quindi rieseguirlo non fa danni.
@@ -323,6 +324,18 @@ moderna.
 
 **`Unknown table 'articoli'` (o `armi`, `matrimoni`, `licenze`, `completi`).**
 Manca la migrazione: esegui `sql/03_espansione.sql`.
+
+**`Unknown table 'ticket'` (o `animali`, `whitelist`, `corrispondenza`, `defunti`).**
+Manca la seconda migrazione: esegui `sql/04_servizi.sql`.
+
+**`attempt to index a nil value (field 'aurea_target')`.**
+La risorsa che dà l'errore parte prima di `aurea_target`. Deve dichiararlo
+fra le `dependencies` e comparire dopo di lui negli `ensure`.
+
+**Il terzo occhio non evidenzia niente.**
+Si tiene premuto il tasto destro del mouse, e funziona solo a piedi entro
+quattro metri. Le zone le registrano le singole risorse: se una non parte,
+i suoi punti non ci sono.
 
 **`attempt to index a nil value (global 'AUREA')` all'avvio.**
 Quella risorsa non carica il ponte del framework. Il suo `fxmanifest.lua`

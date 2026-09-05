@@ -92,10 +92,11 @@ fivem-italia/
 ├── sql/                    schema e dati iniziali
 ├── docs/                   documentazione operativa
 └── resources/
-    ├── [core]/             framework, interfaccia, HUD, selezione personaggio
-    ├── [essenziali]/       inventario, banca, telefono, negozi, lavori, sanità, case
+    ├── [core]/             framework, interfaccia, HUD, chat, terzo occhio
+    ├── [essenziali]/       inventario, banca, telefono, negozi, veicoli, tempo libero
     ├── [italia]/           i moduli che rendono il server italiano
-    └── [admin]/            staff, protezioni, registro
+    ├── [lavori]/           mestieri con una loro meccanica
+    └── [admin]/            staff, whitelist, supporto, metriche
 ```
 
 ### `[core]`
@@ -110,6 +111,10 @@ fivem-italia/
 | `aurea_chat` | Chat di prossimità con portate reali, `/me`, `/fai`, `/tentativo`, dadi, radio a frequenze riservate |
 | `aurea_emote` | Circa sessanta emote con oggetti in mano, emote a due, dieci andature |
 | `aurea_scoreboard` | Presenze e servizi attivi, senza rivelare chi è in partita |
+| `aurea_target` | Terzo occhio: registro condiviso di zone, modelli e azioni contestuali |
+| `aurea_interazioni` | Manette, accompagnamento, perquisizione — e il diritto di rifiutare |
+| `aurea_pausa` | Menu ESC sostituito; l'uscita ha un'attesa che si allunga sotto custodia |
+| `aurea_caricamento` | Schermata di attesa che spiega come si gioca qui |
 
 ### `[essenziali]`
 
@@ -125,6 +130,15 @@ fivem-italia/
 | `aurea_garage` | Garage, carburante con consumo per classe, usura, distributori |
 | `aurea_armi` | Registro nazionale delle armi con matricola, porto d'armi per titolo, denuncia di detenzione, controlli e sequestri |
 | `aurea_tuning` | Elaborazioni estetiche libere e meccaniche soggette a omologazione, officina clandestina, art. 78 CdS |
+| `aurea_concessionaria` | Listino con IVA e oneri, prova su strada con cauzione, passaggio di proprietà fra privati |
+| `aurea_soccorso` | Carro attrezzi: chiamate, traino su pianale, interventi sul posto, rimozione d'ufficio |
+| `aurea_noleggio` | Autonoleggio a ore con cauzione, penale e trattenuta sui danni |
+| `aurea_autolavaggio` | Lo sporco si accumula guidando e si toglie pagando |
+| `aurea_palestra` | Forza e resistenza che si allenano, si sentono in strada e si perdono |
+| `aurea_casino` | Blackjack, roulette europea e slot con margine dichiarato e imposta sulle vincite |
+| `aurea_scommesse` | Totalizzatore su eventi aperti dai giocatori: le quote le muove il denaro |
+| `aurea_musica` | Stereo e autoradio sincronizzati, si sentono da dove sei |
+| `aurea_animali` | Adozione, fame, affetto, comandi, anagrafe canina |
 
 ### `[italia]`
 
@@ -147,6 +161,24 @@ fivem-italia/
 | `ita_droga` | Purezza, coltivazione curata, laboratori, taglio a massa costante, piazze con vedetta, overdose, narcotest |
 | `ita_furti` | Effrazione per fascia, allarme, avviamento a ponte, blocco motore, antifurto satellitare, targhe, autodemolizione su commessa |
 | `ita_cayo` | Punta Corvo: ricognizione fotografica, tre vie d'accesso, infiltrazione a fasi, contatore di sospetto, rientro sorvegliato |
+| `ita_autoscuola` | Quiz veri sul Codice della Strada ed esame di guida su percorso, con bocciatura |
+| `ita_poste` | Lettere, raccomandate A/R, pacchi, pagamento dei bollettini |
+| `ita_farmacia` | Farmaci da banco e con ricetta, ticket sanitario, prescrizioni del medico |
+| `ita_trasporti` | Linee di autobus, fermate, biglietti da obliterare, controllori |
+| `ita_ristorazione` | Comande, cucina, servizio al tavolo; il fatto a mano nutre di più |
+| `ita_sosta` | Strisce blu, parcometri, pass residenti, ausiliari del traffico |
+| `ita_tribunale` | Patteggiamento, rito abbreviato, dibattimento, difensore, sentenza |
+| `ita_funebri` | Morte definitiva su richiesta, cerimonia, successione, cimitero |
+
+### `[lavori]`
+
+| Risorsa | Che cosa fa |
+|---|---|
+| `lav_camionista` | Trasporto su lunga distanza: il carico si rovina se guidi male |
+| `lav_netturbino` | Giri di raccolta, bonus di squadra, isola ecologica, differenziata |
+| `lav_benzinaio` | I serbatoi dei distributori si svuotano davvero e vanno riempiti |
+| `lav_elettricista` | Guasti che lasciano al buio una zona, per tutti |
+| `lav_corriere` | Consegne su indirizzi veri, bonus se il destinatario ritira di persona |
 
 ### `[admin]`
 
@@ -155,6 +187,10 @@ fivem-italia/
 | `aurea_admin` | Sanzioni, segnalazioni, modalità staff, noclip |
 | `aurea_anticheat` | Punteggio di sospetto, protezione eventi ed entità, integrità risorse |
 | `aurea_logs` | Recapito su Discord con accodamento e limitazione di frequenza |
+| `aurea_whitelist` | Candidatura compilabile in gioco e revisione dello staff |
+| `aurea_supporto` | Ticket con conversazione che resta agli atti |
+| `aurea_regolamento` | Regole consultabili e tutorial del primo accesso |
+| `aurea_metriche` | Presenze, massa monetaria, erario, allarmi di inflazione |
 
 ---
 
@@ -223,6 +259,14 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/commessa` | Cosa cerca l'autodemolizione in questo momento |
 | `/puntacorvo` `/ricognizione` `/colpo` | Il colpo all'isola |
 | `/consegnamastro` | Consegna il libro mastro a un pubblico ufficiale |
+| `Tasto destro (tenuto)` | Terzo occhio: punta una cosa e agisci |
+| `F5` | Interazioni con chi hai davanti |
+| `ESC` | Menu di pausa: personaggio, regole, comandi, uscita |
+| `/regolamento` `/ticket` | Regole e supporto |
+| `/poste` `/musica` `/animale` | Sportello postale, stereo, animale domestico |
+| `/soccorso` | Chiama il carro attrezzi |
+| `/forma` `/scommesse` | Forma fisica e agenzia scommesse |
+| `/comande` | Comande del locale in cui lavori |
 
 ### Servizio (forze dell'ordine, 118, VVF)
 
@@ -246,6 +290,14 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/controllotelaio` | Verifica se un veicolo è provento di furto |
 | `/istanze` | Istanze in esame agli uffici comunali (personale del Comune) |
 | `/redazione` | Redazione, rettifiche, dirette (giornalisti) |
+| `/ricetta` | Prescrivi un farmaco (medico) |
+| `/udienza` `/processi` | Apri un'udienza e seguila (magistratura) |
+| `/controllosos` | Verifica il titolo di sosta (ausiliari) |
+| `/controllobiglietti` | Controllo dei titoli di viaggio |
+| `/interventi` `/riparasulposto` | Soccorso stradale |
+| `/guasti` | Guasti alla rete elettrica |
+| `/ticketaperti` `/candidature` | Supporto e whitelist (staff) |
+| `/metriche` | Stato del server (admin) |
 
 ### Staff
 
