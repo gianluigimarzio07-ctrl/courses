@@ -124,10 +124,30 @@ end
 --  Mutazione
 -- ---------------------------------------------------------------------------
 
+--- Due metadata sono uguali se hanno le stesse chiavi con gli stessi valori.
+--- Il confronto è a un livello: nei metadata non mettiamo strutture annidate
+--- proprio perché devono restare confrontabili.
+function Contenitore.MetadataUguali(a, b)
+    local vuotoA = a == nil or next(a) == nil
+    local vuotoB = b == nil or next(b) == nil
+    if vuotoA and vuotoB then return true end
+    if vuotoA ~= vuotoB then return false end
+
+    for chiave, valore in pairs(a) do
+        if type(valore) == 'table' then return false end
+        if b[chiave] ~= valore then return false end
+    end
+    for chiave in pairs(b) do
+        if a[chiave] == nil then return false end
+    end
+    return true
+end
+
 --- Aggiunge un oggetto. Restituisce (ok, motivo).
 ---@param nome string
 ---@param quantita integer
----@param metadata table|nil  se presente l'item diventa un'istanza a sé
+---@param metadata table|nil  distingue le istanze: pile con metadata diversi
+---                           restano separate, con metadata uguali si fondono
 function Contenitore:Aggiungi(nome, quantita, metadata, slotDesiderato)
     local dati = AUREA.Item[nome]
     if not dati then return false, 'Oggetto sconosciuto.' end
@@ -139,12 +159,15 @@ function Contenitore:Aggiungi(nome, quantita, metadata, slotDesiderato)
         return false, 'Peso massimo superato.'
     end
 
-    local impilabile = dati.impilabile and not dati.unico and metadata == nil
+    local impilabile = dati.impilabile and not dati.unico
 
     if impilabile then
-        -- si prova prima ad accumulare su una pila esistente
+        -- Si accumula su una pila esistente con gli STESSI metadata: due dosi
+        -- della stessa sostanza e della stessa purezza sono la stessa cosa e
+        -- devono stare nello stesso slot, mentre purezze diverse restano
+        -- distinte perché valgono prezzi diversi.
         for _, riga in ipairs(self.item) do
-            if riga.nome == nome and (riga.metadata == nil or next(riga.metadata) == nil) then
+            if riga.nome == nome and Contenitore.MetadataUguali(riga.metadata, metadata) then
                 riga.quantita = riga.quantita + quantita
                 self.sporco = true
                 return true

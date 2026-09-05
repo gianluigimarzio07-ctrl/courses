@@ -7,7 +7,10 @@ author      'AUREA · Italia Roleplay'
 description 'Animazioni, emote con oggetti, andature e azioni condivise'
 version     '1.0.0'
 
-shared_scripts { 'config.lua' }
+shared_scripts {
+    '@aurea_core/bridge/aurea.lua',
+    'config.lua',
+}
 client_scripts { 'client/main.lua' }
 server_scripts { 'server/main.lua' }
 

@@ -165,6 +165,41 @@ I('sostanza_raffinata',{ etichetta = 'Sostanza raffinata', peso = 25, categoria 
 I('documento_falso',  { etichetta = 'Documento contraffatto', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'illegale' })
 I('targa_clonata',    { etichetta = 'Targa clonata', peso = 300, impilabile = false, unico = true, usabile = true, categoria = 'illegale' })
 
+-- Sostanze: ogni unità porta nei metadata la sostanza e la sua purezza
+I('infiorescenza',    { etichetta = 'Infiorescenza', peso = 20, categoria = 'illegale', descrizione = 'Cannabis raccolta. La purezza è il tenore di principio attivo.' })
+I('hashish',          { etichetta = 'Hashish', peso = 18, categoria = 'illegale', usabile = true })
+I('cocaina',          { etichetta = 'Cocaina', peso = 12, categoria = 'illegale', usabile = true })
+I('eroina',           { etichetta = 'Eroina', peso = 12, categoria = 'illegale', usabile = true })
+I('mdma',             { etichetta = 'MDMA', peso = 10, categoria = 'illegale', usabile = true })
+I('erba',             { etichetta = 'Marijuana', peso = 15, categoria = 'illegale', usabile = true })
+
+-- Materie prime e precursori
+I('pasta_base',       { etichetta = 'Pasta base di coca', peso = 40, categoria = 'illegale', descrizione = 'Non si produce qui: arriva via mare.' })
+I('oppio_grezzo',     { etichetta = 'Oppio grezzo', peso = 40, categoria = 'illegale' })
+I('precursori',       { etichetta = 'Precursori chimici', peso = 350, categoria = 'illegale', descrizione = 'Sostanze tabellate. Il possesso va giustificato.' })
+I('solvente',         { etichetta = 'Solvente', peso = 500, categoria = 'illegale' })
+
+-- Sostanze da taglio: aumentano la quantità, abbassano la purezza
+I('mannitolo',        { etichetta = 'Mannitolo', peso = 25, categoria = 'illegale', descrizione = 'Sostanza da taglio. Inerte, e proprio per questo insospettabile.' })
+I('lattosio',         { etichetta = 'Lattosio', peso = 25, categoria = 'illegale' })
+I('caffeina',         { etichetta = 'Caffeina', peso = 20, categoria = 'illegale' })
+
+-- Attrezzatura
+I('bilancino',        { etichetta = 'Bilancino di precisione', peso = 300, impilabile = false, unico = true, usabile = true, categoria = 'illegale' })
+I('narcotest',        { etichetta = 'Kit narcotest', peso = 80, usabile = true, categoria = 'servizio', descrizione = 'Reattivo per l\'analisi speditiva delle sostanze.' })
+I('centralina',       { etichetta = 'Centralina clonata', peso = 400, impilabile = false, unico = true, usabile = true, categoria = 'illegale', descrizione = 'Aggira il blocco motore dei veicoli recenti.' })
+I('spadino',          { etichetta = 'Spadino elettronico', peso = 250, impilabile = false, unico = true, usabile = true, categoria = 'illegale', descrizione = 'Apre le serrature senza lasciare segni di scasso.' })
+I('antifurto',        { etichetta = 'Antifurto satellitare', peso = 200, usabile = true, categoria = 'elettronica', descrizione = 'Da installare sul veicolo. Segnala dove finisce.' })
+I('tronchesi',        { etichetta = 'Tronchesi', peso = 1100, usabile = true, categoria = 'attrezzi' })
+I('muta',             { etichetta = 'Muta subacquea', peso = 3500, impilabile = false, unico = true, usabile = true, categoria = 'attrezzi' })
+I('esplosivo',        { etichetta = 'Carica esplosiva', peso = 2200, impilabile = false, unico = true, usabile = true, categoria = 'illegale' })
+I('fotocamera',       { etichetta = 'Fotocamera', peso = 700, impilabile = false, unico = true, usabile = true, categoria = 'elettronica' })
+
+-- Refurtiva del colpo all'isola
+I('lingotto',         { etichetta = 'Lingotto d\'oro', peso = 12000, categoria = 'illegale' })
+I('quadro',           { etichetta = 'Dipinto d\'autore', peso = 4000, impilabile = false, unico = true, categoria = 'illegale' })
+I('contabilita',      { etichetta = 'Libro mastro del clan', peso = 800, impilabile = false, unico = true, usabile = true, categoria = 'illegale', descrizione = 'Nomi, cifre, date. Vale molto per chi lo compra e ancora di più per chi indaga.' })
+
 -- ---------------------------------------------------------------------------
 --  ATTREZZI E VARIE
 -- ---------------------------------------------------------------------------

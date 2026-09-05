@@ -43,6 +43,39 @@ decide sul serio: la quota di addizionale comunale che resta al Comune
 invece di andare allo Stato, la TARI iscritta a ruolo su ogni immobile, le
 fasce orarie della ZTL, l'importo del sussidio di disoccupazione.
 
+**La droga è un problema di aritmetica.** Ogni dose porta con sé una
+purezza da 0 a 100, e da quel numero dipende tutto: il prezzo, il reato
+contestato, l'effetto su chi la usa. Tagliare moltiplica la merce e abbassa
+la purezza — il principio attivo si conserva, dieci dosi al 90% più dieci
+parti di mannitolo fanno venti dosi al 45% — ma sotto una soglia i clienti
+rifiutano e la piazza si brucia. Non tagliare lascia una purezza che il
+consumatore non regge, e un morto per overdose non è più spaccio: è
+l'art. 586 c.p. Il narcotest delle forze dell'ordine legge quel numero e
+decide se il fatto è di lieve entità o no.
+
+**Le piazze si tengono in due.** Su una piazza di spaccio si può lavorare
+da soli, ma male. Con una vedetta appostata al suo posto i prezzi salgono
+del 25%, il rischio di finire davanti a un agente sotto copertura si
+dimezza, e chi fa il palo vede arrivare le volanti prima degli altri — e
+prende il 20% di quello che si vende.
+
+**Rubare un'auto è una catena, non un tasto.** Serratura, allarme,
+ponticello, blocco motore: quattro passaggi, ognuno con il suo rumore. E
+quello che rubi è di qualcuno: se ha montato l'antifurto satellitare, il
+proprietario vede dove sei, e dopo quattro minuti lo vede anche la centrale.
+L'autodemolizione lavora su commessa — ogni ora chiede un tipo di mezzo e
+lo paga il doppio — ed è quella richiesta a decidere cosa vale la pena
+rubare stasera.
+
+**C'è un'isola, e sopra c'è un latitante.** Il colpo a Punta Corvo è la
+cosa più lunga che si può fare: ci vai in incognito a fotografare, e ogni
+foto apre un'opzione; scegli come entrare fra mare, cielo e container;
+isoli la torre radio, stacchi il quadro, apri il caveau. Un contatore di
+sospetto sale da solo mentre sei lì e schizza a ogni cosa che rompi: a
+cento la villa si chiude e il colpo salta. Il bottino principale è il libro
+mastro della cosca, e lì c'è la scelta vera — venderlo al ricettatore, o
+consegnarlo a un pubblico ufficiale e far arrivare quei nomi in Procura.
+
 **La cronaca esiste.** La testata pubblica, tutti leggono in edicola o dal
 telefono, e chi viene raccontato male ha gli strumenti che gli dà la legge
 italiana: la rettifica ex art. 8 legge 47/1948 — che se la redazione non
@@ -109,8 +142,11 @@ fivem-italia/
 | `ita_comune` | Anagrafe, residenza, matrimoni civili con regime patrimoniale, divorzio, elezioni comunali, leve del sindaco |
 | `ita_media` | Testata giornalistica: cronaca, archivio, rettifiche, querele, dirette televisive, inserzioni |
 | `ita_attivita` | Pesca con taglie minime, caccia a stagione aperta e carniere, cava, raccolta di funghi e tartufi, licenze |
-| `ita_illegale` | Coltivazione, raffinazione in laboratorio, spaccio con agenti sotto copertura, smontaggio, mercato nero itinerante |
+| `ita_illegale` | Mercato nero itinerante: attrezzatura, precursori e armi senza matricola, solo in contanti non tracciati |
 | `ita_rapine` | Colpi a scaglioni, dal negozio all'istituto di credito, praticabili solo con abbastanza agenti in servizio |
+| `ita_droga` | Purezza, coltivazione curata, laboratori, taglio a massa costante, piazze con vedetta, overdose, narcotest |
+| `ita_furti` | Effrazione per fascia, allarme, avviamento a ponte, blocco motore, antifurto satellitare, targhe, autodemolizione su commessa |
+| `ita_cayo` | Punta Corvo: ricognizione fotografica, tre vie d'accesso, infiltrazione a fasi, contatore di sospetto, rientro sorvegliato |
 
 ### `[admin]`
 
@@ -177,6 +213,11 @@ mysql -u root -p aurea < sql/02_dati_iniziali.sql
 | `/colpi` | Stato dei bersagli e agenti in servizio |
 | `/miearmi` `/portoarmi` | Le tue armi registrate e il titolo di porto |
 | `/licenze` | Pesca, caccia, raccolta |
+| `/pianta` `/taglia` | Coltivazione e taglio delle sostanze |
+| `/antifurto` `/cambiotarga` `/staccaantifurto` | Antifurto satellitare e targhe |
+| `/commessa` | Cosa cerca l'autodemolizione in questo momento |
+| `/puntacorvo` `/ricognizione` `/colpo` | Il colpo all'isola |
+| `/consegnamastro` | Consegna il libro mastro a un pubblico ufficiale |
 
 ### Servizio (forze dell'ordine, 118, VVF)
 
@@ -196,6 +237,8 @@ mysql -u root -p aurea < sql/02_dati_iniziali.sql
 | `/controlloarmi` | Armi registrate e titolo di porto del soggetto |
 | `/controllomodifiche` `/verbalemodifiche` | Elaborazioni non omologate, art. 78 CdS |
 | `/controllolicenze` | Licenze di pesca, caccia e raccolta |
+| `/narcotest` | Analisi speditiva delle sostanze e scelta del capo d'imputazione |
+| `/controllotelaio` | Verifica se un veicolo è provento di furto |
 | `/istanze` | Istanze in esame agli uffici comunali (personale del Comune) |
 | `/redazione` | Redazione, rettifiche, dirette (giornalisti) |
 
@@ -223,6 +266,13 @@ mysql -u root -p aurea < sql/02_dati_iniziali.sql
   sempre il `source` come primo parametro. Nessun `citizenid` arrivato dal
   client viene mai considerato valido.
 - **I webhook non stanno nel codice**: si leggono dalle convar di `server.cfg`.
+- **Le globali non attraversano le risorse.** In FiveM ogni risorsa ha il
+  suo stato Lua. Il framework arriva ovunque con un ponte: `aurea_core`
+  espone la propria tabella e ogni altra risorsa la aggancia caricando
+  `'@aurea_core/bridge/aurea.lua'` come primo `shared_script`. Fra risorse
+  Lua il valore passa per riferimento, quindi arrivano anche i metodi
+  dell'oggetto Giocatore. Una risorsa nuova che usa `AUREA` deve caricare
+  quel file e dichiarare `aurea_core` fra le `dependencies`.
 - **L'ordine di avvio in `server.cfg` è un ordinamento topologico** delle
   `dependencies` dichiarate nei manifest. Se aggiungi un modulo che usa gli
   export di un altro, dichiaralo e inseriscilo dopo di quello.

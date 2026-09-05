@@ -65,6 +65,20 @@ local function esciDaIncoscienza(salute, ticket)
     end
 end
 
+--- Fa perdere conoscenza per una causa che non è un trauma: overdose,
+--- intossicazione, malore. Il chiamante dice perché, il resto è identico.
+RegisterNetEvent('med:abbatti', function(causa)
+    if incosciente then return end
+    entraInIncoscienza()
+
+    if causa then
+        exports.aurea_ui:Notifica({
+            tipo = 'errore', icona = '☠', durata = 15000,
+            titolo = 'Malore', testo = causa,
+        })
+    end
+end)
+
 -- Sostituisce la morte con l'incoscienza
 CreateThread(function()
     while true do

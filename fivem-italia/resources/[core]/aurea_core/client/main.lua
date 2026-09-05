@@ -66,6 +66,13 @@ exports('GetPG', AUREA.GetPG)
 exports('EInServizio', AUREA.EInServizio)
 exports('HaLavoro', AUREA.HaLavoro)
 
+--- La tabella del framework, per le altre risorse.
+--- Passa per riferimento fra risorse Lua: chi la riceve ha i metodi
+--- dell'oggetto Giocatore e la tabella viva dei connessi, non una copia.
+--- Si aggancia con '@aurea_core/bridge/aurea.lua'.
+exports('Aurea', function() return AUREA end)
+
+
 -- ---------------------------------------------------------------------------
 --  Utilità grafiche riusabili
 -- ---------------------------------------------------------------------------

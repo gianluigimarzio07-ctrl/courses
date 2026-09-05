@@ -7,7 +7,10 @@ author      'AUREA · Italia Roleplay'
 description 'Centro per l Impiego, turni, missioni di lavoro e officina'
 version     '1.0.0'
 
-shared_scripts { 'config.lua' }
+shared_scripts {
+    '@aurea_core/bridge/aurea.lua',
+    'config.lua',
+}
 client_scripts { 'client/main.lua', 'client/missioni.lua' }
 server_scripts { '@oxmysql/lib/MySQL.lua', 'server/main.lua' }
 

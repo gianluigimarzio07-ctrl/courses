@@ -58,6 +58,24 @@ end
 
 exports('CaloreOrganizzazione', Famiglie.Calore)
 
+--- Chi controlla un territorio, e con quanta presa. Serve a chi vuole sapere
+--- se sta lavorando in casa propria: le piazze di spaccio rendono di più
+--- dove l'organizzazione ha già il controllo.
+---@return string|nil tag, integer controllo 0-100
+function Famiglie.ControlloTerritorio(codice)
+    local riga = MySQL.single.await([[
+        SELECT o.tag, t.controllo
+        FROM territori t JOIN organizzazioni o ON o.id = t.org_id
+        WHERE t.codice = ? AND o.attiva = 1
+    ]], { codice })
+    if not riga then return nil, 0 end
+    return riga.tag, tonumber(riga.controllo) or 0
+end
+
+exports('ControllaTerritorio', function(codice)
+    return (Famiglie.ControlloTerritorio(codice))
+end)
+
 -- Raffreddamento periodico
 CreateThread(function()
     while true do

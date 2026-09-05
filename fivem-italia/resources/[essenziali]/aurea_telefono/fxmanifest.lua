@@ -15,6 +15,10 @@ files {
     'html/app.js',
 }
 
+shared_scripts {
+    '@aurea_core/bridge/aurea.lua',
+}
+
 client_scripts { 'client/main.lua' }
 server_scripts { '@oxmysql/lib/MySQL.lua', 'server/main.lua' }
 

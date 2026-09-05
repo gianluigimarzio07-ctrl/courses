@@ -7,7 +7,10 @@ author      'AUREA · Italia Roleplay'
 description 'Immobili: acquisto, affitto, chiavi, deposito e interni istanziati'
 version     '1.0.0'
 
-shared_scripts { 'config.lua' }
+shared_scripts {
+    '@aurea_core/bridge/aurea.lua',
+    'config.lua',
+}
 client_scripts { 'client/main.lua' }
 server_scripts { '@oxmysql/lib/MySQL.lua', 'server/main.lua' }
 

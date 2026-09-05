@@ -280,6 +280,30 @@ popolate non recupera i dati già corrotti.
 **`Unknown table 'articoli'` (o `armi`, `matrimoni`, `licenze`, `completi`).**
 Manca la migrazione: esegui `sql/03_espansione.sql`.
 
+**`attempt to index a nil value (global 'AUREA')` all'avvio.**
+Quella risorsa non carica il ponte del framework. Il suo `fxmanifest.lua`
+deve avere `'@aurea_core/bridge/aurea.lua'` come PRIMO `shared_script` e
+`aurea_core` fra le `dependencies`.
+
+**Nessuno riesce a vendere la droga.**
+Guarda la purezza con `/taglia`: sotto la soglia minima della sostanza i
+clienti rifiutano e la partita è invendibile. Sopra la soglia letale, invece,
+si vende benissimo ma si rischia di ammazzare il cliente — e allora non è
+più spaccio, è l'art. 586 c.p. Le soglie stanno in `ita_droga/config.lua`.
+
+**Le auto non si aprono mai.**
+Serve un grimaldello (rozzo, si spezza) o uno spadino (pulito, costoso), e la
+difficoltà scala con la fascia del veicolo. Le sportive hanno anche il blocco
+motore: senza centralina clonata non partono comunque. Tutto in
+`ita_furti/config.lua`.
+
+**Il colpo a Punta Corvo non parte.**
+Servono tre condizioni insieme: i quattro sopralluoghi obbligatori fatti da
+meno di 90 minuti, da 3 a 6 persone tutte entro 40 metri da chi organizza, e
+l'attrezzatura obbligatoria addosso a chi organizza. `/puntacorvo` dice quale
+manca. Le coordinate dell'isola sono quelle del DLC Cayo Perico e vanno
+rifinite in gioco.
+
 **Le rapine non partono mai.**
 È voluto. Ogni bersaglio richiede un numero minimo di agenti in servizio —
 due per un esercizio, sei per un istituto di credito. Con `/colpi` si vede

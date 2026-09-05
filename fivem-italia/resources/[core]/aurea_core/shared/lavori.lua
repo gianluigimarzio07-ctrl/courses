@@ -2,8 +2,8 @@
     AUREA · Lavori e gerarchie
 
     Ogni lavoro ha gradi progressivi con stipendio orario (in centesimi) e
-    permessi. I permessi sono stringhe verificate lato server con
-    AUREA.HaPermessoLavoro(src, 'permesso').
+    permessi. I permessi sono stringhe verificate lato server sull'oggetto
+    Giocatore, con g:HaPermessoLavoro('permesso').
 ]]
 
 AUREA = AUREA or {}

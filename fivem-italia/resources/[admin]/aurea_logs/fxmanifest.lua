@@ -7,6 +7,10 @@ author      'AUREA · Italia Roleplay'
 description 'Recapito dei log su Discord con accodamento e limitazione di frequenza'
 version     '1.0.0'
 
+shared_scripts {
+    '@aurea_core/bridge/aurea.lua',
+}
+
 server_scripts { '@oxmysql/lib/MySQL.lua', 'server/main.lua' }
 
 dependencies {
