@@ -165,13 +165,13 @@ Vedi **[docs/INSTALLAZIONE.md](docs/INSTALLAZIONE.md)** per la procedura complet
 In breve:
 
 ```bash
-# 1. Database
+# 1. Risorse di sistema di FiveM e oxmysql — una volta sola
+./installa.sh          # su Windows: installa.bat
+
+# 2. Database
 mysql -u root -p -e "CREATE DATABASE aurea CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 mysql -u root -p aurea < sql/01_schema.sql
 mysql -u root -p aurea < sql/02_dati_iniziali.sql
-
-# 2. Dipendenza esterna
-#    scarica oxmysql in resources/ da github.com/overextended/oxmysql
 
 # 3. Configurazione
 #    modifica server.cfg: stringa di connessione, licenza, license del fondatore
@@ -179,6 +179,11 @@ mysql -u root -p aurea < sql/02_dati_iniziali.sql
 # 4. Avvio
 ./run.sh +exec server.cfg
 ```
+
+Il passo 1 non è saltabile: `mapmanager`, `chat`, `spawnmanager`,
+`sessionmanager`, `basic-gamemode`, `hardcap` e `oxmysql` non appartengono ad
+AUREA e non stanno nel pacchetto. Senza, il server si ferma su
+`Couldn't find resource oxmysql` e non parte nulla.
 
 ---
 

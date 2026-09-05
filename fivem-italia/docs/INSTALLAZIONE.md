@@ -54,18 +54,45 @@ EXISTS`, quindi rieseguirlo non fa danni.
 
 ---
 
-## 3. Dipendenza esterna
+## 3. Quello che AUREA non contiene
 
-AUREA usa **oxmysql** come unico strato di accesso al database.
+Nella cartella di AUREA mancano due cose, e non per dimenticanza: non sono
+sue e non si possono ridistribuire dentro il pacchetto.
+
+1. **Le risorse di sistema di FiveM** — `mapmanager`, `chat`, `spawnmanager`,
+   `sessionmanager`, `basic-gamemode`, `hardcap`. Stanno in
+   [cfx-server-data](https://github.com/citizenfx/cfx-server-data).
+2. **oxmysql**, l'unico strato di accesso al database che AUREA usa, e serve
+   la **release già compilata**: il repository sorgente da solo non funziona.
+
+Le scarica entrambe lo script incluso. Va lanciato una volta sola, dentro la
+cartella di AUREA:
 
 ```bash
-cd resources
-git clone https://github.com/overextended/oxmysql.git
-# oppure scarica la release compilata: oxmysql richiede la build, non i sorgenti
+# Linux / macOS
+chmod +x installa.sh
+./installa.sh
 ```
 
-Scarica la **release già compilata** dalla pagina dei rilasci: il repository
-sorgente da solo non funziona.
+```bat
+REM Windows — doppio clic, oppure da prompt
+installa.bat
+```
+
+Non tocca nulla di AUREA: se una risorsa c'è già, la salta. Alla fine
+controlla che tutte e sette le risorse ci siano e te lo dice.
+
+Se preferisci farlo a mano:
+
+```bash
+# risorse di sistema
+curl -L https://github.com/citizenfx/cfx-server-data/archive/refs/heads/master.zip -o cfx.zip
+unzip cfx.zip && cp -R cfx-server-data-master/resources/* resources/
+
+# oxmysql (release compilata, non i sorgenti)
+curl -L https://github.com/overextended/oxmysql/releases/latest/download/oxmysql.zip -o ox.zip
+unzip ox.zip -d resources/oxmysql
+```
 
 ---
 
@@ -276,6 +303,23 @@ Con il server vuoto il listino resta fermo, ed è corretto che sia così.
 **Accenti sbagliati nei nomi.**
 Il database non è in `utf8mb4`. Va ricreato: cambiare charset a tabelle già
 popolate non recupera i dati già corrotti.
+
+**`Couldn't find resource oxmysql` e poi tutto a cascata.**
+Questo è il primo errore che vedrai se salti il passo 3. `aurea_core` dipende
+da oxmysql, e tutto il resto dipende da `aurea_core`: manca una risorsa e non
+parte niente. Lancia `./installa.sh` (o `installa.bat`) e riavvia.
+
+**`Couldn't find resource mapmanager` / `chat` / `spawnmanager` / `hardcap`.**
+Stessa causa: mancano le risorse di sistema di FiveM. Le scarica lo stesso
+script. In alternativa, la strada canonica di FiveM è partire da
+cfx-server-data e mettere la cartella di AUREA dentro il suo `resources/`.
+
+**`No such command sv_projectDesc` oppure `No such command locale`.**
+Sono avvisi innocui e non impediscono l'avvio: quel comando non esiste nella
+build di FXServer che stai usando. Se ti danno fastidio commenta la riga in
+`server.cfg`, ma la cosa più utile è aggiornare gli artifacts a una versione
+recente — `sv_enforceGameBuild 3095` in `server.cfg` presuppone una build
+moderna.
 
 **`Unknown table 'articoli'` (o `armi`, `matrimoni`, `licenze`, `completi`).**
 Manca la migrazione: esegui `sql/03_espansione.sql`.
