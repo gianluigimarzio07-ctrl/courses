@@ -166,6 +166,18 @@ exports('Ha', function(nome, quantita)
     return totale >= (quantita or 1)
 end)
 
+--- Le righe di un oggetto, metadata comprese: serve a chi deve mostrare
+--- un elenco (i reperti della Scientifica, le ricette del banco da lavoro)
+--- senza fare un giro sul server per compilare un menu.
+exports('Righe', function(nome)
+    local out = {}
+    if not mioInventario then return out end
+    for _, i in ipairs(mioInventario.item) do
+        if i.nome == nome then out[#out + 1] = i end
+    end
+    return out
+end)
+
 -- ---------------------------------------------------------------------------
 --  Oggetti a terra
 -- ---------------------------------------------------------------------------

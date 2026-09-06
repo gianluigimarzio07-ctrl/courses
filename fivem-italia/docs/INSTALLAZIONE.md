@@ -46,12 +46,16 @@ Se invece hai già un database della prima versione, esegui anche:
 ```bash
 mysql -u aurea -p aurea < sql/03_espansione.sql
 mysql -u aurea -p aurea < sql/04_servizi.sql
+mysql -u aurea -p aurea < sql/05_indagini.sql
 ```
 
 Aggiungono le tabelle dei moduli introdotti dopo — armadio dei completi,
 registro delle armi e porto d'armi, licenze di pesca e caccia, stato civile
-ed elezioni comunali, testata giornalistica. Usa `CREATE TABLE IF NOT
-EXISTS`, quindi rieseguirlo non fa danni.
+ed elezioni comunali, testata giornalistica, poi animali, poste, scommesse,
+sosta, supporto, whitelist e onoranze funebri, e infine banca dati
+biometrica, reperti, matricola e colloqui del carcere, riscontri
+diagnostici, casse degli enti e fermi immagine. Usano `CREATE TABLE IF NOT
+EXISTS` e `ADD COLUMN IF NOT EXISTS`, quindi rieseguirli non fa danni.
 
 ---
 
@@ -281,6 +285,43 @@ WHERE canale = 'anticheat' AND momento > DATE_SUB(NOW(), INTERVAL 7 DAY)
 GROUP BY citizenid ORDER BY 2 DESC LIMIT 10;
 ```
 
+### Copie di sicurezza
+
+Sono due cose diverse e servono tutte e due.
+
+**Il backup vero lo fa `mysqldump`, dal sistema operativo.** È quello che
+salva il server se il disco muore, e AUREA non può farlo da dentro FiveM.
+Mettilo in cron, con una copia fuori dalla macchina:
+
+```bash
+# /etc/cron.d/aurea-backup — ogni notte alle 4
+0 4 * * * aurea mysqldump --single-transaction --quick \
+  -u aurea -p'password' aurea | gzip > /var/backup/aurea-$(date +\%F).sql.gz
+
+# e tieni solo gli ultimi 14 giorni
+30 4 * * * aurea find /var/backup -name 'aurea-*.sql.gz' -mtime +14 -delete
+```
+
+`--single-transaction` fa la copia senza bloccare le tabelle InnoDB: il
+server può restare acceso. La password sulla riga di comando si vede in
+`ps`: se la cosa ti preoccupa, mettila in `~/.my.cnf` con permessi `600` e
+togli `-p` dal comando.
+
+**Le istantanee di `aurea_backup` sono l'altra cosa.** Ogni 30 minuti
+scrivono in `resources/[admin]/aurea_backup/copie/` un JSON con
+personaggi, conti, veicoli, inventari, imprese, immobili, armi, patenti,
+casellario, mutui e organizzazioni. Se ne tengono 24, cioè mezza giornata,
+riscrivendo a rotazione. Servono a rispondere in un minuto a "mi è sparita
+la macchina" o "avevo cinquantamila euro in banca", che con un dump di
+quindici ore prima si risolvono male.
+
+Si consultano in gioco con `/backups` (serve il gruppo `admin`; per leggere
+il contenuto di una copia serve `gestore`, perché sono dati personali di
+tutti). Una copia si può forzare con `/backup`, anche da console.
+
+La cartella `copie/` ha un `.gitignore` che esclude i JSON: non
+committarli mai, contengono i dati dei giocatori.
+
 ---
 
 ## 11. Problemi frequenti
@@ -327,6 +368,10 @@ Manca la migrazione: esegui `sql/03_espansione.sql`.
 
 **`Unknown table 'ticket'` (o `animali`, `whitelist`, `corrispondenza`, `defunti`).**
 Manca la seconda migrazione: esegui `sql/04_servizi.sql`.
+
+**`Unknown table 'reperti'` (o `banca_dati_biometrica`, `carcere_matricola`,
+`riscontri`, `enti`, `telecamere_fermi`), oppure `Unknown column 'visto_il'`.**
+Manca la terza migrazione: esegui `sql/05_indagini.sql`.
 
 **`attempt to index a nil value (field 'aurea_target')`.**
 La risorsa che dà l'errore parte prima di `aurea_target`. Deve dichiararlo

@@ -815,6 +815,10 @@ local function consuma(g, riga)
     local purezza = DRO.Purezza(riga.metadata)
     local effetto = DRO.Consumo.effetti[idSostanza]
 
+    -- Quello che si assume resta nel sangue per un po', e un esame
+    -- tossicologico lo tira fuori anche molto dopo
+    TriggerEvent('aurea:ospedale:assunzione', g.citizenid, riga.nome)
+
     if effetto then
         for chiave, delta in pairs(effetto.stato) do
             g:VariaStato(chiave, delta)

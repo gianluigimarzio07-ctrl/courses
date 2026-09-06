@@ -22,6 +22,8 @@ local function apriGuasto(idCabina, causa)
     guasti[idCabina] = { tipo = tipo.id, aperto = os.time(), causa = causa }
 
     TriggerClientEvent('ele:blackout', -1, idCabina, true)
+    -- Senza corrente non funziona solo la luce: la videosorveglianza cade
+    TriggerEvent('aurea:elettricita:blackout', idCabina, true)
 
     exports.aurea_ui:NotificaLavoro(ELE.Lavoro, {
         tipo = 'avviso', icona = '⚡', durata = 16000,
@@ -41,6 +43,7 @@ local function apriGuasto(idCabina, causa)
         if guasti[idCabina] then
             guasti[idCabina] = nil
             TriggerClientEvent('ele:blackout', -1, idCabina, false)
+            TriggerEvent('aurea:elettricita:blackout', idCabina, false)
             exports.aurea_ui:NotificaLavoro(ELE.Lavoro, {
                 tipo = 'info', icona = '⚡', durata = 12000,
                 titolo = 'Guasto risolto da terzi',
@@ -141,6 +144,7 @@ AUREA.Callback.Registra('ele:concludiRiparazione', function(src, rispondi, idCab
 
     guasti[idCabina] = nil
     TriggerClientEvent('ele:blackout', -1, idCabina, false)
+    TriggerEvent('aurea:elettricita:blackout', idCabina, false)
 
     local paga = t.paga
     local ritenuta = math.floor(paga * 0.20)

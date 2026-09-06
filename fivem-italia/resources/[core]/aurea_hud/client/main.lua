@@ -190,6 +190,18 @@ RegisterNetEvent('aurea:hud:patente', function(punti)
     SendNUIMessage({ azione = 'patente', visibile = punti ~= nil, punti = punti })
 end)
 
+--- La portata della voce: quanto lontano ti sentono adesso.
+RegisterNetEvent('aurea:hud:voce', function(dati)
+    SendNUIMessage({
+        azione = 'voce',
+        portata = dati and dati.portata or nil,
+        nome = dati and dati.nome or nil,
+        icona = dati and dati.icona or nil,
+        metri = dati and dati.metri or 0,
+    })
+end)
+AddEventHandler('aurea:hud:voce', function() end)
+
 -- ---------------------------------------------------------------------------
 --  Visibilità
 -- ---------------------------------------------------------------------------

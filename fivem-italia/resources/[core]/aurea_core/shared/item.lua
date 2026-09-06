@@ -224,6 +224,14 @@ I('pasta_secca',      { etichetta = 'Pasta secca', peso = 500, categoria = 'cibo
 I('caffe_crudo',      { etichetta = 'Caffè in grani', peso = 250, categoria = 'materiali' })
 
 -- ---------------------------------------------------------------------------
+--  RILIEVI E SANITÀ  (Scientifica, ospedale)
+-- ---------------------------------------------------------------------------
+I('guanti',           { etichetta = 'Guanti in nitrile', peso = 20, usabile = false, categoria = 'sanita', descrizione = 'Chi li indossa non lascia impronte. Il DNA è un altro discorso.' })
+I('tampone_dna',      { etichetta = 'Tampone sterile', peso = 15, categoria = 'sanita', descrizione = 'Per il prelievo biologico sulla scena.' })
+I('reperto',          { etichetta = 'Reperto sigillato', peso = 120, impilabile = false, unico = true, usabile = true, categoria = 'servizio', descrizione = 'Va portato in laboratorio. Fuori dalla catena di custodia non vale niente.' })
+I('certificato_medico',{ etichetta = 'Certificato medico', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Idoneità psicofisica. Ha una scadenza e serve altrove.' })
+
+-- ---------------------------------------------------------------------------
 --  ATTREZZI E VARIE
 -- ---------------------------------------------------------------------------
 I('kit_riparazione',  { etichetta = 'Kit riparazione', peso = 2500, usabile = true, categoria = 'attrezzi' })

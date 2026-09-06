@@ -124,6 +124,16 @@ function aggiornaZtl(d) {
     : (d.attiva ? 'Varco attivo — transito sanzionabile' : 'Varco non attivo in questa fascia oraria');
 }
 
+function aggiornaVoce(d) {
+  const el = $('voce');
+  el.classList.toggle('oculto', !d.portata);
+  if (!d.portata) return;
+  el.className = `voce ${d.portata}`;
+  $('voce-icona').textContent = d.icona || '💬';
+  $('voce-nome').textContent = d.nome || '';
+  $('voce-metri').textContent = `${Math.round(d.metri || 0)} m`;
+}
+
 function aggiornaPatente(d) {
   const el = $('patente');
   el.classList.toggle('oculto', !d.visibile);
@@ -142,6 +152,7 @@ window.addEventListener('message', ({ data }) => {
     case 'cruscotto':   aggiornaCruscotto(data); break;
     case 'ztl':         aggiornaZtl(data); break;
     case 'patente':     aggiornaPatente(data); break;
+    case 'voce':        aggiornaVoce(data); break;
     case 'nascondiTutto':
       ['stato', 'portafoglio', 'cruscotto', 'limite', 'ztl', 'patente']
         .forEach((id) => $(id).classList.add('oculto'));

@@ -69,6 +69,12 @@ RegisterNetEvent('giu:ammanettato', function(stato)
     end
 end)
 
+--- Chi altro ha bisogno di sapere se un soggetto è in stato di fermo:
+--- la Scientifica, per il fotosegnalamento dell'art. 349 c.p.p.
+exports('EAmmanettato', function(citizenid)
+    return ammanettati[citizenid] ~= nil
+end)
+
 --- Accompagnamento coattivo: solo su soggetti già ammanettati e vicini.
 RegisterNetEvent('giu:trascinaRichiesta', function(bersaglioSrc)
     local src = source

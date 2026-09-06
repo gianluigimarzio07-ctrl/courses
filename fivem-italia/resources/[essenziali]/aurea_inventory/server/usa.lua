@@ -242,6 +242,12 @@ Usa.Registra('radio', function(g)
     return false
 end)
 
+--- Il disturbatore di frequenze: acceca le telecamere che ha intorno.
+Usa.Registra('jammer', function(g)
+    TriggerClientEvent('tvc:usaJammer', g.source)
+    return false
+end)
+
 --- Contenitori portatili: aprono un inventario secondario.
 for nome, dati in pairs(AUREA.Item) do
     if dati.contenitore then

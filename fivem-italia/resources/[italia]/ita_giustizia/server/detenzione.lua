@@ -29,6 +29,10 @@ function Detenzione.Avvia(giocatore, minuti, motivo, agente)
         minuti = minuti, motivo = motivo, agente = agente,
     })
 
+    -- L'ufficio matricola prende in carico il detenuto: effetti personali
+    -- in deposito, contanti sul peculio
+    TriggerEvent('aurea:carcere:ingresso', giocatore.citizenid, minuti, motivo)
+
     AUREA.Log('giustizia', 'avviso', giocatore, ('detenzione di %d minuti: %s'):format(minuti, motivo))
 end
 
@@ -51,6 +55,9 @@ function Detenzione.Rilascia(citizenid, motivo)
         TriggerClientEvent('giu:scarcerato', g.source, motivo or 'fine pena')
     end
 
+    -- Restituzione degli effetti personali e chiusura del peculio
+    TriggerEvent('aurea:carcere:uscita', citizenid, motivo or 'fine pena')
+
     AUREA.Log('giustizia', 'info', nil, ('%s scarcerato (%s)'):format(citizenid, motivo or 'fine pena'))
 end
 
@@ -66,6 +73,8 @@ function Detenzione.Stato(citizenid)
     if not s then return nil end
     return { totali = s.totali, scontati = s.scontati, residui = math.max(0, s.totali - s.scontati) }
 end
+
+exports('StatoDetenzione', Detenzione.Stato)
 
 -- ---------------------------------------------------------------------------
 --  Ripresa al rientro in gioco

@@ -115,6 +115,9 @@ fivem-italia/
 | `aurea_interazioni` | Manette, accompagnamento, perquisizione — e il diritto di rifiutare |
 | `aurea_pausa` | Menu ESC sostituito; l'uscita ha un'attesa che si allunga sotto custodia |
 | `aurea_caricamento` | Schermata di attesa che spiega come si gioca qui |
+| `aurea_porte` | Serrature governate dal server: chiavi per lavoro e per grado, autochiusura, scasso rumoroso e incerto |
+| `aurea_voce` | Tre portate della voce, radio su frequenze riservate per lavoro, banda libera |
+| `aurea_persistenza` | Il veicolo lasciato per strada resta dove l'hai lasciato, anche dopo un riavvio |
 
 ### `[essenziali]`
 
@@ -139,6 +142,9 @@ fivem-italia/
 | `aurea_scommesse` | Totalizzatore su eventi aperti dai giocatori: le quote le muove il denaro |
 | `aurea_musica` | Stereo e autoradio sincronizzati, si sentono da dove sei |
 | `aurea_animali` | Adozione, fame, affetto, comandi, anagrafe canina |
+| `aurea_ospedale` | Triage a codici, esami di laboratorio e diagnostica, cartella clinica, certificazioni di idoneità, riscontro diagnostico |
+| `aurea_azienda` | Gestione del personale: assunzioni, gradi, licenziamenti, cassa dell'ente, registro presenze |
+| `aurea_crafting` | Banchi da lavoro per attrezzi, elettronica e medicazioni, con smontaggio che restituisce materiale |
 
 ### `[italia]`
 
@@ -169,6 +175,8 @@ fivem-italia/
 | `ita_sosta` | Strisce blu, parcometri, pass residenti, ausiliari del traffico |
 | `ita_tribunale` | Patteggiamento, rito abbreviato, dibattimento, difensore, sentenza |
 | `ita_funebri` | Morte definitiva su richiesta, cerimonia, successione, cimitero |
+| `ita_scientifica` | Bossoli, sangue, impronte e residui sulla scena; banca dati biometrica alimentata dal fotosegnalamento; balistica e confronto in laboratorio |
+| `ita_carcere` | Peculio e deposito degli effetti, sopravvitto, lavoro retribuito, colloqui autorizzati, perquisizione e isolamento, evasione con attrezzi introdotti da fuori |
 
 ### `[lavori]`
 
@@ -191,6 +199,8 @@ fivem-italia/
 | `aurea_supporto` | Ticket con conversazione che resta agli atti |
 | `aurea_regolamento` | Regole consultabili e tutorial del primo accesso |
 | `aurea_metriche` | Presenze, massa monetaria, erario, allarmi di inflazione |
+| `aurea_telecamere` | Videosorveglianza urbana e penitenziaria: sale operative, brandeggio con fine corsa, fermi immagine agli atti, impianti che cadono col blackout |
+| `aurea_backup` | Istantanee periodiche dei dati che contano, con rotazione e consultazione in gioco |
 
 ---
 

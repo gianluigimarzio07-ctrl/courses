@@ -24,6 +24,11 @@ RegisterNetEvent('med:incosciente', function(stato)
             { x = coord.x, y = coord.y, z = coord.z },
             ('Persona a terra: %s'):format(g:NomeCompleto()), 'posizione trasmessa dal telefono')
 
+        -- Chi resta a terra sanguina, e il sangue è una traccia: la
+        -- Scientifica decide se ne resta abbastanza da poterla repertare
+        TriggerEvent('aurea:scientifica:traccia', 'sangue',
+            { x = coord.x, y = coord.y, z = coord.z }, g.citizenid)
+
         AUREA.Log('giustizia', 'info', g, 'ha perso conoscenza')
     else
         incoscienti[src] = nil

@@ -261,3 +261,23 @@ html, body {
 .patente-punti { font-size: 16px; font-weight: 750; color: var(--verde); font-variant-numeric: tabular-nums; }
 .patente.attenzione .patente-punti { color: var(--giallo); }
 .patente.critica .patente-punti { color: var(--rosso); }
+
+/* --------------------------------------------------------------------------
+   Portata della voce
+   -------------------------------------------------------------------------- */
+.voce {
+  position: absolute; right: 22px; top: 166px;
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 12px;
+  background: var(--vetro);
+  border: 1px solid var(--bordo);
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  font-size: 11px; color: var(--tenue);
+  transition: opacity .25s ease;
+}
+.voce-icona { font-size: 13px; }
+.voce-nome  { font-weight: 650; color: var(--chiaro, #e8e8e8); }
+.voce-metri { font-variant-numeric: tabular-nums; opacity: .7; }
+.voce.sussurro .voce-nome { color: var(--tenue); }
+.voce.grido    .voce-nome { color: var(--giallo); }
