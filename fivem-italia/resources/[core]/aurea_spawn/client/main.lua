@@ -81,6 +81,18 @@ local function apriSelezione()
     preparaScena()
 
     local dati = AUREA.Callback.Attendi('core:personaggi')
+
+    -- In modalità ESX la selezione la fa es_extended: aurea_spawn andrebbe
+    -- spento, ma se è rimasto acceso non deve almeno bloccare lo schermo.
+    if dati and dati.gestitoDaESX then
+        print('[aurea_spawn] Il server è in modalità ESX: la selezione personaggio la fa es_extended. '
+            .. 'Togli "ensure aurea_spawn" da server.cfg.')
+        inSelezione = false
+        ShutdownLoadingScreen()
+        DoScreenFadeIn(500)
+        return
+    end
+
     SetNuiFocus(true, true)
     SendNUIMessage({
         azione = 'apri',

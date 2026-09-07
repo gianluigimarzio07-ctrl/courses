@@ -261,18 +261,9 @@ end)
 -- ---------------------------------------------------------------------------
 --  Oggetti a terra
 -- ---------------------------------------------------------------------------
-AUREA.Callback.Registra('inv:getta', function(src, rispondi, slot, quantita)
-    local g = AUREA.GetPlayer(src)
-    if not g then return rispondi(false) end
-
-    local inv = inventarioDi(g.citizenid)
-    local riga = inv:GetSlot(slot)
-    if not riga then return rispondi(false, 'Slot vuoto.') end
-
-    quantita = math.min(math.max(1, math.floor(tonumber(quantita) or riga.quantita)), riga.quantita)
-
-    local posizione = GetEntityCoords(GetPlayerPed(src))
-
+--- Il mucchio a terra in quel punto: se non c'è, lo crea. Restituisce il
+--- contenitore, perché è quello che serve a chi ci deve mettere roba.
+local function mucchioIn(posizione)
     -- si cerca un mucchio già presente a meno di 1,5 m
     local idMucchio
     for id, m in pairs(mucchi) do
@@ -293,7 +284,32 @@ AUREA.Callback.Registra('inv:getta', function(src, rispondi, slot, quantita)
         mucchi[idMucchio].scadenza = os.time() + C.Inventario.duratsTerra * 60
     end
 
-    local terra = Contenitore.Carica('terra:' .. idMucchio, { tipo = 'terra', capienza = 20, pesoMax = 100000 })
+    return Contenitore.Carica('terra:' .. idMucchio,
+        { tipo = 'terra', capienza = 20, pesoMax = 100000 }), idMucchio
+end
+
+--- Lascia oggetti a terra senza che nessuno li abbia in tasca prima.
+--- Serve a chi genera bottino sul posto (e al ponte ESX, per i pickup).
+exports('Deposita', function(coord, nome, quantita, metadata)
+    if not AUREA.Item[nome] then return false end
+    local posizione = vector3(coord.x, coord.y, coord.z)
+    local terra = mucchioIn(posizione)
+    return (terra:Aggiungi(nome, math.max(1, math.floor(tonumber(quantita) or 1)), metadata))
+end)
+
+AUREA.Callback.Registra('inv:getta', function(src, rispondi, slot, quantita)
+    local g = AUREA.GetPlayer(src)
+    if not g then return rispondi(false) end
+
+    local inv = inventarioDi(g.citizenid)
+    local riga = inv:GetSlot(slot)
+    if not riga then return rispondi(false, 'Slot vuoto.') end
+
+    quantita = math.min(math.max(1, math.floor(tonumber(quantita) or riga.quantita)), riga.quantita)
+
+    local posizione = GetEntityCoords(GetPlayerPed(src))
+    local terra = mucchioIn(posizione)
+
     local ok, motivo = terra:Aggiungi(riga.nome, quantita, riga.metadata)
     if not ok then return rispondi(false, motivo) end
 

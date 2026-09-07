@@ -52,6 +52,12 @@ end
 
 AddEventHandler('playerConnecting', function(nomeUtente, _, deferrals)
     local src = source
+
+    -- In modalità ESX l'accesso lo governa es_extended: due flussi di
+    -- deferral in parallelo si bloccano a vicenda e il giocatore resta
+    -- appeso in connessione.
+    if C.Framework == 'esx' then return end
+
     deferrals.defer()
     Wait(0)
     deferrals.update(('Benvenuto su %s. Verifica dell\'accesso in corso...'):format(C.Server.nome))
@@ -107,6 +113,11 @@ end)
 -- ===========================================================================
 
 AUREA.Callback.Registra('core:personaggi', function(src, rispondi)
+    if C.Framework == 'esx' then
+        -- Il personaggio lo prepara aurea_esx a partire da esx:playerLoaded.
+        return rispondi({ personaggi = {}, slot = 0, gestitoDaESX = true })
+    end
+
     local sessione = sessioni[src]
     if not sessione then return rispondi({ personaggi = {}, slot = 0 }) end
 
@@ -207,6 +218,8 @@ end)
 
 --- Carica il personaggio e lo mette in gioco.
 AUREA.Callback.Registra('core:selezionaPersonaggio', function(src, rispondi, citizenid)
+    if C.Framework == 'esx' then return rispondi(nil) end
+
     local sessione = sessioni[src]
     if not sessione then return rispondi(nil) end
 
@@ -242,6 +255,14 @@ end)
 
 AddEventHandler('playerDropped', function(motivo)
     local src = source
+
+    -- In modalità ESX il salvataggio e lo scarico li fa aurea_esx, che sa
+    -- anche cosa NON salvare (il denaro, che è di ESX).
+    if C.Framework == 'esx' then
+        sessioni[src] = nil
+        return
+    end
+
     local g = AUREA.Giocatori[src]
     if g then
         TriggerEvent('aurea:giocatore:scaricato', src, g)

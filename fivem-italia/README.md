@@ -202,11 +202,21 @@ fivem-italia/
 | `aurea_telecamere` | Videosorveglianza urbana e penitenziaria: sale operative, brandeggio con fine corsa, fermi immagine agli atti, impianti che cadono col blackout |
 | `aurea_backup` | Istantanee periodiche dei dati che contano, con rotazione e consultazione in gioco |
 
+### `[esx]` — compatibilità (facoltativa)
+
+Due risorse alternative, se ne accende **una sola**. Vedi **[docs/ESX.md](docs/ESX.md)**.
+
+| Risorsa | Che cosa fa |
+|---|---|
+| `es_extended` | Espone l'oggetto `ESX` completo costruito sopra AUREA: i tuoi script `esx_*` girano senza installare il vero es_extended, e senza perdere un centesimo perché AUREA resta autoritativa. Include la migrazione dal database `users` di un vecchio server ESX |
+| `aurea_esx` | Il percorso inverso: il vero es_extended resta il framework e AUREA gli si appoggia sopra. Da usare solo se hai già un server ESX in piedi con giocatori dentro |
+
 ---
 
 ## Installazione
 
 Vedi **[docs/INSTALLAZIONE.md](docs/INSTALLAZIONE.md)** per la procedura completa.
+Per far convivere AUREA con l'ecosistema ESX, **[docs/ESX.md](docs/ESX.md)**.
 
 In breve:
 

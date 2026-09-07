@@ -14,6 +14,24 @@ local C = AUREA.Config
 -- ---------------------------------------------------------------------------
 --  Identità del server
 -- ---------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------
+--  Framework
+--
+--  'nativo'  AUREA gestisce accesso, personaggi, denaro e lavori. È la
+--            modalità normale, ed è quella che regge i centesimi interi.
+--
+--  'esx'     Il vero es_extended è il framework: gestisce lui l'accesso,
+--            il denaro e i lavori, e AUREA gli si appoggia sopra tramite
+--            [esx]/aurea_esx. In questa modalità aurea_core NON apre la
+--            selezione personaggio e non tocca playerConnecting, perché
+--            lo fa già ESX: due flussi d'accesso in parallelo si
+--            annullerebbero a vicenda.
+--
+--  Attenzione: [esx]/es_extended (il ponte che espone ESX sopra AUREA) è
+--  un'altra cosa e vuole 'nativo'. Vedi docs/ESX.md.
+-- ---------------------------------------------------------------------------
+C.Framework = 'nativo'
+
 C.Server = {
     nome        = 'AUREA · Italia Roleplay',
     sigla       = 'AUREA',
