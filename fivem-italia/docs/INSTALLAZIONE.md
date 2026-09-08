@@ -48,6 +48,7 @@ mysql -u aurea -p aurea < sql/03_espansione.sql
 mysql -u aurea -p aurea < sql/04_servizi.sql
 mysql -u aurea -p aurea < sql/05_indagini.sql
 mysql -u aurea -p aurea < sql/06_pubblici.sql
+mysql -u aurea -p aurea < sql/07_telefono.sql
 ```
 
 Aggiungono le tabelle dei moduli introdotti dopo — armadio dei completi,
@@ -56,7 +57,8 @@ ed elezioni comunali, testata giornalistica, poi animali, poste, scommesse,
 sosta, supporto, whitelist e onoranze funebri, e infine banca dati
 biometrica, reperti, matricola e colloqui del carcere, riscontri
 diagnostici, casse degli enti e fermi immagine, e infine carriere
-universitarie, titoli di studio, ormeggi e criptovalute. Usano `CREATE
+universitarie, titoli di studio, ormeggi e criptovalute, infine il registro
+delle chiamate del telefono (i tabulati). Usano `CREATE
 TABLE IF NOT EXISTS` e `ADD COLUMN IF NOT EXISTS`, quindi rieseguirli non
 fa danni.
 
@@ -378,6 +380,15 @@ Manca la terza migrazione: esegui `sql/05_indagini.sql`.
 
 **`Unknown table 'titoli'` (o `carriere`, `ormeggi`, `cripto_mercato`).**
 Manca la quarta migrazione: esegui `sql/06_pubblici.sql`.
+
+**`Unknown table 'tel_chiamate'`, oppure `/tabulati` non trova niente.**
+Manca la quinta migrazione: esegui `sql/07_telefono.sql`.
+
+**Un'app non compare nella home del telefono.**
+Le app le registrano le singole risorse: se quella risorsa non parte,
+l'app non c'è — è voluto. Se invece la risorsa parte, controlla che usi
+`AureaApp({...})` e non `exports.aurea_telefono:RegistraApp` diretto: la
+prima si ripresenta da sola quando il telefono (ri)parte, la seconda no.
 
 **`attempt to index a nil value (field 'aurea_target')`.**
 La risorsa che dà l'errore parte prima di `aurea_target`. Deve dichiararlo

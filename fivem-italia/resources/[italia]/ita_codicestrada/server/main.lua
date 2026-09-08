@@ -515,3 +515,60 @@ AUREA.Comando('permessoztl', 'utente', 'Rilascia un permesso ZTL (Comune)', {
     })
     AUREA.Log('multe', 'info', g, ('permesso ZTL %s per %s (%d giorni)'):format(zona, targa, giorni))
 end)
+
+-- ---------------------------------------------------------------------------
+--  App sul telefono: la patente a punti
+--
+--  I verbali stanno nel cassetto fiscale, perché sono un debito. Qui c'è
+--  la patente: i punti che restano e come sono stati persi, che è la cosa
+--  che si guarda con ansia dopo un controllo.
+-- ---------------------------------------------------------------------------
+AureaApp({
+    id = 'patente',
+    nome = 'Patente',
+    icona = '🚗',
+    colore = 'linear-gradient(150deg,#4a5b7a,#28334a)',
+    ordine = 110,
+
+    condizione = function(g)
+        return Patente.Get(g.citizenid) ~= nil
+    end,
+
+    schermata = function(g)
+        local p = Patente.Get(g.citizenid)
+        if not p then
+            return { tipo = 'testo', titolo = 'Patente',
+                     corpo = 'Non risulti titolare di patente di guida.' }
+        end
+
+        local voci = {}
+
+        for _, m in ipairs(MySQL.query.await([[
+            SELECT articolo, descrizione, punti_decurtati, emessa
+            FROM multe WHERE citizenid = ? AND punti_decurtati > 0
+            ORDER BY id DESC LIMIT 20
+        ]], { g.citizenid }) or {}) do
+            voci[#voci + 1] = {
+                icona = '➖',
+                titolo = ('%s — %s'):format(m.articolo, m.descrizione),
+                valore = ('−%d'):format(m.punti_decurtati),
+                tono = 'rosso',
+                inerte = true,
+            }
+        end
+
+        if #voci == 0 then
+            voci[1] = { icona = '✅', titolo = 'Nessuna decurtazione',
+                        sottotitolo = 'Non hai mai perso punti.', inerte = true }
+        end
+
+        return {
+            tipo = 'saldo',
+            etichetta = 'Punti residui',
+            valore = tostring(p.punti),
+            nota = ('N. %s · categorie %s'):format(
+                p.numero, p.categorie ~= '' and p.categorie or '—'),
+            voci = voci,
+        }
+    end,
+})

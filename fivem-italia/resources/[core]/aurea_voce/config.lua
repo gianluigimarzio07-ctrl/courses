@@ -33,17 +33,22 @@ VOC.Tasti = {
 VOC.Radio = {
     -- Serve l'apparecchio in tasca
     oggetto = 'radio',
-    -- Le frequenze riservate: chi non ha quel lavoro non entra
+    -- Le frequenze riservate: chi non ha quel lavoro non entra.
+    -- Valgono per la voce E per il testo (/r): è la stessa radio, e
+    -- l'elenco di chi è sintonizzato è uno solo, quello di questa risorsa.
     riservate = {
-        [1.0]  = { 'carabinieri' },
-        [2.0]  = { 'polizia' },
-        [3.0]  = { 'guardia_finanza' },
-        [4.0]  = { '118', 'medico' },
-        [5.0]  = { 'vigili_fuoco' },
-        [6.0]  = { 'penitenziaria' },
-        [10.0] = { 'meccanico' },
-        [11.0] = { 'autista' },
-        [12.0] = { 'giornalista' },
+        [1.0]  = { nome = 'Carabinieri — operativo', lavori = { 'carabinieri' } },
+        [2.0]  = { nome = 'Polizia — operativo',     lavori = { 'polizia' } },
+        [3.0]  = { nome = 'Guardia di Finanza',      lavori = { 'guardia_finanza' } },
+        [4.0]  = { nome = 'Emergenza Sanitaria 118', lavori = { '118', 'medico' } },
+        [5.0]  = { nome = 'Vigili del Fuoco',        lavori = { 'vigili_fuoco' } },
+        [6.0]  = { nome = 'Polizia Penitenziaria',   lavori = { 'penitenziaria' } },
+        [9.0]  = { nome = 'Interforze',              lavori = { 'carabinieri', 'polizia',
+                                                                'guardia_finanza', '118',
+                                                                'vigili_fuoco', 'penitenziaria' } },
+        [10.0] = { nome = 'Soccorso stradale',       lavori = { 'meccanico' } },
+        [11.0] = { nome = 'Trasporto pubblico',      lavori = { 'autista' } },
+        [12.0] = { nome = 'Redazione',               lavori = { 'giornalista' } },
     },
     -- Fra queste due chiunque può parlare
     liberaDa = 20.0, liberaA = 99.9,
@@ -88,8 +93,14 @@ function VOC.FrequenzaAmmessa(frequenza, lavoro)
     if not riservata then
         return frequenza >= VOC.Radio.liberaDa and frequenza <= VOC.Radio.liberaA
     end
-    for _, l in ipairs(riservata) do
+    for _, l in ipairs(riservata.lavori) do
         if l == lavoro then return true end
     end
     return false
+end
+
+--- Il nome parlato di una frequenza, per le notifiche.
+function VOC.NomeFrequenza(frequenza)
+    local riservata = VOC.Radio.riservate[frequenza]
+    return riservata and riservata.nome or ('Frequenza %0.1f'):format(frequenza)
 end

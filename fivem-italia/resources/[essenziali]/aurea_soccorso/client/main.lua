@@ -73,12 +73,12 @@ RegisterNetEvent('soc:nuovaChiamata', function(c)
     exports.aurea_ui:Notifica({
         tipo = 'avviso', icona = '🚛', durata = 15000,
         titolo = 'Richiesta di soccorso',
-        testo = ('%s — %s%s. Apri l\'elenco con /interventi.')
+        testo = ('%s — %s%s. Apri l\'elenco con /soccorsi.')
             :format(c.nome, c.guasto, c.targa ~= '' and (' (%s)'):format(c.targa) or ''),
     })
 end)
 
-RegisterCommand('interventi', function() elencoChiamate() end, false)
+RegisterCommand('soccorsi', function() elencoChiamate() end, false)
 
 function elencoChiamate()
     CreateThread(function()

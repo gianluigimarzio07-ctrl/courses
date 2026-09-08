@@ -153,25 +153,28 @@ AUREA.Callback.Registra('banca:preleva', function(src, rispondi, euro, daSportel
         or ('Prelevati %s.'):format(U.Euro(importo)))
 end)
 
-AUREA.Callback.Registra('banca:bonifico', function(src, rispondi, ibanDestinatario, euro, causale, istantaneo)
-    local g = AUREA.GetPlayer(src)
-    if not g then return rispondi(false, 'Sessione non valida.') end
+-- Un solo bonifico per tutto il server: lo sportello, lo sportello ATM e
+-- l'app Banca del telefono passano tutti di qui, così i massimali, le
+-- commissioni e la segnalazione antiriciclaggio non possono divergere.
+-- L'importo è già in CENTESIMI.
+local function eseguiBonifico(g, ibanDestinatario, importo, causale, istantaneo)
+    if not g then return false, 'Sessione non valida.' end
 
-    local importo = U.ACentesimi(tonumber(tostring(euro):gsub(',', '.')) or 0)
-    if importo <= 0 then return rispondi(false, 'Importo non valido.') end
+    importo = math.floor(tonumber(importo) or 0)
+    if importo <= 0 then return false, 'Importo non valido.' end
     if importo > BANCA.Commissioni.massimaleOperazione then
-        return rispondi(false, ('Il massimale per bonifico è %s.'):format(U.Euro(BANCA.Commissioni.massimaleOperazione)))
+        return false, ('Il massimale per bonifico è %s.'):format(U.Euro(BANCA.Commissioni.massimaleOperazione))
     end
 
     local iban = tostring(ibanDestinatario or ''):upper():gsub('%s+', '')
     local destinazione = MySQL.single.await('SELECT * FROM conti WHERE iban = ?', { iban })
-    if not destinazione then return rispondi(false, 'IBAN non riconosciuto.') end
-    if destinazione.intestatario == g.citizenid then return rispondi(false, 'Non puoi bonificare a te stesso.') end
-    if destinazione.bloccato == 1 then return rispondi(false, 'Il conto di destinazione è bloccato.') end
+    if not destinazione then return false, 'IBAN non riconosciuto.' end
+    if destinazione.intestatario == g.citizenid then return false, 'Non puoi bonificare a te stesso.' end
+    if destinazione.bloccato == 1 then return false, 'Il conto di destinazione è bloccato.' end
 
     local commissione = istantaneo and BANCA.Commissioni.bonificoIstantaneo or BANCA.Commissioni.bonifico
     if not g:Sottrai('banca', importo + commissione, ('bonifico a %s'):format(iban)) then
-        return rispondi(false, ('Servono %s comprensivi di commissione.'):format(U.Euro(importo + commissione)))
+        return false, ('Servono %s comprensivi di commissione.'):format(U.Euro(importo + commissione))
     end
 
     exports.ita_fisco:ErarioIncassa('commissioni_bancarie', commissione, g.citizenid)
@@ -202,7 +205,20 @@ AUREA.Callback.Registra('banca:bonifico', function(src, rispondi, ibanDestinatar
     end
 
     AUREA.Log('denaro', 'info', g, ('bonifico di %s a %s'):format(U.Euro(importo), iban))
-    rispondi(true, ('Bonifico di %s eseguito. Commissione %s.'):format(U.Euro(importo), U.Euro(commissione)))
+    return true, ('Bonifico di %s eseguito. Commissione %s.'):format(U.Euro(importo), U.Euro(commissione))
+end
+
+AUREA.Callback.Registra('banca:bonifico', function(src, rispondi, ibanDestinatario, euro, causale, istantaneo)
+    local g = AUREA.GetPlayer(src)
+    if not g then return rispondi(false, 'Sessione non valida.') end
+    local importo = U.ACentesimi(tonumber(tostring(euro):gsub(',', '.')) or 0)
+    return rispondi(eseguiBonifico(g, ibanDestinatario, importo, causale, istantaneo))
+end)
+
+-- Bonifico(citizenid, iban, centesimi, causale) -> ok, messaggio
+-- Usato dall'app Banca del telefono: stessi controlli dello sportello.
+exports('Bonifico', function(citizenid, iban, centesimi, causale)
+    return eseguiBonifico(AUREA.GetPlayerByCitizenId(citizenid), iban, centesimi, causale, false)
 end)
 
 -- ---------------------------------------------------------------------------

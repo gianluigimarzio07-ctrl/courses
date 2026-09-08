@@ -544,3 +544,63 @@ AddEventHandler('playerDropped', function()
         chiudiDiretta('Il collegamento è caduto.')
     end
 end)
+
+-- ---------------------------------------------------------------------------
+--  App sul telefono: il quotidiano
+--
+--  Si legge, non si scrive. Scrivere resta un atto che si fa in redazione,
+--  perché un articolo pubblicato dal telefono mentre si scappa non è
+--  giornalismo.
+-- ---------------------------------------------------------------------------
+AureaApp({
+    id = 'quotidiano',
+    nome = 'Quotidiano',
+    icona = '📰',
+    colore = 'linear-gradient(150deg,#8a8377,#514c44)',
+    ordine = 140,
+
+    schermata = function(g, argomenti)
+        argomenti = argomenti or {}
+
+        if argomenti.id then
+            local a = MySQL.single.await(
+                'SELECT * FROM articoli WHERE id = ? AND ritirato = 0 LIMIT 1',
+                { tonumber(argomenti.id) or 0 })
+            if not a then
+                return { tipo = 'testo', titolo = 'Articolo',
+                         corpo = 'L\'articolo non è più disponibile: può essere stato ritirato.' }
+            end
+
+            return {
+                tipo = 'testo',
+                titolo = a.titolo,
+                sottotitolo = ('%s · di %s'):format(a.sezione or 'cronaca', a.firma or 'redazione'),
+                corpo = ('%s\n\n%s'):format(a.occhiello or '', a.testo or ''),
+            }
+        end
+
+        local voci = {}
+        for _, a in ipairs(MySQL.query.await([[
+            SELECT id, titolo, occhiello, firma, sezione, tipo
+            FROM articoli WHERE ritirato = 0
+            ORDER BY id DESC LIMIT 25
+        ]]) or {}) do
+            voci[#voci + 1] = {
+                icona = a.tipo == 'rettifica' and '⚖' or '📰',
+                titolo = a.titolo,
+                sottotitolo = ('%s\n%s · %s'):format(
+                    (a.occhiello or ''):sub(1, 90), a.sezione or 'cronaca',
+                    a.firma or 'redazione'),
+                apri = { id = a.id },
+            }
+        end
+
+        if #voci == 0 then
+            voci[1] = { icona = '📰', titolo = 'Nessun articolo pubblicato',
+                        sottotitolo = 'La redazione non ha ancora mandato in stampa.',
+                        inerte = true }
+        end
+
+        return { tipo = 'lista', sottotitolo = 'Ultime notizie', voci = voci }
+    end,
+})

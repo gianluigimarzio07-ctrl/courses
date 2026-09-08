@@ -125,7 +125,7 @@ fivem-italia/
 |---|---|
 | `aurea_inventory` | Inventario a slot con peso, metadata per istanza, contenitori, oggetti a terra, deperibilità |
 | `aurea_banca` | Conti con IBAN, bonifici, mutui con merito creditizio, antiriciclaggio |
-| `aurea_telefono` | Rubrica, messaggi, identità digitale in stile SPID, banca, cassetto fiscale, annunci, 112 |
+| `aurea_telefono` | Telefono unico a registro di app: chiamate con voce, messaggi, rubrica, identità in stile SPID, banca, cassetto fiscale, annunci, emergenze, note. Ogni altra risorsa ci aggiunge la sua app da sola |
 | `aurea_negozi` | Esercizi con scontrino fiscale e mercato a prezzi dinamici |
 | `aurea_lavori` | Centro per l'Impiego, missioni di consegna e corse taxi, officina |
 | `aurea_medico` | Ferite localizzate, emorragie, incoscienza, 118, ospedale |
@@ -254,7 +254,7 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | Comando | Effetto |
 |---|---|
 | `TAB` | Inventario (o bagagliaio, o oggetti a terra) |
-| `F1` | Telefono |
+| `F1` | Telefono: chiamate, messaggi, banca, fisco, identità, patente, libretto universitario, fascicolo sanitario, exchange, giornale, assistenza |
 | `B` | Allaccia o slaccia la cintura |
 | `/id` `/contanti` `/iban` | Documenti e portafoglio |
 | `/dai <euro>` | Consegna contanti a chi hai davanti |
@@ -290,6 +290,10 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/poste` `/musica` `/animale` | Sportello postale, stereo, animale domestico |
 | `/soccorso` | Chiama il carro attrezzi |
 | `/forma` `/scommesse` | Forma fisica e agenzia scommesse |
+| `/sms <numero> <testo>` | Messaggio rapido senza aprire il telefono |
+| `/cripto` | Portafoglio e mercato delle criptovalute |
+| `/titoli` | Titoli di studio e carriera universitaria |
+| `/razzo` `/recupera` | Razzo di segnalazione in mare e recupero di un naufrago |
 | `/comande` | Comande del locale in cui lavori |
 
 ### Servizio (forze dell'ordine, 118, VVF)
@@ -318,7 +322,11 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/udienza` `/processi` | Apri un'udienza e seguila (magistratura) |
 | `/controllosos` | Verifica il titolo di sosta (ausiliari) |
 | `/controllobiglietti` | Controllo dei titoli di viaggio |
-| `/interventi` `/riparasulposto` | Soccorso stradale |
+| `/soccorsi` `/riparasulposto` | Soccorso stradale |
+| `/incendi` `/estrica` | Quadro degli incendi e estricazione dalle lamiere (VVF) |
+| `/controllonautico` | Controllo di unità da diporto (Guardia Costiera) |
+| `/tabulati <numero>` | Acquisizione dei tabulati telefonici (polizia giudiziaria) |
+| `/uif` | Segnalazioni di operazioni sospette in criptovaluta (GdF) |
 | `/guasti` | Guasti alla rete elettrica |
 | `/ticketaperti` `/candidature` | Supporto e whitelist (staff) |
 | `/metriche` | Stato del server (admin) |
@@ -357,6 +365,23 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 - **L'ordine di avvio in `server.cfg` è un ordinamento topologico** delle
   `dependencies` dichiarate nei manifest. Se aggiungi un modulo che usa gli
   export di un altro, dichiaralo e inseriscilo dopo di quello.
+- **Il telefono è un registro, non un contenitore.** `aurea_telefono` non
+  sa niente di cripto, patenti o referti: rende cinque forme di schermata
+  (elenco, saldo, tessera, testo, griglia) e ogni risorsa ci mette la sua
+  app descrivendola con dati, sul server, in una ventina di righe:
+
+  ```lua
+  AureaApp({
+      id = 'cripto', nome = 'Exchange', icona = '🪙',
+      schermata = function(g) return { tipo = 'lista', voci = { ... } } end,
+      azione = function(g, id, dati) ... end,
+  })
+  ```
+
+  `AureaApp` arriva dal ponte e si ripresenta quando il telefono riparte,
+  quindi l'ordine degli `ensure` qui non conta. Chi aggiunge una risorsa
+  non tocca né l'HTML né il CSS né il JavaScript del telefono, e se quella
+  risorsa non è installata la sua app semplicemente non c'è.
 
 ---
 

@@ -562,3 +562,47 @@ CreateThread(function()
         end
     end
 end)
+
+-- ---------------------------------------------------------------------------
+--  App sul telefono: il fascicolo sanitario
+--
+--  Solo la propria cartella. Quella altrui è coperta dal segreto e si
+--  consulta in ambulatorio, dove il medico deve esserci di persona.
+-- ---------------------------------------------------------------------------
+AureaApp({
+    id = 'sanita',
+    nome = 'Fascicolo',
+    icona = '🩺',
+    colore = 'linear-gradient(150deg,#d1443f,#8d2724)',
+    ordine = 130,
+
+    schermata = function(g)
+        local voci = {}
+
+        for _, r in ipairs(MySQL.query.await([[
+            SELECT diagnosi, terapia, medico, ticket, data
+            FROM cartelle_cliniche WHERE citizenid = ?
+            ORDER BY data DESC LIMIT 25
+        ]], { g.citizenid }) or {}) do
+            voci[#voci + 1] = {
+                icona = '📄',
+                titolo = r.diagnosi,
+                sottotitolo = ('%s\nRefertato da %s'):format(
+                    r.terapia or '', r.medico or 'n.d.'),
+                valore = (r.ticket or 0) > 0 and U.Euro(r.ticket) or nil,
+                inerte = true,
+            }
+        end
+
+        if #voci == 0 then
+            voci[1] = { icona = '🩺', titolo = 'Fascicolo vuoto',
+                        sottotitolo = 'Nessun referto a tuo nome.', inerte = true }
+        end
+
+        return {
+            tipo = 'lista',
+            sottotitolo = 'Referti e certificazioni a tuo nome',
+            voci = voci,
+        }
+    end,
+})

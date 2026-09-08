@@ -93,6 +93,8 @@ RegisterCommand('musica', function()
         end
         voci[#voci + 1] = { id = 'url', icona = '🔗', titolo = 'Incolla un collegamento',
                             descrizione = table.concat(MUS.DominiAmmessi, ', ') }
+        voci[#voci + 1] = { id = 'volume', icona = '🔊', titolo = 'Cambia volume',
+                            descrizione = 'Sullo stereo che stai già facendo suonare' }
         voci[#voci + 1] = { id = 'stop', icona = '⏹', titolo = 'Spegni il tuo stereo' }
 
         local ped = PlayerPedId()
@@ -104,6 +106,26 @@ RegisterCommand('musica', function()
             voci = voci,
         })
         if not scelta then return end
+
+        if scelta == 'volume' then
+            local r = exports.aurea_ui:Dialogo('Volume', {
+                { etichetta = 'Volume (0-100)', tipo = 'number',
+                  valore = MUS.Regole.volumePredefinito,
+                  min = 0, max = MUS.Regole.volumeMassimo, obbligatorio = true },
+            })
+            if not r or not r[1] then return end
+
+            -- Non sappiamo quale stereo sia nostro: proviamo su quelli che
+            -- sentiamo e il server rifiuta quelli di altri.
+            for id in pairs(attivi) do
+                if AUREA.Callback.Attendi('mus:volume', id, tonumber(r[1])) then
+                    return exports.aurea_ui:Notifica({ tipo = 'successo', icona = '🔊',
+                        titolo = 'Musica', testo = ('Volume portato a %s.'):format(math.floor(tonumber(r[1]) or 0)) })
+                end
+            end
+            return exports.aurea_ui:Notifica({ tipo = 'errore', icona = '🔊',
+                titolo = 'Musica', testo = 'Non stai facendo suonare nessuno stereo qui.' })
+        end
 
         if scelta == 'stop' then
             for id, s in pairs(attivi) do
@@ -117,6 +139,7 @@ RegisterCommand('musica', function()
         end
 
         local url = scelta:match('^p:(.+)$')
+        local volume = MUS.Regole.volumePredefinito
         if scelta == 'url' then
             local r = exports.aurea_ui:Dialogo('Collegamento', {
                 { etichetta = 'URL del brano', tipo = 'text',
@@ -126,6 +149,8 @@ RegisterCommand('musica', function()
             })
             if not r or not r[1] then return end
             url = r[1]
+            -- il volume chiesto qui va usato: prima veniva ignorato
+            volume = tonumber(r[2]) or volume
         end
         if not url then return end
 
@@ -137,7 +162,7 @@ RegisterCommand('musica', function()
 
         local ok, esito = AUREA.Callback.Attendi('mus:accendi', {
             url = url, tipo = inAuto and 'autoradio' or 'boombox',
-            volume = MUS.Regole.volumePredefinito, rete = rete,
+            volume = volume, rete = rete,
         })
 
         exports.aurea_ui:Notifica({

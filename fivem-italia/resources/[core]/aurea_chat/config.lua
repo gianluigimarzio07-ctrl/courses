@@ -85,36 +85,11 @@ CHAT.Regole = {
 -- ---------------------------------------------------------------------------
 --  Canali radio: chi può accedere a cosa
 -- ---------------------------------------------------------------------------
+-- Le frequenze, chi può usarle e chi è sintonizzato stanno in aurea_voce
+-- (VOC.Radio): è la stessa radio, e tenerne due elenchi voleva dire che
+-- uno si sintonizzava, parlava, e i suoi /r non arrivavano a nessuno.
+-- Qui resta solo la regola sull'apparecchio per il testo.
 CHAT.Radio = {
-    -- Frequenze riservate, non selezionabili dai civili
-    riservate = {
-        [1]  = { nome = 'Carabinieri — operativo', lavori = { 'carabinieri' } },
-        [2]  = { nome = 'Polizia — operativo',     lavori = { 'polizia' } },
-        [3]  = { nome = 'Guardia di Finanza',      lavori = { 'guardia_finanza' } },
-        [4]  = { nome = 'Emergenza Sanitaria 118', lavori = { '118' } },
-        [5]  = { nome = 'Vigili del Fuoco',        lavori = { 'vigili_fuoco' } },
-        [10] = { nome = 'Interforze',              lavori = { 'carabinieri', 'polizia', 'guardia_finanza', '118', 'vigili_fuoco' } },
-    },
-    -- Intervallo di frequenze libere
-    libereDa = 20,
-    libereA = 999,
-    -- Serve una ricetrasmittente nell'inventario
+    -- Serve una ricetrasmittente nell'inventario anche per scrivere
     richiedeApparecchio = true,
 }
-
---- Verifica se un lavoro può accedere a una frequenza.
-function CHAT.PuoUsareFrequenza(frequenza, lavoro)
-    local riservata = CHAT.Radio.riservate[frequenza]
-    if not riservata then
-        return frequenza >= CHAT.Radio.libereDa and frequenza <= CHAT.Radio.libereA
-    end
-    for _, l in ipairs(riservata.lavori) do
-        if l == lavoro then return true end
-    end
-    return false
-end
-
-function CHAT.NomeFrequenza(frequenza)
-    local riservata = CHAT.Radio.riservate[frequenza]
-    return riservata and riservata.nome or ('Frequenza %d'):format(frequenza)
-end

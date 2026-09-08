@@ -6,7 +6,6 @@
 ]]
 
 local U = AUREA.Util
-local frequenze = {}      -- [src] = numero frequenza
 local traffico = {}       -- [src] = { conteggio, azzeramento, silenziatoFino }
 
 -- ---------------------------------------------------------------------------
@@ -213,55 +212,29 @@ end)
 
 -- ---------------------------------------------------------------------------
 --  Radio di servizio
+--
+--  Sintonizzarsi è /radio, e lo gestisce aurea_voce: è lì che sta
+--  l'apparecchio, il controllo sulle frequenze riservate e il canale di
+--  pma-voice. Qui c'è solo il testo, che va sulla stessa frequenza della
+--  voce — perché è la stessa radio.
+--
+--  Prima erano due elenchi separati e il comando client di aurea_voce
+--  copriva quello di qui: uno si sintonizzava, parlava, e i suoi /r non
+--  arrivavano a nessuno.
 -- ---------------------------------------------------------------------------
-AUREA.Comando('radio', 'utente', 'Sintonizza la ricetrasmittente', {
-    { name = 'frequenza', help = 'Numero di frequenza, 0 per spegnere' },
-}, function(src, args, _, g)
-    if not g then return end
 
-    if CHAT.Radio.richiedeApparecchio and not exports.aurea_inventory:Ha(g.citizenid, 'radio', 1) then
-        return TriggerClientEvent('aurea:ui:notifica', src, {
-            tipo = 'errore', icona = '📻', titolo = 'Nessun apparecchio',
-            testo = 'Ti serve una ricetrasmittente.',
-        })
-    end
-
-    local frequenza = math.floor(tonumber(args[1]) or 0)
-
-    if frequenza == 0 then
-        frequenze[src] = nil
-        return TriggerClientEvent('aurea:ui:notifica', src, {
-            tipo = 'info', icona = '📻', titolo = 'Radio spenta', testo = 'Sei uscito da ogni frequenza.',
-        })
-    end
-
-    if not CHAT.PuoUsareFrequenza(frequenza, g.lavoro.nome) then
-        return TriggerClientEvent('aurea:ui:notifica', src, {
-            tipo = 'errore', icona = '📻', titolo = 'Frequenza riservata',
-            testo = ('La frequenza %d è assegnata a un ente di cui non fai parte.'):format(frequenza),
-        })
-    end
-
-    frequenze[src] = frequenza
-
-    local quanti = 0
-    for _, f in pairs(frequenze) do
-        if f == frequenza then quanti = quanti + 1 end
-    end
-
-    TriggerClientEvent('aurea:ui:notifica', src, {
-        tipo = 'successo', icona = '📻', durata = 8000,
-        titolo = CHAT.NomeFrequenza(frequenza),
-        testo = ('Sintonizzato. In ascolto: %d.'):format(quanti),
-    })
-end)
+--- La frequenza del giocatore secondo aurea_voce, o nil.
+local function frequenzaDi(src)
+    local ok, f = pcall(function() return exports.aurea_voce:FrequenzaDi(src) end)
+    return ok and f or nil
+end
 
 AUREA.Comando('r', 'utente', 'Trasmette sulla frequenza sintonizzata', {
     { name = 'testo', help = 'Messaggio radio' },
 }, function(src, args, _, g)
     if not g then return end
 
-    local frequenza = frequenze[src]
+    local frequenza = frequenzaDi(src)
     if not frequenza then
         return TriggerClientEvent('aurea:ui:notifica', src, {
             tipo = 'errore', icona = '📻', titolo = 'Radio spenta', testo = 'Sintonizzati con /radio <frequenza>.',
@@ -269,7 +242,6 @@ AUREA.Comando('r', 'utente', 'Trasmette sulla frequenza sintonizzata', {
     end
 
     if CHAT.Radio.richiedeApparecchio and not exports.aurea_inventory:Ha(g.citizenid, 'radio', 1) then
-        frequenze[src] = nil
         return TriggerClientEvent('aurea:ui:notifica', src, {
             tipo = 'errore', icona = '📻', titolo = 'Apparecchio perduto', testo = 'Non hai più la ricetrasmittente.',
         })
@@ -287,11 +259,13 @@ AUREA.Comando('r', 'utente', 'Trasmette sulla frequenza sintonizzata', {
     end
 
     local cfg = CHAT.Canali.radio
-    for altroSrc, f in pairs(frequenze) do
-        if f == frequenza and AUREA.GetPlayer(altroSrc) then
+    local ok, ascolto = pcall(function() return exports.aurea_voce:SintonizzatiSu(frequenza) end)
+
+    for _, altroSrc in ipairs(ok and ascolto or { src }) do
+        if AUREA.GetPlayer(altroSrc) then
             TriggerClientEvent('chat:messaggio', altroSrc, {
                 canale = 'radio',
-                mittente = ('%d · %s'):format(frequenza, g:NomeCompleto()),
+                mittente = ('%0.1f · %s'):format(frequenza, g:NomeCompleto()),
                 testo = testo:sub(1, CHAT.Regole.lunghezzaMassima),
                 etichetta = cfg.etichetta,
                 colore = cfg.colore,
@@ -363,6 +337,5 @@ AUREA.Comando('silenzia', 'moderatore', 'Silenzia un giocatore in chat', {
 end)
 
 AddEventHandler('playerDropped', function()
-    frequenze[source] = nil
     traffico[source] = nil
 end)

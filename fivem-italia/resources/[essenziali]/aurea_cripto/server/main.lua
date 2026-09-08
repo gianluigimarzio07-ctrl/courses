@@ -301,24 +301,24 @@ end)
 -- ---------------------------------------------------------------------------
 --  Vendita
 -- ---------------------------------------------------------------------------
-AUREA.Callback.Registra('crp:vendi', function(src, rispondi, idMoneta, millesimi)
-    local g = AUREA.GetPlayer(src)
-    if not g then return rispondi(false) end
-
+--- La vendita. Sta in una funzione perché la chiamano in due: il menu
+--- allo sportello e l'app sul telefono. Duplicarla vorrebbe dire due
+--- posti dove sbagliare la commissione.
+local function vendi(g, idMoneta, millesimi)
     local m = CRP.GetMoneta(idMoneta)
     local stato = mercato[idMoneta]
-    if not m or not stato then return rispondi(false, 'Moneta non quotata.') end
+    if not m or not stato then return false, 'Moneta non quotata.' end
 
     if sequestrato(g.citizenid) then
-        return rispondi(false, 'Il tuo portafoglio è sotto sequestro.')
+        return false, 'Il tuo portafoglio è sotto sequestro.'
     end
 
     local quantita = math.floor(tonumber(millesimi) or 0)
-    if quantita <= 0 then return rispondi(false, 'Quantità non valida.') end
+    if quantita <= 0 then return false, 'Quantità non valida.' end
 
     local mio = portafoglio(g.citizenid)
     if (mio[idMoneta] or 0) < quantita then
-        return rispondi(false, ('Ne hai solo %s.'):format(CRP.FormattaQuantita(mio[idMoneta] or 0)))
+        return false, ('Ne hai solo %s.'):format(CRP.FormattaQuantita(mio[idMoneta] or 0))
     end
 
     local prezzo = stato.prezzo
@@ -341,8 +341,14 @@ AUREA.Callback.Registra('crp:vendi', function(src, rispondi, idMoneta, millesimi
     AUREA.Log('economia', 'info', g,
         ('ha venduto %s %s per %s'):format(CRP.FormattaQuantita(quantita), m.simbolo, U.Euro(netto)))
 
-    rispondi(true, ('%s %s venduti a %s l\'uno. Accreditati %s al netto della commissione.')
-        :format(CRP.FormattaQuantita(quantita), m.simbolo, U.Euro(prezzo), U.Euro(netto)))
+    return true, ('%s %s venduti a %s l\'uno. Accreditati %s al netto della commissione.')
+        :format(CRP.FormattaQuantita(quantita), m.simbolo, U.Euro(prezzo), U.Euro(netto))
+end
+
+AUREA.Callback.Registra('crp:vendi', function(src, rispondi, idMoneta, millesimi)
+    local g = AUREA.GetPlayer(src)
+    if not g then return rispondi(false) end
+    rispondi(vendi(g, idMoneta, millesimi))
 end)
 
 -- ---------------------------------------------------------------------------
@@ -518,3 +524,91 @@ exports('Controvalore', function(citizenid)
     end
     return totale
 end)
+
+-- ---------------------------------------------------------------------------
+--  App sul telefono
+--
+--  Lo sportello fisico resta il solo posto dove si opera in contante: da
+--  qui si vede il mercato e si vende, che è tutto quello che serve avere
+--  in tasca. Il nero deve continuare a costare un viaggio.
+-- ---------------------------------------------------------------------------
+AureaApp({
+    id = 'exchange',
+    nome = 'Exchange',
+    icona = '🪙',
+    colore = 'linear-gradient(150deg,#c9a227,#7e6414)',
+    ordine = 55,
+
+    schermata = function(g)
+        local mio = {}
+        for _, r in ipairs(MySQL.query.await(
+            'SELECT moneta, quantita FROM cripto_portafogli WHERE citizenid = ?',
+            { g.citizenid }) or {}) do
+            mio[r.moneta] = tonumber(r.quantita) or 0
+        end
+
+        local bloccato = MySQL.scalar.await(
+            'SELECT sequestrato FROM cripto_conti WHERE citizenid = ? LIMIT 1',
+            { g.citizenid }) == 1
+
+        local voci, totale = {}, 0
+
+        for _, m in ipairs(CRP.Monete) do
+            local stato = GlobalState.criptoQuadro or {}
+            local prezzo, variazione = m.iniziale, 0
+
+            for _, q in ipairs(stato) do
+                if q.id == m.id then prezzo, variazione = q.prezzo, q.variazione end
+            end
+
+            local quantita = mio[m.id] or 0
+            local controvalore = CRP.Controvalore(quantita, prezzo)
+            totale = totale + controvalore
+
+            voci[#voci + 1] = {
+                icona = variazione > 1 and '📈' or (variazione < -1 and '📉' or '🪙'),
+                titolo = ('%s — %s'):format(m.simbolo, U.Euro(prezzo)),
+                sottotitolo = ('%+.2f%% · %s'):format(variazione,
+                    quantita > 0 and ('ne hai %s'):format(CRP.FormattaQuantita(quantita))
+                        or 'non ne hai'),
+                valore = quantita > 0 and U.Euro(controvalore) or nil,
+                tono = variazione > 1 and 'verde' or (variazione < -1 and 'rosso' or nil),
+                azione = quantita > 0 and 'vendi' or nil,
+                dati = { moneta = m.id, quantita = quantita },
+                inerte = quantita <= 0,
+            }
+        end
+
+        return {
+            tipo = 'saldo',
+            etichetta = 'Controvalore del portafoglio',
+            valore = U.Euro(totale),
+            nota = bloccato and 'PORTAFOGLIO SOTTO SEQUESTRO'
+                or 'Per comprare in contante serve lo sportello',
+            voci = voci,
+        }
+    end,
+
+    azione = function(g, azione, dati)
+        dati = dati or {}
+
+        if azione == 'vendi' then
+            return { ok = true, dialogo = {
+                titolo = 'Vendita',
+                campi = { { etichetta = ('Millesimi da vendere (ne hai %d)')
+                    :format(dati.quantita or 0), tipo = 'number', min = 1,
+                    max = dati.quantita or 1, obbligatorio = true } },
+                azione = 'eseguiVendita', chiave = 'millesimi',
+            } }
+        end
+
+        if azione == 'eseguiVendita' then
+            -- Si riusa la stessa funzione dello sportello: stessi
+            -- controlli, stessa commissione, stesso registro.
+            local ok, messaggio = vendi(g, dati.moneta, dati.millesimi)
+            return ok, messaggio, true
+        end
+
+        return false, 'Azione sconosciuta.'
+    end,
+})

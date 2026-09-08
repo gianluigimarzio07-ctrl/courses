@@ -155,12 +155,6 @@ local function variaPeculio(citizenid, delta)
     return true, saldo + delta
 end
 
-AUREA.Callback.Registra('car:peculio', function(src, rispondi)
-    local g = AUREA.GetPlayer(src)
-    if not g then return rispondi(0) end
-    rispondi(peculioDi(g.citizenid))
-end)
-
 --- Versamento dall'esterno: i familiari mandano soldi al detenuto.
 AUREA.Callback.Registra('car:versa', function(src, rispondi, detenutoSrc, importo)
     local g = AUREA.GetPlayer(src)

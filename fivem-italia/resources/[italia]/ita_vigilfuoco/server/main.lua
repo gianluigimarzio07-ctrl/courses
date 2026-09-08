@@ -161,7 +161,7 @@ local function accendi(tipologia, coord, zona, focolaiIniziali)
     exports.aurea_ui:NotificaLavoro(VVF.Lavoro, {
         tipo = 'errore', icona = t.icona, durata = 20000,
         titolo = ('INTERVENTO — %s'):format(t.nome),
-        testo = ('%s · %d focolai. Usa /interventi per la posizione.'):format(inc.zona, quanti),
+        testo = ('%s · %d focolai. Usa /incendi per la posizione.'):format(inc.zona, quanti),
     }, true)
 
     return inc.id

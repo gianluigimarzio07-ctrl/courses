@@ -405,3 +405,99 @@ end)
 AddEventHandler('aurea:giocatore:scaricato', function(src)
     proveInCorso[src] = nil
 end)
+
+-- ---------------------------------------------------------------------------
+--  App sul telefono: il libretto universitario
+--
+--  Solo consultazione. Iscriversi e dare esami richiede di essere in
+--  segreteria e in aula, e deve restare così: un titolo che si prende dal
+--  divano non è un titolo.
+-- ---------------------------------------------------------------------------
+AureaApp({
+    id = 'libretto',
+    nome = 'Libretto',
+    icona = '🎓',
+    colore = 'linear-gradient(150deg,#7b52c9,#4b2f80)',
+    ordine = 120,
+
+    condizione = function(g)
+        -- Compare solo a chi ha una carriera aperta o un titolo:
+        -- a chi non ha mai messo piede in università non serve.
+        local carriere = MySQL.scalar.await(
+            'SELECT COUNT(*) FROM carriere WHERE citizenid = ?', { g.citizenid }) or 0
+        local titoli = MySQL.scalar.await(
+            'SELECT COUNT(*) FROM titoli WHERE citizenid = ?', { g.citizenid }) or 0
+        return (carriere + titoli) > 0
+    end,
+
+    schermata = function(g)
+        local voci = {}
+
+        for _, t in ipairs(MySQL.query.await(
+            'SELECT corso, titolo, abilitato FROM titoli WHERE citizenid = ?',
+            { g.citizenid }) or {}) do
+            local c = SCU.GetCorso(t.corso)
+            voci[#voci + 1] = {
+                icona = t.abilitato == 1 and '🎖' or '🎓',
+                titolo = t.titolo,
+                sottotitolo = t.abilitato == 1
+                    and 'Abilitato all\'esercizio della professione'
+                    or ((c and c.esameDiStato)
+                        and 'Manca l\'esame di Stato per esercitare'
+                        or 'Titolo conseguito'),
+                tono = t.abilitato == 1 and 'verde' or nil,
+                inerte = true,
+            }
+        end
+
+        for _, riga in ipairs(MySQL.query.await(
+            'SELECT corso, prossimo_appello FROM carriere WHERE citizenid = ?',
+            { g.citizenid }) or {}) do
+            local c = SCU.GetCorso(riga.corso)
+            if c then
+                local superati = {}
+                for _, e in ipairs(MySQL.query.await(
+                    'SELECT materia FROM esami_superati WHERE citizenid = ? AND corso = ?',
+                    { g.citizenid, riga.corso }) or {}) do
+                    superati[e.materia] = true
+                end
+
+                voci[#voci + 1] = {
+                    icona = '📚', titolo = c.nome,
+                    sottotitolo = riga.prossimo_appello
+                        and ('Prossimo appello: %s'):format(tostring(riga.prossimo_appello))
+                        or 'Puoi presentarti in aula quando vuoi',
+                    valore = ('%d/%d'):format(
+                        (function()
+                            local n = 0
+                            for _, materia in ipairs(c.esami) do
+                                if superati[materia] then n = n + 1 end
+                            end
+                            return n
+                        end)(), #c.esami),
+                    inerte = true,
+                }
+
+                for _, materia in ipairs(c.esami) do
+                    local m = SCU.GetMateria(materia)
+                    voci[#voci + 1] = {
+                        icona = superati[materia] and '✅' or '○',
+                        titolo = m and m.nome or materia,
+                        sottotitolo = superati[materia] and 'Superato' or 'Da sostenere',
+                        inerte = true,
+                    }
+                end
+            end
+        end
+
+        if #voci == 0 then
+            voci[1] = { icona = '🎓', titolo = 'Nessuna carriera aperta', inerte = true }
+        end
+
+        return {
+            tipo = 'lista',
+            sottotitolo = 'Iscrizioni ed esami si fanno in ateneo',
+            voci = voci,
+        }
+    end,
+})

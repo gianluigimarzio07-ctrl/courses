@@ -20,26 +20,28 @@ AUREA.Callback.Registra('sup:miei', function(src, rispondi)
     rispondi({ ticket = righe, categorie = SUP.Categorie })
 end)
 
-AUREA.Callback.Registra('sup:apri', function(src, rispondi, categoria, titolo, testo)
-    local g = AUREA.GetPlayer(src)
-    if not g then return rispondi(false) end
+--- Apre un ticket. Sta in una funzione perché la chiamano in due: il
+--- menu in gioco e l'app sul telefono. I limiti e i controlli devono
+--- essere gli stessi da tutte e due le parti.
+function ApriTicket(g, categoria, titolo, testo)
+    if not g then return false end
 
-    if not SUP.GetCategoria(categoria) then return rispondi(false, 'Categoria non prevista.') end
+    if not SUP.GetCategoria(categoria) then return false, 'Categoria non prevista.' end
 
     local aperti = MySQL.scalar.await(
         'SELECT COUNT(*) FROM ticket WHERE citizenid = ? AND stato != \'chiuso\'',
         { g.citizenid }) or 0
     if aperti >= SUP.Regole.apertiPerPersona then
-        return rispondi(false, 'Hai già un ticket aperto. Aspetta che venga chiuso.')
+        return false, 'Hai già un ticket aperto. Aspetta che venga chiuso.'
     end
 
     titolo = tostring(titolo or ''):sub(1, 90)
     testo = tostring(testo or ''):sub(1, SUP.Regole.lunghezzaMessaggio)
     if #titolo < 5 or #testo < 20 then
-        return rispondi(false, 'Descrivi meglio il problema: senza dettagli nessuno può aiutarti.')
+        return false, 'Descrivi meglio il problema: senza dettagli nessuno può aiutarti.'
     end
 
-    local coord = GetEntityCoords(GetPlayerPed(src))
+    local coord = GetEntityCoords(GetPlayerPed(g.source))
 
     local id = MySQL.insert.await([[
         INSERT INTO ticket (citizenid, nome, categoria, titolo, stato, posizione)
@@ -64,7 +66,13 @@ AUREA.Callback.Registra('sup:apri', function(src, rispondi, categoria, titolo, t
     end
 
     AUREA.Log('staff', 'info', g, ('ticket #%d aperto: %s'):format(id, titolo))
-    rispondi(true, ('Ticket #%d aperto. Qualcuno lo prenderà in carico.'):format(id))
+    return true, ('Ticket #%d aperto. Qualcuno lo prenderà in carico.'):format(id), id
+end
+
+AUREA.Callback.Registra('sup:apri', function(src, rispondi, categoria, titolo, testo)
+    local g = AUREA.GetPlayer(src)
+    if not g then return rispondi(false) end
+    rispondi(ApriTicket(g, categoria, titolo, testo))
 end)
 
 AUREA.Callback.Registra('sup:leggi', function(src, rispondi, id)
@@ -223,3 +231,88 @@ CreateThread(function()
         ]], { SUP.Regole.oreChiusuraAutomatica })
     end
 end)
+
+-- ---------------------------------------------------------------------------
+--  App sul telefono: assistenza
+--
+--  Il ticket si apre da qui perché il momento in cui serve è quello in cui
+--  qualcosa non funziona, e in quel momento cercare un comando è l'ultima
+--  cosa che uno ha voglia di fare.
+-- ---------------------------------------------------------------------------
+AureaApp({
+    id = 'assistenza',
+    nome = 'Assistenza',
+    icona = '🛟',
+    colore = 'linear-gradient(150deg,#2f6f9e,#1c4462)',
+    ordine = 300,
+
+    badge = function(g)
+        return MySQL.scalar.await([[
+            SELECT COUNT(*) FROM ticket
+            WHERE citizenid = ? AND stato IN ('aperto','in_carico')
+        ]], { g.citizenid }) or 0
+    end,
+
+    schermata = function(g)
+        local voci = {}
+
+        for _, t in ipairs(MySQL.query.await([[
+            SELECT id, titolo, categoria, stato, presa_da, aperto_il
+            FROM ticket WHERE citizenid = ?
+            ORDER BY id DESC LIMIT 20
+        ]], { g.citizenid }) or {}) do
+            voci[#voci + 1] = {
+                icona = t.stato == 'chiuso' and '✅'
+                    or (t.stato == 'in_carico' and '👤' or '⏳'),
+                titolo = t.titolo,
+                sottotitolo = ('%s · %s%s'):format(t.categoria, t.stato,
+                    t.presa_da and (' · ' .. t.presa_da) or ''),
+                tono = t.stato == 'chiuso' and 'verde' or nil,
+                inerte = true,
+            }
+        end
+
+        if #voci == 0 then
+            voci[1] = { icona = '🛟', titolo = 'Nessun ticket',
+                        sottotitolo = 'Apri una richiesta se qualcosa non va.', inerte = true }
+        end
+
+        return {
+            tipo = 'lista',
+            sottotitolo = 'Le risposte dello staff arrivano in chat',
+            barra = { { id = 'apri', etichetta = 'Nuovo', icona = '＋' } },
+            voci = voci,
+        }
+    end,
+
+    azione = function(g, azione, dati)
+        if azione == 'apri' then
+            return { ok = true, dialogo = {
+                titolo = 'Nuova richiesta di assistenza',
+                campi = {
+                    { etichetta = 'Titolo', tipo = 'text', obbligatorio = true },
+                    { etichetta = 'Descrizione', tipo = 'textarea', obbligatorio = true },
+                    { etichetta = 'Categoria', tipo = 'select',
+                      opzioni = (function()
+                          local o = {}
+                          for _, c in ipairs(SUP.Categorie) do o[#o + 1] = c.id end
+                          return o
+                      end)() },
+                },
+                azione = 'salva', chiavi = { 'titolo', 'testo', 'categoria' },
+            } }
+        end
+
+        if azione == 'salva' then
+            dati = dati or {}
+            -- Stessa funzione del menu in gioco: stessi limiti,
+            -- stesse categorie, stesso avviso allo staff.
+            local ok, messaggio = ApriTicket(g,
+                tostring(dati.categoria or 'domanda'),
+                dati.titolo, dati.testo)
+            return ok, messaggio, true
+        end
+
+        return false, 'Azione sconosciuta.'
+    end,
+})

@@ -39,3 +39,47 @@ end
 --- Ci si può anche scrivere: quello che una risorsa aggiunge lo vedono tutte
 --- (è così che aurea_hud pubblica AUREA.LimiteVelocita).
 AUREA = tabella
+
+-- ---------------------------------------------------------------------------
+--  App del telefono
+-- ---------------------------------------------------------------------------
+-- Il telefono è un registro: chi vuole un'app la descrive e basta. Restava
+-- però un tranello, l'ordine di avvio — se una risorsa parte prima di
+-- aurea_telefono l'export non esiste ancora e l'app si perde in silenzio,
+-- senza un errore che lo dica.
+--
+-- AureaApp lo toglie di mezzo: consegna subito se il telefono c'è, e si
+-- ripresenta ogni volta che il telefono (ri)parte. Così l'ordine degli
+-- ensure non conta e un /restart aurea_telefono non svuota la home.
+--
+--     AureaApp({ id = 'cripto', nome = 'Exchange', icona = '🪙',
+--                schermata = function(g) ... end })
+--
+-- Le variabili globali sono per risorsa, quindi ogni risorsa ha il suo
+-- elenco: non c'è modo di pestarsi i piedi a vicenda.
+if IsDuplicityVersion() then
+    local mie, consegnate = {}, 0
+
+    -- Riprende da dove si era fermata: se il telefono non c'è ancora, il
+    -- pcall fallisce, si esce e si riproverà. Nessuna app viene consegnata
+    -- due volte, così il registro non stampa "sostituita" senza motivo.
+    local function consegna()
+        for i = consegnate + 1, #mie do
+            if not pcall(function() exports.aurea_telefono:RegistraApp(mie[i]) end) then return end
+            consegnate = i
+        end
+    end
+
+    --- Registra un'app del telefono per conto di questa risorsa.
+    function AureaApp(descrizione)
+        mie[#mie + 1] = descrizione
+        consegna()
+    end
+
+    AddEventHandler('onResourceStart', function(risorsa)
+        if risorsa == 'aurea_telefono' then
+            consegnate = 0      -- il registro riparte vuoto: si riconsegna tutto
+            consegna()
+        end
+    end)
+end

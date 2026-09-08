@@ -18,4 +18,5 @@ dependencies {
     'aurea_core',
     'aurea_ui',
     'aurea_inventory',
+    'aurea_voce',
 }

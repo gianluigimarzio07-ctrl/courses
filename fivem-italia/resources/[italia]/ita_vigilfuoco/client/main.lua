@@ -326,7 +326,7 @@ end)
 -- ---------------------------------------------------------------------------
 local rottaVerso = nil
 
-RegisterCommand('interventi', function()
+RegisterCommand('incendi', function()
     local righe = AUREA.Callback.Attendi('vvf:interventi')
     local voci = {}
 

@@ -95,7 +95,13 @@ AUREA.Callback.Registra('voc:sintonizza', function(src, rispondi, frequenza)
     frequenze[src] = frequenza
     pma('setPlayerRadio', src, frequenza)
 
-    rispondi(true, ('Sintonizzato sulla %0.1f.'):format(frequenza))
+    local quanti = 0
+    for _, f in pairs(frequenze) do
+        if f == frequenza then quanti = quanti + 1 end
+    end
+
+    rispondi(true, ('%s — sintonizzato sulla %0.1f. In ascolto: %d.')
+        :format(VOC.NomeFrequenza(frequenza), frequenza, quanti))
 end)
 
 --- Chi perde la radio esce dalla frequenza: non si resta in ascolto
@@ -133,5 +139,54 @@ AddEventHandler('aurea:lavoro:cambiato', function(src, lavoro)
 end)
 
 exports('FrequenzaDi', function(src) return frequenze[src] end)
+
+-- ---------------------------------------------------------------------------
+--  Telefonate
+--
+--  Il telefono decide chi parla con chi; qui si apre e si chiude il canale
+--  vocale fra i due. pma-voice ha già il concetto di chiamata, quindi non
+--  si inventa niente: si usa il suo.
+--
+--  Chi è vicino sente la tua metà della conversazione e non quella
+--  dell'altro, che è come funziona un telefono all'orecchio. Lo fa
+--  pma-voice da solo tenendo la voce di prossimità accesa.
+-- ---------------------------------------------------------------------------
+exports('Telefonata', function(sorgenteA, sorgenteB, attiva)
+    local a, b = tonumber(sorgenteA), tonumber(sorgenteB)
+    if not a or not b then return false end
+
+    if attiva then
+        pma('addPlayerToCall', a, b)
+    else
+        pma('removePlayerFromCall', a)
+        pma('removePlayerFromCall', b)
+    end
+
+    return true
+end)
+
+-- ---------------------------------------------------------------------------
+--  La frequenza sintonizzata, per chi deve saperla
+--
+--  C'era una sola radio nel gioco ma due elenchi di sintonizzati: uno qui,
+--  per la voce, e uno in aurea_chat, per il testo. Erano indipendenti, e
+--  il comando /radio del client copriva quello del server: chi si
+--  sintonizzava parlava ma non scriveva. Adesso l'elenco è questo, uno
+--  solo, e aurea_chat lo legge da qui.
+-- ---------------------------------------------------------------------------
+
+--- La frequenza su cui è sintonizzato un giocatore, o nil se ha la radio spenta.
+exports('FrequenzaDi', function(src)
+    return frequenze[tonumber(src)]
+end)
+
+--- Chi è sintonizzato su una frequenza: elenco di source.
+exports('SintonizzatiSu', function(frequenza)
+    local out = {}
+    for src, f in pairs(frequenze) do
+        if f == frequenza then out[#out + 1] = src end
+    end
+    return out
+end)
 
 AddEventHandler('playerDropped', function() frequenze[source] = nil end)
