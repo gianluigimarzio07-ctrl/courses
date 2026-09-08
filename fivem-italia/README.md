@@ -145,6 +145,7 @@ fivem-italia/
 | `aurea_ospedale` | Triage a codici, esami di laboratorio e diagnostica, cartella clinica, certificazioni di idoneità, riscontro diagnostico |
 | `aurea_azienda` | Gestione del personale: assunzioni, gradi, licenziamenti, cassa dell'ente, registro presenze |
 | `aurea_crafting` | Banchi da lavoro per attrezzi, elettronica e medicazioni, con smontaggio che restituisce materiale |
+| `aurea_cripto` | Mercato di criptovalute che si muove da solo, riciclaggio allo sportello in contanti non tracciati, antiriciclaggio e sequestri della Guardia di Finanza |
 
 ### `[italia]`
 
@@ -177,6 +178,9 @@ fivem-italia/
 | `ita_funebri` | Morte definitiva su richiesta, cerimonia, successione, cimitero |
 | `ita_scientifica` | Bossoli, sangue, impronte e residui sulla scena; banca dati biometrica alimentata dal fotosegnalamento; balistica e confronto in laboratorio |
 | `ita_carcere` | Peculio e deposito degli effetti, sopravvitto, lavoro retribuito, colloqui autorizzati, perquisizione e isolamento, evasione con attrezzi introdotti da fuori |
+| `ita_vigilfuoco` | Incendi che si propagano di focolaio in focolaio, autobotte con l'acqua che finisce, idranti, estricazione con le cesoie, fughe di gas, certificato di prevenzione incendi |
+| `ita_nautica` | Patente nautica con esame vero, dotazioni di sicurezza per fascia di distanza, ormeggi, noleggio, controlli della Guardia Costiera, soccorso in mare |
+| `ita_scuola` | Università con esami e sessioni, lauree ed esame di Stato: senza titolo non ti assumono medico né avvocato |
 
 ### `[lavori]`
 

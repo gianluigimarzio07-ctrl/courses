@@ -232,6 +232,29 @@ I('reperto',          { etichetta = 'Reperto sigillato', peso = 120, impilabile 
 I('certificato_medico',{ etichetta = 'Certificato medico', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Idoneità psicofisica. Ha una scadenza e serve altrove.' })
 
 -- ---------------------------------------------------------------------------
+--  VIGILI DEL FUOCO
+-- ---------------------------------------------------------------------------
+I('dpi_antincendio',  { etichetta = 'Dispositivi di protezione antincendio', peso = 4500, impilabile = false, unico = true, categoria = 'servizio', descrizione = 'Giacca, elmo e sottocasco. Senza, nelle fiamme non si sta.' })
+I('manichetta',       { etichetta = 'Manichetta con lancia', peso = 6000, impilabile = false, unico = true, categoria = 'servizio', descrizione = 'Si collega all autobotte. Consuma l acqua del serbatoio.' })
+I('estintore',        { etichetta = 'Estintore a polvere', peso = 6000, impilabile = false, unico = true, usabile = true, categoria = 'servizio', descrizione = 'Basta per un principio d incendio, non per un rogo.' })
+I('autorespiratore',  { etichetta = 'Autorespiratore', peso = 12000, impilabile = false, unico = true, categoria = 'servizio', descrizione = 'Obbligatorio dove l aria non si respira.' })
+I('cesoie_idrauliche',{ etichetta = 'Cesoie idrauliche', peso = 18000, impilabile = false, unico = true, categoria = 'servizio', descrizione = 'Aprono le lamiere. Servono a tirare fuori chi è incastrato.' })
+I('ascia_pompiere',   { etichetta = 'Ascia da pompiere', peso = 3500, impilabile = false, unico = true, categoria = 'servizio' })
+I('cpi',              { etichetta = 'Certificato di prevenzione incendi', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Lo rilasciano i Vigili del Fuoco dopo il sopralluogo. Ha una scadenza.' })
+
+-- ---------------------------------------------------------------------------
+--  NAUTICA
+-- ---------------------------------------------------------------------------
+I('patente_nautica',  { etichetta = 'Patente nautica', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Entro 12 miglia. Oltre le sei miglia serve sempre.' })
+I('giubbotto_salvataggio', { etichetta = 'Cintura di salvataggio', peso = 900, categoria = 'servizio', descrizione = 'Una per persona a bordo: è il minimo assoluto.' })
+I('razzo_segnalazione',{ etichetta = 'Razzo a paracadute', peso = 400, usabile = true, categoria = 'servizio', descrizione = 'Chi lo vede è tenuto a intervenire o a riferire.' })
+
+-- ---------------------------------------------------------------------------
+--  TITOLI DI STUDIO
+-- ---------------------------------------------------------------------------
+I('laurea',           { etichetta = 'Diploma di laurea', peso = 20, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Il pezzo di carta. Per alcune professioni non basta: serve anche l abilitazione.' })
+
+-- ---------------------------------------------------------------------------
 --  ATTREZZI E VARIE
 -- ---------------------------------------------------------------------------
 I('kit_riparazione',  { etichetta = 'Kit riparazione', peso = 2500, usabile = true, categoria = 'attrezzi' })

@@ -47,6 +47,7 @@ Se invece hai già un database della prima versione, esegui anche:
 mysql -u aurea -p aurea < sql/03_espansione.sql
 mysql -u aurea -p aurea < sql/04_servizi.sql
 mysql -u aurea -p aurea < sql/05_indagini.sql
+mysql -u aurea -p aurea < sql/06_pubblici.sql
 ```
 
 Aggiungono le tabelle dei moduli introdotti dopo — armadio dei completi,
@@ -54,8 +55,10 @@ registro delle armi e porto d'armi, licenze di pesca e caccia, stato civile
 ed elezioni comunali, testata giornalistica, poi animali, poste, scommesse,
 sosta, supporto, whitelist e onoranze funebri, e infine banca dati
 biometrica, reperti, matricola e colloqui del carcere, riscontri
-diagnostici, casse degli enti e fermi immagine. Usano `CREATE TABLE IF NOT
-EXISTS` e `ADD COLUMN IF NOT EXISTS`, quindi rieseguirli non fa danni.
+diagnostici, casse degli enti e fermi immagine, e infine carriere
+universitarie, titoli di studio, ormeggi e criptovalute. Usano `CREATE
+TABLE IF NOT EXISTS` e `ADD COLUMN IF NOT EXISTS`, quindi rieseguirli non
+fa danni.
 
 ---
 
@@ -372,6 +375,9 @@ Manca la seconda migrazione: esegui `sql/04_servizi.sql`.
 **`Unknown table 'reperti'` (o `banca_dati_biometrica`, `carcere_matricola`,
 `riscontri`, `enti`, `telecamere_fermi`), oppure `Unknown column 'visto_il'`.**
 Manca la terza migrazione: esegui `sql/05_indagini.sql`.
+
+**`Unknown table 'titoli'` (o `carriere`, `ormeggi`, `cripto_mercato`).**
+Manca la quarta migrazione: esegui `sql/06_pubblici.sql`.
 
 **`attempt to index a nil value (field 'aurea_target')`.**
 La risorsa che dà l'errore parte prima di `aurea_target`. Deve dichiararlo

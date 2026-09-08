@@ -385,6 +385,13 @@ AUREA.Callback.Registra('dro:concludiLavorazione', function(src, rispondi)
         if r.probabilitaIncendio and math.random(100) <= r.probabilitaIncendio then
             local coord = GetEntityCoords(GetPlayerPed(src))
             TriggerClientEvent('dro:incendio', -1, { x = coord.x, y = coord.y, z = coord.z })
+
+            -- Non è solo un effetto: diventa un intervento dei Vigili del
+            -- Fuoco con i suoi focolai, e quelli si allargano se nessuno
+            -- arriva. Un laboratorio che prende fuoco porta gente.
+            TriggerEvent('aurea:vigilfuoco:incendio', 'industriale',
+                { x = coord.x, y = coord.y, z = coord.z }, lab.nome)
+
             TriggerEvent('aurea:112:allerta', 'incendio',
                 { x = coord.x, y = coord.y, z = coord.z },
                 'Principio di incendio con esalazioni. Possibile laboratorio clandestino.',

@@ -122,6 +122,17 @@ AUREA.Callback.Registra('azi:assumi', function(src, rispondi, bersaglioSrc)
         return rispondi(false, 'Fa già parte dell\'organico.')
     end
 
+    -- Le professioni vogliono il titolo di studio. Se ita_scuola non è
+    -- installata la pcall fallisce e non si controlla niente: il vincolo
+    -- si aggiunge da solo quando la risorsa c'è, e non rompe se non c'è.
+    local risposto, ammesso, richiesto = pcall(function()
+        return exports.ita_scuola:AbilitatoAlLavoro(b.citizenid, g.lavoro.nome)
+    end)
+    if risposto and ammesso == false then
+        return rispondi(false, ('%s non ha il titolo richiesto: serve %s.')
+            :format(b:NomeCompleto(), richiesto or 'un titolo di studio'))
+    end
+
     local contributo = AZI.Regole.contributoAssunzione
     local ok, restante = movimento(g.lavoro.nome, -contributo,
         ('assunzione di %s'):format(b:NomeCompleto()), g:NomeCompleto())
