@@ -139,3 +139,6 @@ dmypy.json
 *.DS_Store
 tmp_*
 examples/fine-tuned_qa/local_cache/*
+# output dello scanner XAUUSD
+xauusd_scan.html
+xauusd_scan.json
