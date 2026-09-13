@@ -413,14 +413,24 @@ CreateThread(function()
                 -- Ritenuta IRPEF alla fonte, girata all'erario dal modulo fiscale
                 local aliquota = lordo >= 25000 and 0.27 or 0.23
                 local ritenuta = math.floor(lordo * aliquota)
-                local netto = lordo - ritenuta
+                -- Contributi a carico del lavoratore. Prima uscivano solo
+                -- dalle buste paga private: chi era dipendente pubblico non
+                -- versava niente e non maturava niente.
+                local contributi = math.floor(lordo * C.Stipendi.aliquotaContributiva)
+                local netto = lordo - ritenuta - contributi
 
                 g:Aggiungi('banca', netto, ('Stipendio %s'):format(AUREA.EtichettaLavoro(g.lavoro.nome, g.lavoro.grado)))
                 TriggerEvent('aurea:fisco:ritenuta', g.citizenid, ritenuta, 'irpef')
+                TriggerEvent('aurea:fisco:ritenuta', g.citizenid, contributi, 'inps')
+                -- Il montante previdenziale si calcola sul lordo, non sul
+                -- trattenuto: è la quota di computo, non la cassa.
+                TriggerEvent('aurea:previdenza:contributo', g.citizenid, lordo)
+
                 TriggerClientEvent('aurea:ui:notifica', g.source, {
                     tipo = 'successo',
                     titolo = 'Stipendio accreditato',
-                    testo = ('Netto %s · ritenuta %s'):format(U.Euro(netto), U.Euro(ritenuta)),
+                    testo = ('Netto %s · IRPEF %s · contributi %s')
+                        :format(U.Euro(netto), U.Euro(ritenuta), U.Euro(contributi)),
                 })
             end
         end

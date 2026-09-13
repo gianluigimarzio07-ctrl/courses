@@ -26,6 +26,29 @@ L('disoccupato', {
     },
 })
 
+-- Chi si è ritirato. Lo stipendio è zero perché il rateo di pensione non
+-- è uno stipendio: lo eroga ita_previdenza a parte, calcolato sul montante.
+L('pensionato', {
+    etichetta = 'Pensionato',
+    tipo = 'civile',
+    gradi = {
+        [0] = { etichetta = 'Trattamento di quiescenza', stipendio = 0 },
+    },
+})
+
+L('edile', {
+    etichetta = 'Impresa edile',
+    tipo = 'civile',
+    gradi = {
+        [0] = { etichetta = 'Manovale',          stipendio = 9500 },
+        [1] = { etichetta = 'Muratore',          stipendio = 13500, permessi = { 'lavora_cantiere' } },
+        [2] = { etichetta = 'Capo squadra',      stipendio = 17500, permessi = { 'lavora_cantiere', 'monta_ponteggio' } },
+        [3] = { etichetta = 'Preposto',          stipendio = 21000, permessi = { 'lavora_cantiere', 'monta_ponteggio', 'preposto' } },
+        [4] = { etichetta = 'Direttore di cantiere', stipendio = 27000,
+                permessi = { 'lavora_cantiere', 'monta_ponteggio', 'preposto', 'apri_cantiere', 'assumi', 'licenzia', 'cassa' } },
+    },
+})
+
 L('corriere', {
     etichetta = 'Corriere espresso',
     tipo = 'civile',

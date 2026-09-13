@@ -1160,4 +1160,201 @@ CREATE TABLE IF NOT EXISTS `tel_chiamate` (
   KEY `idx_perse` (`destinatario`, `esito`, `vista`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ---------------------------------------------------------------------------
+--  POSIZIONE ASSICURATIVA
+--
+--  Il montante è una scrittura, non un deposito: il sistema è a
+--  ripartizione e le pensioni le paga l'erario. Qui c'è solo il numero
+--  che serve a calcolare quanto spetta.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `previdenza_posizioni` (
+  `citizenid`         VARCHAR(12) NOT NULL,
+  `montante`          BIGINT      NOT NULL DEFAULT 0 COMMENT 'centesimi, 33% degli imponibili',
+  `settimane`         INT UNSIGNED NOT NULL DEFAULT 0,
+  `ultimo_imponibile` BIGINT      NOT NULL DEFAULT 0 COMMENT 'base di calcolo di malattia, NASpI e INAIL',
+  `ultimo_contributo` TIMESTAMP   NULL DEFAULT NULL,
+  `pensionato`        TINYINT(1)  NOT NULL DEFAULT 0,
+  `decorrenza`        TIMESTAMP   NULL DEFAULT NULL COMMENT 'da quando è in pensione',
+  PRIMARY KEY (`citizenid`),
+  KEY `idx_settimane` (`settimane`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
+--  PRESTAZIONI
+--
+--  Una riga per ogni cosa che l'INPS sta pagando. Il thread di erogazione
+--  legge solo quelle in stato 'aperta'.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `previdenza_prestazioni` (
+  `id`             BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `citizenid`      VARCHAR(12) NOT NULL,
+  `tipo`           ENUM('pensione','malattia','infortunio','naspi') NOT NULL,
+  `stato`          ENUM('aperta','chiusa','revocata','sospesa') NOT NULL DEFAULT 'aperta',
+  `importo_rateo`  BIGINT      NOT NULL DEFAULT 0,
+  `ratei_residui`  INT         NOT NULL DEFAULT 0,
+  `ratei_erogati`  INT         NOT NULL DEFAULT 0,
+  `visita_fiscale` TINYINT(1)  NOT NULL DEFAULT 0,
+  `motivo`         VARCHAR(160) DEFAULT NULL COMMENT 'perché è stata chiusa o revocata',
+  `dati`           JSON        DEFAULT NULL,
+  `aperta_il`      TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `chiusa_il`      TIMESTAMP   NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_aperte` (`stato`, `tipo`),
+  KEY `idx_citizen` (`citizenid`, `stato`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
+--  INFORTUNI SUL LAVORO
+--
+--  Art. 53 D.P.R. 1124/1965: il datore denuncia entro il termine. Scaduto
+--  quello, `scaduto` passa a 1, arriva la sanzione e il DURC diventa
+--  irregolare finché la posizione non viene sanata.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `previdenza_infortuni` (
+  `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `citizenid`     VARCHAR(12) NOT NULL COMMENT 'l\'infortunato',
+  `datore`        VARCHAR(12) DEFAULT NULL COMMENT 'chi aveva l\'obbligo di denuncia',
+  `descrizione`   VARCHAR(200) NOT NULL,
+  `gravita`       ENUM('lieve','medio','grave') NOT NULL DEFAULT 'lieve',
+  `denunciato`    TINYINT(1)  NOT NULL DEFAULT 0,
+  `denunciato_il` TIMESTAMP   NULL DEFAULT NULL,
+  `scaduto`       TINYINT(1)  NOT NULL DEFAULT 0 COMMENT '1 = termine decorso senza denuncia',
+  `scade_il`      TIMESTAMP   NULL DEFAULT NULL,
+  `aperto_il`     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_datore` (`datore`, `denunciato`, `scaduto`),
+  KEY `idx_infortunato` (`citizenid`, `id`),
+  KEY `idx_termine` (`denunciato`, `scaduto`, `scade_il`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
+--  DURC RILASCIATI
+--
+--  Il documento ha una scadenza: un cantiere aperto con un DURC di tre ore
+--  prima non è aperto in regola.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `previdenza_durc` (
+  `citizenid`     VARCHAR(12) NOT NULL,
+  `rilasciato_il` TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `scade_il`      TIMESTAMP   NULL DEFAULT NULL,
+  PRIMARY KEY (`citizenid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
+--  TITOLI EDILIZI
+--
+--  `silenzio_assenso` dice se il permesso è stato rilasciato dagli uffici
+--  o si è formato per decorso del termine (art. 20 D.P.R. 380/2001).
+--  Serve a saperlo dopo, quando qualcuno contesta.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `edilizia_permessi` (
+  `id`               INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `citizenid`        VARCHAR(12) NOT NULL,
+  `lotto`            VARCHAR(32) NOT NULL,
+  `silenzio_assenso` TINYINT(1)  NOT NULL DEFAULT 0,
+  `consumato`        TINYINT(1)  NOT NULL DEFAULT 0 COMMENT '1 = usato per aprire un cantiere',
+  `rilasciato_il`    TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `scade_il`         TIMESTAMP   NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_lotto` (`lotto`, `consumato`, `scade_il`),
+  KEY `idx_titolare` (`citizenid`, `id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
+--  CANTIERI
+--
+--  Uno per lotto. `permesso_id` a NULL significa cantiere abusivo: è la
+--  condizione che fa scattare il sequestro.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `edilizia_cantieri` (
+  `id`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `lotto`         VARCHAR(32) NOT NULL,
+  `impresa`       VARCHAR(32) NOT NULL COMMENT 'il lavoro dell\'ente titolare',
+  `direttore`     VARCHAR(12) NOT NULL COMMENT 'il datore di lavoro, ai fini INAIL',
+  `permesso_id`   INT UNSIGNED DEFAULT NULL,
+  `fase`          VARCHAR(24) NOT NULL DEFAULT 'scavo',
+  `lavorazioni`   INT UNSIGNED NOT NULL DEFAULT 0,
+  `rischio`       INT          NOT NULL DEFAULT 0 COMMENT '0-100',
+  `ponteggio`     TINYINT(1)  NOT NULL DEFAULT 0,
+  `pos`           TINYINT(1)  NOT NULL DEFAULT 0 COMMENT 'piano operativo di sicurezza depositato',
+  `stato`         ENUM('aperto','sospeso','consegnato','sequestrato') NOT NULL DEFAULT 'aperto',
+  `sospeso_fino`  DATETIME    NULL DEFAULT NULL,
+  `aperto_il`     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `consegnato_il` TIMESTAMP   NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_aperti` (`stato`, `lotto`),
+  KEY `idx_impresa` (`impresa`, `stato`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
+--  INFORTUNI IN CANTIERE
+--
+--  Il duplicato di quanto sta in previdenza_infortuni, ma dal lato del
+--  cantiere: serve a rispondere alla domanda "in quale cantiere ci si fa
+--  male, e con che rischio", che è quella che fa aprire un'inchiesta.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `edilizia_infortuni` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `cantiere_id` INT UNSIGNED NOT NULL,
+  `citizenid`   VARCHAR(12) NOT NULL,
+  `gravita`     ENUM('lieve','medio','grave') NOT NULL DEFAULT 'lieve',
+  `descrizione` VARCHAR(200) NOT NULL,
+  `rischio`     INT NOT NULL DEFAULT 0 COMMENT 'il rischio del cantiere al momento del fatto',
+  `momento`     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_cantiere` (`cantiere_id`, `id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
+--  ISPEZIONI
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `edilizia_ispezioni` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `cantiere_id` INT UNSIGNED NOT NULL,
+  `ispettore`   VARCHAR(64) NOT NULL,
+  `violazioni`  JSON        DEFAULT NULL,
+  `sanzione`    BIGINT      NOT NULL DEFAULT 0,
+  `momento`     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_cantiere` (`cantiere_id`, `id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
+--  VOLONTARI DEL GRUPPO COMUNALE
+--
+--  Non è un lavoro e non ha gradi: è un elenco. `interventi` è l'unica
+--  cosa che si accumula, e serve solo a riconoscere chi c'era.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pc_volontari` (
+  `citizenid`   VARCHAR(12) NOT NULL,
+  `nome`        VARCHAR(96) NOT NULL,
+  `interventi`  INT UNSIGNED NOT NULL DEFAULT 0,
+  `iscritto_il` TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`citizenid`),
+  KEY `idx_interventi` (`interventi`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ---------------------------------------------------------------------------
+--  SCENARI
+--
+--  I punti dei compiti non si salvano: si generano all'apertura e vivono
+--  in memoria. Uno scenario interrotto da un riavvio è uno scenario
+--  perso, ed è giusto così — l'emergenza è il momento in cui accade.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pc_emergenze` (
+  `id`             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tipo`           VARCHAR(32) NOT NULL,
+  `zona`           VARCHAR(96) NOT NULL,
+  `allerta`        VARCHAR(16) NOT NULL DEFAULT 'verde',
+  `compiti_totali` INT UNSIGNED NOT NULL DEFAULT 0,
+  `compiti_fatti`  INT UNSIGNED NOT NULL DEFAULT 0,
+  `partecipanti`   INT UNSIGNED NOT NULL DEFAULT 0,
+  `esito`          ENUM('aperta','risolta','fallita') NOT NULL DEFAULT 'aperta',
+  `aperta_il`      TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `chiusa_il`      TIMESTAMP   NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_esito` (`esito`, `id`),
+  KEY `idx_tipo` (`tipo`, `id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 SET FOREIGN_KEY_CHECKS = 1;

@@ -94,6 +94,21 @@ I('acciaio',          { etichetta = 'Acciaio', peso = 700, categoria = 'material
 I('plastica',         { etichetta = 'Plastica', peso = 200, categoria = 'materiali' })
 I('vetro',            { etichetta = 'Vetro', peso = 500, categoria = 'materiali' })
 
+-- Edilizia. Pesano molto apposta: un cantiere si rifornisce con il
+-- camion, non riempiendosi le tasche.
+I('cemento',          { etichetta = 'Sacco di cemento', peso = 2500, categoria = 'materiali' })
+I('sabbia',           { etichetta = 'Sabbia', peso = 1800, categoria = 'materiali' })
+I('mattoni',          { etichetta = 'Mattoni', peso = 2200, categoria = 'materiali' })
+I('tondino',          { etichetta = 'Tondino per armatura', peso = 3000, categoria = 'materiali' })
+I('tubo_ponteggio',   { etichetta = 'Tubo da ponteggio', peso = 3500, categoria = 'materiali', descrizione = 'Serve a montare il ponteggio. Senza, sopra i due metri non si sale.' })
+
+-- Dispositivi di protezione individuale (D.Lgs. 81/2008). Non sono un
+-- accessorio: senza, il rischio in cantiere sale a ogni lavorazione.
+I('casco_cantiere',   { etichetta = 'Elmetto di protezione', peso = 400, impilabile = false, usabile = true, categoria = 'attrezzi', descrizione = 'DPI obbligatorio in cantiere.' })
+I('scarpe_antinfortunistiche', { etichetta = 'Calzature antinfortunistiche', peso = 900, impilabile = false, usabile = true, categoria = 'attrezzi', descrizione = 'DPI obbligatorio in cantiere.' })
+I('imbracatura',      { etichetta = 'Imbracatura anticaduta', peso = 1500, impilabile = false, usabile = true, categoria = 'attrezzi', descrizione = 'Obbligatoria per i lavori in quota, sopra i due metri.' })
+I('gilet_alta_visibilita', { etichetta = 'Gilet ad alta visibilità', peso = 200, impilabile = false, usabile = true, categoria = 'attrezzi' })
+
 -- ---------------------------------------------------------------------------
 --  PESCA, CACCIA, CAVA E RACCOLTA
 -- ---------------------------------------------------------------------------

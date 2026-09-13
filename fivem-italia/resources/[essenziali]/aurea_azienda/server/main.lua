@@ -37,6 +37,14 @@ exports('VersaInCassa', function(lavoro, importo, causale)
     return (movimento(lavoro, math.floor(importo), causale or 'versamento', 'sistema'))
 end)
 
+--- E le altre risorse prelevano: il materiale del cantiere, le sanzioni
+--- all'impresa, i rimborsi. Restituisce (fatto, saldo residuo): se la
+--- cassa non basta non va in rosso, rifiuta.
+exports('PrelevaDaCassa', function(lavoro, importo, causale)
+    if not AUREA.Lavori[lavoro] or (tonumber(importo) or 0) <= 0 then return false, 0 end
+    return movimento(lavoro, -math.floor(importo), causale or 'prelievo', 'sistema')
+end)
+
 exports('SaldoCassa', saldo)
 
 -- ---------------------------------------------------------------------------

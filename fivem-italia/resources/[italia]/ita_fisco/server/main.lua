@@ -177,6 +177,9 @@ CreateThread(function()
                 AUREA.Denaro.AggiungiOffline(r.citizenid, 'banca', netto, ('stipendio %s'):format(r.ragione_sociale))
                 Erario.Incassa('inps', contributi, r.citizenid)
                 Erario.Incassa('irpef', irpef, r.citizenid)
+                -- La busta paga alimenta la posizione previdenziale: è
+                -- l'unico posto da cui ita_previdenza sa che hai lavorato.
+                TriggerEvent('aurea:previdenza:contributo', r.citizenid, r.stipendio)
 
                 local g = AUREA.GetPlayerByCitizenId(r.citizenid)
                 if g then

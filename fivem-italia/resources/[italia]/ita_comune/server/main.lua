@@ -276,6 +276,11 @@ AUREA.Callback.Registra('com:decidiIstanza', function(src, rispondi, id, accolta
         })
     end
 
+    -- Chi ha protocollato un tipo di istanza suo se la riprende da qui,
+    -- invece di stare a interrogare il database aspettando una decisione.
+    TriggerEvent('aurea:comune:istanzaDecisa', istanza.tipo, istanza.citizenid,
+        istanza.contenuto, accolta and true or false, g:NomeCompleto())
+
     rispondi(true, accolta and 'Istanza accolta.' or 'Istanza respinta.')
 end)
 

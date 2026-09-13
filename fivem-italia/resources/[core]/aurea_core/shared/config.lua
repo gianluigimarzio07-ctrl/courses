@@ -95,6 +95,17 @@ C.Salvataggio = {
 }
 
 -- ---------------------------------------------------------------------------
+--  Busta paga
+--
+--  La quota a carico del lavoratore (9,19% in Italia). Il resto del 33%
+--  di computo è la quota del datore, che nel sistema a ripartizione non
+--  si accantona: ita_previdenza la usa solo per calcolare il montante.
+-- ---------------------------------------------------------------------------
+C.Stipendi = {
+    aliquotaContributiva = 0.0919,
+}
+
+-- ---------------------------------------------------------------------------
 --  Province italiane usate per generare codici fiscali e codici cittadino
 -- ---------------------------------------------------------------------------
 C.Province = {

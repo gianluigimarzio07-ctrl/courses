@@ -49,6 +49,9 @@ mysql -u aurea -p aurea < sql/04_servizi.sql
 mysql -u aurea -p aurea < sql/05_indagini.sql
 mysql -u aurea -p aurea < sql/06_pubblici.sql
 mysql -u aurea -p aurea < sql/07_telefono.sql
+mysql -u aurea -p aurea < sql/08_previdenza.sql
+mysql -u aurea -p aurea < sql/09_edilizia.sql
+mysql -u aurea -p aurea < sql/10_protezionecivile.sql
 ```
 
 Aggiungono le tabelle dei moduli introdotti dopo — armadio dei completi,
@@ -58,7 +61,9 @@ sosta, supporto, whitelist e onoranze funebri, e infine banca dati
 biometrica, reperti, matricola e colloqui del carcere, riscontri
 diagnostici, casse degli enti e fermi immagine, e infine carriere
 universitarie, titoli di studio, ormeggi e criptovalute, infine il registro
-delle chiamate del telefono (i tabulati). Usano `CREATE
+delle chiamate del telefono (i tabulati), la posizione previdenziale con
+pensioni, malattia e infortuni, i cantieri con i titoli edilizi, e il
+volontariato di protezione civile. Usano `CREATE
 TABLE IF NOT EXISTS` e `ADD COLUMN IF NOT EXISTS`, quindi rieseguirli non
 fa danni.
 
@@ -383,6 +388,21 @@ Manca la quarta migrazione: esegui `sql/06_pubblici.sql`.
 
 **`Unknown table 'tel_chiamate'`, oppure `/tabulati` non trova niente.**
 Manca la quinta migrazione: esegui `sql/07_telefono.sql`.
+
+**`Unknown table 'previdenza_posizioni'`, `edilizia_cantieri` o `pc_volontari`.**
+Mancano le migrazioni successive: esegui `sql/08_previdenza.sql`,
+`sql/09_edilizia.sql` e `sql/10_protezionecivile.sql`.
+
+**Il montante contributivo resta a zero.**
+Il montante cresce con le buste paga, e le buste paga arrivano ogni 30
+minuti reali a chi ha un lavoro con uno stipendio. Chi è disoccupato
+prende il sussidio, che non è contribuzione: da lì la pensione non matura,
+ed è voluto.
+
+**Il cantiere non apre: "DURC irregolare".**
+La posizione contributiva ha un debito iscritto a ruolo, oppure c'è un
+infortunio che non è stato denunciato nei termini. Si vede con `/inps`, e
+si sana pagando all'Agenzia delle Entrate.
 
 **Un'app non compare nella home del telefono.**
 Le app le registrano le singole risorse: se quella risorsa non parte,

@@ -76,6 +76,35 @@ cento la villa si chiude e il colpo salta. Il bottino principale è il libro
 mastro della cosca, e lì c'è la scelta vera — venderlo al ricettatore, o
 consegnarlo a un pubblico ufficiale e far arrivare quei nomi in Procura.
 
+**I contributi tornano indietro.** Ogni busta paga trattiene il 9,19% e
+alimenta una posizione previdenziale. Non è una tassa travestita: da lì
+arrivano la pensione — calcolata sul montante, a ripartizione, come in
+Italia — la malattia con il certificato del medico, l'indennità INAIL dopo
+un infortunio e la NASpI per chi ha versato abbastanza. E arriva il DURC,
+che è la ragione per cui pagare i contributi conviene anche a chi della
+pensione non gliene importa niente: senza regolarità contributiva un
+cantiere non apre.
+
+**La sicurezza sul lavoro costa, e non averla costa di più.** In cantiere
+ogni lavorazione senza elmetto, calzature o imbracatura alza il rischio; i
+lavori in quota senza ponteggio lo alzano molto. Sopra soglia qualcuno cade
+davvero: parte l'ambulanza, si apre la pratica INAIL, e il datore ha un
+termine per denunciarla — scaduto quello, sanzione e DURC compromesso.
+L'ispettorato può sospendere l'attività, art. 14 D.Lgs. 81/2008, e chi ha
+aperto senza permesso a costruire si vede sequestrare tutto. Consegnare
+un'opera con il rischio basso, invece, porta un premio: la sicurezza ha un
+ritorno, non solo un costo evitato.
+
+**Quando l'emergenza è più grande di una squadra.** Il maltempo alza da solo
+il livello di allerta, il Sindaco può alzarlo di più, e sopra l'arancione si
+apre il Centro Operativo Comunale. Allora chi è iscritto al gruppo comunale
+di volontariato viene attivato: sacchi di sabbia contro l'esondazione,
+idrovore, fasce tagliafuoco davanti a un incendio che i vigili del fuoco
+stanno combattendo dall'altra parte, settori da battere per cercare un
+disperso. È l'unico posto del server dove un cittadino senza lavoro, senza
+gradi e senza equipaggiamento fa qualcosa che conta — e se lo scenario non
+si chiude nei termini, i danni li paga il bilancio comunale.
+
 **La cronaca esiste.** La testata pubblica, tutti leggono in edicola o dal
 telefono, e chi viene raccontato male ha gli strumenti che gli dà la legge
 italiana: la rettifica ex art. 8 legge 47/1948 — che se la redazione non
@@ -181,6 +210,9 @@ fivem-italia/
 | `ita_vigilfuoco` | Incendi che si propagano di focolaio in focolaio, autobotte con l'acqua che finisce, idranti, estricazione con le cesoie, fughe di gas, certificato di prevenzione incendi |
 | `ita_nautica` | Patente nautica con esame vero, dotazioni di sicurezza per fascia di distanza, ormeggi, noleggio, controlli della Guardia Costiera, soccorso in mare |
 | `ita_scuola` | Università con esami e sessioni, lauree ed esame di Stato: senza titolo non ti assumono medico né avvocato |
+| `ita_previdenza` | INPS e INAIL: montante contributivo, pensione di vecchiaia e anticipata, malattia con visita fiscale, infortunio sul lavoro con obbligo di denuncia, NASpI, DURC |
+| `ita_edilizia` | Cantieri a fasi, permesso a costruire con silenzio-assenso, DURC, POS, ponteggio, DPI e infortuni, ispezione e sospensione dell'attività, abuso edilizio e sequestro |
+| `ita_protezionecivile` | Sistema di allertamento, Centro Operativo Comunale, volontari del gruppo comunale, alluvioni, incendi boschivi e ricerca di dispersi |
 
 ### `[lavori]`
 
@@ -294,6 +326,10 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/cripto` | Portafoglio e mercato delle criptovalute |
 | `/titoli` | Titoli di studio e carriera universitaria |
 | `/razzo` `/recupera` | Razzo di segnalazione in mare e recupero di un naufrago |
+| `/inps` | Posizione contributiva, pensione, malattia, NASpI, DURC |
+| `/pc` | Protezione civile: allerta, scenari in corso, iscrizione al gruppo comunale |
+| `/cantiere` | Pannello del cantiere in cui ti trovi (imprese edili) |
+| `/denunciainfortunio` | Denuncia all'INAIL un infortunio di un tuo dipendente |
 | `/comande` | Comande del locale in cui lavori |
 
 ### Servizio (forze dell'ordine, 118, VVF)
@@ -327,6 +363,9 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/controllonautico` | Controllo di unità da diporto (Guardia Costiera) |
 | `/tabulati <numero>` | Acquisizione dei tabulati telefonici (polizia giudiziaria) |
 | `/uif` | Segnalazioni di operazioni sospette in criptovaluta (GdF) |
+| `/verificacontributi <id>` | Posizione contributiva e DURC di un soggetto (ispettorato) |
+| `/ispezionecantiere` `/sequestracantiere` | Vigilanza sui cantieri, art. 14 D.Lgs. 81/2008 e art. 44 D.P.R. 380/2001 |
+| `/allerta <livello>` `/emergenza <tipo>` | Allertamento e apertura degli scenari (Comune) |
 | `/guasti` | Guasti alla rete elettrica |
 | `/ticketaperti` `/candidature` | Supporto e whitelist (staff) |
 | `/metriche` | Stato del server (admin) |
