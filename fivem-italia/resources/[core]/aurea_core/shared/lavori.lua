@@ -60,6 +60,18 @@ L('immobiliarista', {
     },
 })
 
+L('vigilanza', {
+    etichetta = 'Istituto di vigilanza',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Addetto',        stipendio = 11000 },
+        [1] = { etichetta = 'Guardia giurata',stipendio = 15500, permessi = { 'piantonamento', 'portavalori' } },
+        [2] = { etichetta = 'Capo servizio',  stipendio = 19500, permessi = { 'piantonamento', 'portavalori', 'assegna' } },
+        [3] = { etichetta = 'Direttore',      stipendio = 25000, permessi = { 'piantonamento', 'portavalori', 'assegna', 'assumi', 'licenzia', 'cassa' } },
+    },
+})
+
 L('corriere', {
     etichetta = 'Corriere espresso',
     tipo = 'civile',

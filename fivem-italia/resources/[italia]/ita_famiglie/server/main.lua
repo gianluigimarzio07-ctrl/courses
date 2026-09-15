@@ -58,6 +58,26 @@ end
 
 exports('CaloreOrganizzazione', Famiglie.Calore)
 
+--- L'organizzazione di un codice cittadino, o nil. Funziona anche su chi
+--- è scollegato: legge l'anagrafe, non la sessione.
+---@return string|nil tag, string|nil nome
+function Famiglie.TagDi(citizenid)
+    local tag = MySQL.scalar.await('SELECT organizzazione FROM personaggi WHERE citizenid = ?', { citizenid })
+    if not tag or tag == 'nessuna' then return nil end
+    local org = Famiglie.Get(tag)
+    return tag, org and org.nome or tag
+end
+
+exports('OrganizzazioneDi', Famiglie.TagDi)
+
+--- Alzare il calore partendo da una persona invece che da un tag: è quello
+--- che serve agli altri moduli, che conoscono chi ha fatto la cosa e non
+--- a quale cosca appartiene.
+AddEventHandler('aurea:famiglie:calore', function(citizenid, delta, motivo)
+    local tag = Famiglie.TagDi(citizenid)
+    if tag then Famiglie.Calore(tag, delta, motivo) end
+end)
+
 --- Chi controlla un territorio, e con quanta presa. Serve a chi vuole sapere
 --- se sta lavorando in casa propria: le piazze di spaccio rendono di più
 --- dove l'organizzazione ha già il controllo.

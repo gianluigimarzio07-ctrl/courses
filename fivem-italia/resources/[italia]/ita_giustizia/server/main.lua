@@ -30,6 +30,10 @@ function Casellario.Apri(citizenid, codiceReato, agente, note)
         })
     end
 
+    -- Chi ha titoli che decadono con una condanna se lo riprende da qui:
+    -- il decreto di guardia giurata, il porto d'armi, una licenza.
+    TriggerEvent('aurea:giustizia:fascicolo', citizenid, reato.gravita, reato.codice, id)
+
     AUREA.Log('giustizia', 'info', nil, ('Fascicolo %s a carico di %s (%s)'):format(reato.articolo, citizenid, agente or 'ufficio'))
     return id
 end
