@@ -451,6 +451,10 @@ AUREA.Callback.Registra('edi:lavora', function(src, rispondi)
     c.lavorazioni = c.lavorazioni + 1
     g:Aggiungi('contanti', EDI.Compensi.aLavorazione, 'lavorazione in cantiere')
 
+    -- Ogni lavorazione produce macerie. Il cantiere non se ne accorge:
+    -- se ne accorge chi deve smaltirle.
+    TriggerEvent('aurea:rifiuti:prodotti', g.citizenid, EDI.Lavoro, 1)
+
     local messaggio
     if c.lavorazioni >= fase.lavorazioni then
         local dopo = EDI.FaseDopo(c.fase)

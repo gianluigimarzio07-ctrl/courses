@@ -213,6 +213,16 @@ fivem-italia/
 | `ita_previdenza` | INPS e INAIL: montante contributivo, pensione di vecchiaia e anticipata, malattia con visita fiscale, infortunio sul lavoro con obbligo di denuncia, NASpI, DURC |
 | `ita_edilizia` | Cantieri a fasi, permesso a costruire con silenzio-assenso, DURC, POS, ponteggio, DPI e infortuni, ispezione e sospensione dell'attività, abuso edilizio e sequestro |
 | `ita_protezionecivile` | Sistema di allertamento, Centro Operativo Comunale, volontari del gruppo comunale, alluvioni, incendi boschivi e ricerca di dispersi |
+| `ita_dogana` | Bolletta doganale, circuito di controllo verde/giallo/arancione/rosso, visita merce, accise e contrabbando |
+| `ita_intercettazioni` | Decreto del giudice, urgenza del PM con convalida a termine, brogliaccio, inutilizzabilità |
+| `ita_notaio` | Atto pubblico di compravendita immobiliare, imposta di registro, prima casa, procura a vendere |
+| `ita_immobiliare` | Vetrina fra privati, visite accompagnate, proposte con caparra, provvigione di mediazione |
+| `ita_usura` | Prestiti fra privati, tasso soglia calcolato come quello vero, morosità, denuncia e fondo di solidarietà |
+| `ita_bische` | Sette e mezzo clandestino con banco di tasca propria, soffiate, irruzioni, art. 718 e 720 c.p. |
+| `ita_corse` | Competizioni di velocità non autorizzate, checkpoint validati dal server, art. 9-ter CdS e confisca del veicolo |
+| `ita_sicurezza` | Guardie particolari giurate con decreto, presidi agli esercizi, servizi portavalori assaltabili |
+| `ita_asl` | Igiene degli esercizi come numero, piano HACCP, ispezioni, tossinfezioni, sospensione dell'attività |
+| `ita_rifiuti` | Rifiuti speciali, registro di carico e scarico, formulario, discariche abusive, art. 256 e 452-quaterdecies |
 
 ### `[lavori]`
 
@@ -326,6 +336,16 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/cripto` | Portafoglio e mercato delle criptovalute |
 | `/titoli` | Titoli di studio e carriera universitaria |
 | `/razzo` `/recupera` | Razzo di segnalazione in mare e recupero di un naufrago |
+| `/dogana` | Presenta una bolletta doganale e ritira la merce al terminal |
+| `/prestito` | Prestiti fra privati: chiedi, presta, paga le rate |
+| `/denunciausura` | Denuncia un prestito oltre la soglia: il contratto è nullo |
+| `/corsa` | Apri o entra in una corsa clandestina |
+| `/immobiliare` `/proposte` | Vetrina immobiliare e proposte ricevute |
+| `/firma` | Firma un atto davanti al notaio |
+| `/igiene` | Stato igienico del locale in cui lavori, sanificazione, HACCP |
+| `/registrorifiuti` | Il tuo registro di carico e scarico e i formulari |
+| `/vigilanza` | Servizi di vigilanza privata: presidi e portavalori |
+| `/forzaportellone` | Apri un furgone portavalori. Ci vuole tempo, e si sente |
 | `/inps` | Posizione contributiva, pensione, malattia, NASpI, DURC |
 | `/pc` | Protezione civile: allerta, scenari in corso, iscrizione al gruppo comunale |
 | `/cantiere` | Pannello del cantiere in cui ti trovi (imprese edili) |
@@ -366,6 +386,12 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/verificacontributi <id>` | Posizione contributiva e DURC di un soggetto (ispettorato) |
 | `/ispezionecantiere` `/sequestracantiere` | Vigilanza sui cantieri, art. 14 D.Lgs. 81/2008 e art. 44 D.P.R. 380/2001 |
 | `/allerta <livello>` `/emergenza <tipo>` | Allertamento e apertura degli scenari (Comune) |
+| `/visitamerce` | Visita merce su un container doganale (GdF) |
+| `/decreti` `/intercettazioni` | Decreti di intercettazione e sala d'ascolto |
+| `/irruzione` | Irruzione in una bisca clandestina |
+| `/contestacorsa <id>` | Art. 9-ter CdS: sanzione, sospensione e confisca |
+| `/ispezionealimenti` | Ispezione igienico-sanitaria di un esercizio (ASL) |
+| `/controlloregistro <id>` | Registro di carico e scarico dei rifiuti (NTA) |
 | `/guasti` | Guasti alla rete elettrica |
 | `/ticketaperti` `/candidature` | Supporto e whitelist (staff) |
 | `/metriche` | Stato del server (admin) |

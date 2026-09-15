@@ -109,6 +109,11 @@ AUREA.Callback.Registra('ris:prepara', function(src, rispondi, idComanda)
         return rispondi(false, 'Devi essere in cucina.')
     end
 
+    -- L'ASL può aver sospeso l'attività: in quel caso la cucina è chiusa
+    -- e non c'è comanda che tenga.
+    local okAsl, puo, motivo = pcall(function() return exports.ita_asl:PuoCucinare(l.id) end)
+    if okAsl and puo == false then return rispondi(false, motivo or 'Attività sospesa.') end
+
     local r = RIS.GetRicetta(c.piatto)
     local inventario = exports.aurea_inventory:Inventario(g.citizenid)
 
@@ -150,6 +155,11 @@ AUREA.Callback.Registra('ris:concludiPreparazione', function(src, rispondi)
     c.prontaAlle = os.time()
     c.cuoco = g.citizenid
 
+    -- Ogni piatto sporca. Se la cucina è messa male, il conto lo paga
+    -- chi mangia: lo decide ita_asl, non questo file.
+    pcall(function() exports.ita_asl:PiattoPreparato(c.locale, c.cliente) end)
+    TriggerEvent('aurea:rifiuti:prodotti', g.citizenid, g.lavoro.nome, 1)
+
     local cliente = AUREA.GetPlayerByCitizenId(c.cliente)
     if cliente then
         TriggerClientEvent('aurea:ui:notifica', cliente.source, {
@@ -160,6 +170,20 @@ AUREA.Callback.Registra('ris:concludiPreparazione', function(src, rispondi)
     end
 
     rispondi(true, ('%s pronto. Portalo al cliente.'):format(r.nome))
+end)
+
+--- L'elenco dei locali, per chi deve sapere dove sono: l'ASL che li
+--- ispeziona, e chiunque altro in futuro.
+exports('Locali', function()
+    local fuori = {}
+    for _, l in ipairs(RIS.Locali) do
+        fuori[#fuori + 1] = {
+            id = l.id, nome = l.nome, lavoro = l.lavoro,
+            banco = { x = l.banco.x, y = l.banco.y, z = l.banco.z },
+            cucina = { x = l.cucina.x, y = l.cucina.y, z = l.cucina.z },
+        }
+    end
+    return fuori
 end)
 
 -- ---------------------------------------------------------------------------

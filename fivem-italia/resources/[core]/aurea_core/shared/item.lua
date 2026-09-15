@@ -171,6 +171,7 @@ I('dissuasore',       { etichetta = 'Striscia chiodata', peso = 4000, impilabile
 -- ---------------------------------------------------------------------------
 I('grimaldello',      { etichetta = 'Grimaldello', peso = 120, usabile = true, categoria = 'illegale' })
 I('chiave_inglese',   { etichetta = 'Chiave inglese', peso = 800, usabile = true, categoria = 'attrezzi' })
+I('detergente',       { etichetta = 'Detergente professionale', peso = 700, categoria = 'attrezzi', descrizione = 'Sanificazione delle superfici. Un locale che non ne compra è un locale che verrà chiuso.' })
 I('contanti_sporchi', { etichetta = 'Contanti non tracciati', peso = 2, categoria = 'illegale', descrizione = 'Vanno ripuliti prima di poter essere versati.' })
 I('cartuccia',        { etichetta = 'Cartucce', peso = 12, categoria = 'armi' })
 I('cartuccia_caccia', { etichetta = 'Cartucce da caccia', peso = 20, categoria = 'armi' })
