@@ -223,6 +223,7 @@ Registro.Aggiungi({
 
             MySQL.insert.await('INSERT INTO tel_messaggi (mittente, destinatario, testo) VALUES (?, ?, ?)',
                 { g.telefono, numero, testo })
+            TriggerEvent('aurea:telefono:sms', g.telefono, numero, testo)
 
             local destinatario = AUREA.GetPlayerByTelefono(numero)
             if destinatario then
@@ -884,6 +885,7 @@ AUREA.Comando('sms', 'utente', 'Invia un SMS rapido', {
 
     MySQL.insert('INSERT INTO tel_messaggi (mittente, destinatario, testo) VALUES (?, ?, ?)',
         { g.telefono, numero, testo:sub(1, 300) })
+    TriggerEvent('aurea:telefono:sms', g.telefono, numero, testo:sub(1, 300))
 
     local destinatario = AUREA.GetPlayerByTelefono(numero)
     if destinatario then

@@ -49,6 +49,17 @@ L('edile', {
     },
 })
 
+L('immobiliarista', {
+    etichetta = 'Agenzia immobiliare',
+    tipo = 'civile',
+    gradi = {
+        [0] = { etichetta = 'Collaboratore',  stipendio = 10000 },
+        [1] = { etichetta = 'Agente',         stipendio = 14000, permessi = { 'visita', 'pubblica' } },
+        [2] = { etichetta = 'Agente senior',  stipendio = 18500, permessi = { 'visita', 'pubblica', 'stima' } },
+        [3] = { etichetta = 'Titolare',       stipendio = 24000, permessi = { 'visita', 'pubblica', 'stima', 'assumi', 'licenzia', 'cassa' } },
+    },
+})
+
 L('corriere', {
     etichetta = 'Corriere espresso',
     tipo = 'civile',
@@ -108,6 +119,10 @@ L('avvocato', {
         [0] = { etichetta = 'Praticante',     stipendio = 12000, permessi = { 'consulta_casellario' } },
         [1] = { etichetta = 'Avvocato',       stipendio = 20000, permessi = { 'consulta_casellario', 'colloquio_detenuto', 'ricorso' } },
         [2] = { etichetta = 'Penalista',      stipendio = 28000, permessi = { 'consulta_casellario', 'colloquio_detenuto', 'ricorso', 'patteggiamento' } },
+        -- Il notaio è un pubblico ufficiale, non un avvocato: ma tenerlo
+        -- come grado dello studio evita un ente da tre persone che non
+        -- si riempirebbe mai. Il permesso 'rogito' è quello che conta.
+        [3] = { etichetta = 'Notaio',         stipendio = 34000, permessi = { 'consulta_casellario', 'colloquio_detenuto', 'ricorso', 'patteggiamento', 'rogito', 'assumi', 'licenzia', 'cassa' } },
     },
 })
 

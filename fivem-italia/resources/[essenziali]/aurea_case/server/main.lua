@@ -115,7 +115,14 @@ AUREA.Callback.Registra('casa:entra', function(src, rispondi, idImmobile)
     if not i then return rispondi(nil, 'Immobile non trovato.') end
 
     if i.serratura == 1 and not haAccesso(i, g.citizenid) then
-        return rispondi(nil, 'La porta è chiusa a chiave.')
+        -- L'agenzia immobiliare può aprire per una visita: è un permesso
+        -- a tempo, non una chiave, e scade da solo.
+        local conVisita = select(2, pcall(function()
+            return exports.ita_immobiliare:VisitaAperta(g.citizenid, i.id)
+        end))
+        if conVisita ~= true then
+            return rispondi(nil, 'La porta è chiusa a chiave.')
+        end
     end
 
     -- ogni immobile ha la propria istanza

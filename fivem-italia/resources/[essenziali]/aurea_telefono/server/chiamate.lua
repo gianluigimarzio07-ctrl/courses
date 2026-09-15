@@ -34,6 +34,11 @@ end
 local function scriviTabulato(mittente, destinatario, esito, secondi)
     MySQL.insert('INSERT INTO tel_chiamate (mittente, destinatario, esito, secondi) VALUES (?, ?, ?, ?)',
         { mittente, destinatario, esito, math.max(0, math.floor(secondi or 0)) })
+
+    -- Il telefono annuncia, non sa chi ascolta. È così che ita_intercettazioni
+    -- riesce a esistere senza che questo file sappia cosa sia un decreto.
+    TriggerEvent('aurea:telefono:chiamata', mittente, destinatario, esito,
+        math.max(0, math.floor(secondi or 0)))
 end
 
 -- ---------------------------------------------------------------------------

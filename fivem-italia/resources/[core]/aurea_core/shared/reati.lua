@@ -58,6 +58,21 @@ R('dpr73', { articolo = 'art. 73 DPR 309/90', nome = 'Spaccio di stupefacenti', 
 R('dpr73l',{ articolo = 'art. 73 c.5 DPR 309/90', nome = 'Spaccio di lieve entità',gravita = 2, pena = 30,  ammenda = 80000 })
 R('dpr74', { articolo = 'art. 74 DPR 309/90', nome = 'Associazione finalizzata al traffico', gravita = 5, pena = 150, ammenda = 600000 })
 
+-- Economia, dogana e gioco
+R('644',  { articolo = 'art. 644 c.p.',   nome = 'Usura',                          gravita = 4, pena = 80,  ammenda = 300000 })
+R('644a', { articolo = 'art. 644 c.p. agg.', nome = 'Usura aggravata',            gravita = 4, pena = 110, ammenda = 450000 })
+R('718',  { articolo = 'art. 718 c.p.',   nome = 'Esercizio di gioco d\'azzardo',  gravita = 2, pena = 25,  ammenda = 70000 })
+R('720',  { articolo = 'art. 720 c.p.',   nome = 'Partecipazione a gioco d\'azzardo', gravita = 1, pena = 8, ammenda = 22000 })
+R('291b', { articolo = 'art. 291-bis DPR 43/1973', nome = 'Contrabbando di tabacchi lavorati esteri', gravita = 3, pena = 50, ammenda = 160000 })
+R('292',  { articolo = 'art. 292 DPR 43/1973', nome = 'Contrabbando',              gravita = 3, pena = 40,  ammenda = 130000 })
+R('474',  { articolo = 'art. 474 c.p.',   nome = 'Introduzione di prodotti con segni falsi', gravita = 2, pena = 28, ammenda = 75000 })
+R('452q', { articolo = 'art. 452-quaterdecies c.p.', nome = 'Attività organizzate per il traffico illecito di rifiuti', gravita = 4, pena = 95, ammenda = 400000 })
+R('256',  { articolo = 'art. 256 D.Lgs. 152/2006', nome = 'Gestione non autorizzata di rifiuti', gravita = 2, pena = 22, ammenda = 65000 })
+
+-- Intercettazioni e indagini
+R('617',  { articolo = 'art. 617 c.p.',   nome = 'Intercettazione abusiva di comunicazioni', gravita = 3, pena = 45, ammenda = 120000 })
+R('326',  { articolo = 'art. 326 c.p.',   nome = 'Rivelazione di segreti d\'ufficio', gravita = 3, pena = 42, ammenda = 110000 })
+
 -- Associative
 R('416',  { articolo = 'art. 416 c.p.',   nome = 'Associazione per delinquere',    gravita = 5, pena = 120, ammenda = 400000 })
 R('416b', { articolo = 'art. 416-bis c.p.', nome = 'Associazione di tipo mafioso', gravita = 5, pena = 240, ammenda = 900000 })

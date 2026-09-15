@@ -63,6 +63,8 @@ I('vino_rosso',       { etichetta = 'Vino rosso', peso = 1250, usabile = true, c
 I('vino_docg',        { etichetta = 'Vino DOCG', peso = 1250, impilabile = false, unico = true, usabile = true, categoria = 'alcolici', effetto = { sete = 10, alcol = 24, stress = -25 } })
 I('birra',            { etichetta = 'Birra artigianale', peso = 660, usabile = true, categoria = 'alcolici', effetto = { sete = 20, alcol = 14, stress = -10 } })
 I('amaro',            { etichetta = 'Amaro', peso = 200, usabile = true, categoria = 'alcolici', effetto = { alcol = 30, stress = -18 } })
+-- Soggette ad accisa: è il motivo per cui esiste il contrabbando di TLE
+I('sigarette',        { etichetta = 'Stecca di sigarette', peso = 220, categoria = 'varie', descrizione = 'Tabacchi lavorati. Vendibili solo con licenza di monopolio.' })
 I('panino',           { etichetta = 'Panino', peso = 250, usabile = true, categoria = 'cibo', degrada = 240, effetto = { fame = 30 } })
 I('pizza_margherita', { etichetta = 'Pizza margherita', peso = 550, usabile = true, categoria = 'cibo', degrada = 90, effetto = { fame = 55, stress = -8 } })
 I('pasta_carbonara',  { etichetta = 'Pasta alla carbonara', peso = 450, usabile = true, categoria = 'cibo', degrada = 60, effetto = { fame = 60, stress = -10 } })
