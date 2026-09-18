@@ -105,6 +105,23 @@ disperso. È l'unico posto del server dove un cittadino senza lavoro, senza
 gradi e senza equipaggiamento fa qualcosa che conta — e se lo scenario non
 si chiude nei termini, i danni li paga il bilancio comunale.
 
+**Il patrimonio deve tornare con i redditi.** Il codice antimafia non
+chiede una condanna: chiede che i conti tornino. Se quello che possiedi —
+conti, cripto, veicoli, case — è sproporzionato rispetto a quello che hai
+dichiarato, si apre il contraddittorio, e quello che non giustifichi viene
+confiscato. Giustificare vuol dire pagarci le imposte che non hai pagato,
+che è l'unica giustificazione che il fisco riconosce. E il bene confiscato
+non finisce all'asta: il Comune lo destina ad alloggio popolare, a mensa, a
+sede di associazione. La cosa tolta si deve vedere.
+
+**Un palazzo finito non è ancora un immobile.** Il cantiere si consegna e
+l'opera c'è, ma per il catasto non esiste: va accatastata, e da lì nasce la
+rendita su cui si paga l'IMU. Stessa cosa dopo un rogito: il notaio
+trasferisce la proprietà, il catasto lo sa solo quando qualcuno presenta la
+voltura — e finché non la presenta, la cartella arriva a chi ha venduto. È
+il motivo per cui in Italia si paga l'IMU di una casa venduta tre anni
+prima.
+
 **La cronaca esiste.** La testata pubblica, tutti leggono in edicola o dal
 telefono, e chi viene raccontato male ha gli strumenti che gli dà la legge
 italiana: la rettifica ex art. 8 legge 47/1948 — che se la redazione non
@@ -223,6 +240,12 @@ fivem-italia/
 | `ita_sicurezza` | Guardie particolari giurate con decreto, presidi agli esercizi, servizi portavalori assaltabili |
 | `ita_asl` | Igiene degli esercizi come numero, piano HACCP, ispezioni, tossinfezioni, sospensione dell'attività |
 | `ita_rifiuti` | Rifiuti speciali, registro di carico e scarico, formulario, discariche abusive, art. 256 e 452-quaterdecies |
+| `ita_catasto` | Accatastamento dei fabbricati nuovi, voltura dopo il rogito, visura pubblica, rendita da cui discende l'IMU |
+| `ita_agricoltura` | Poderi in conduzione, colture a stagione, fertilità che si consuma, contributi PAC e controlli in loco |
+| `ita_chiesa` | Riti, matrimonio religioso dopo il civile, mensa che vive di offerte, e un confessionale che non registra niente |
+| `ita_antimafia` | Accertamento patrimoniale, sproporzione fra redditi e beni, confisca di prevenzione, riutilizzo sociale |
+| `ita_pesca` | Pesca professionale con quote condivise, mercato ittico a prezzo variabile, vendita in nero, controlli |
+| `ita_ferrovie` | Linee regionali con orario e ritardo che pesa sul compenso, biglietti da obliterare, passaggi a livello |
 
 ### `[lavori]`
 
@@ -346,6 +369,11 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/registrorifiuti` | Il tuo registro di carico e scarico e i formulari |
 | `/vigilanza` | Servizi di vigilanza privata: presidi e portavalori |
 | `/forzaportellone` | Apri un furgone portavalori. Ci vuole tempo, e si sente |
+| `/catasto` | Accatastamenti, volture e visure |
+| `/consorzio` | Poderi, sementi, concime e domanda unica PAC |
+| `/dico` | Parla in confessionale. Non finisce da nessuna parte |
+| `/cala` `/rammenda` `/mercatoittico` | Pesca professionale |
+| `/giustifica <euro>` | Giustifica il patrimonio in un procedimento di prevenzione |
 | `/inps` | Posizione contributiva, pensione, malattia, NASpI, DURC |
 | `/pc` | Protezione civile: allerta, scenari in corso, iscrizione al gruppo comunale |
 | `/cantiere` | Pannello del cantiere in cui ti trovi (imprese edili) |
@@ -392,6 +420,9 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 | `/contestacorsa <id>` | Art. 9-ter CdS: sanzione, sospensione e confisca |
 | `/ispezionealimenti` | Ispezione igienico-sanitaria di un esercizio (ASL) |
 | `/controlloregistro <id>` | Registro di carico e scarico dei rifiuti (NTA) |
+| `/prevenzione` | Accertamento patrimoniale e destinazione dei beni confiscati |
+| `/controllopesca <id>` | Licenza e pescato a bordo (Capitaneria) |
+| `/controllotreno <id>` | Titoli di viaggio a bordo del convoglio (capotreno) |
 | `/guasti` | Guasti alla rete elettrica |
 | `/ticketaperti` `/candidature` | Supporto e whitelist (staff) |
 | `/metriche` | Stato del server (admin) |

@@ -380,3 +380,13 @@ AUREA.Comando('sequestra', 'utente', 'Sequestra il veicolo indicato', {
     Veicoli.Sequestra(targa, motivo ~= '' and motivo or 'provvedimento di polizia giudiziaria', g:NomeCompleto())
     TriggerClientEvent('aurea:ui:notifica', src, { tipo = 'successo', titolo = 'Sequestro registrato', testo = targa })
 end)
+
+--- Il valore di listino di un veicolo. Serve a chi deve stimare un
+--- patrimonio: la tabella `veicoli` tiene la targa e il modello, il
+--- prezzo sta a catalogo, e nessuno dei due da solo basta.
+exports('ValoreVeicolo', function(targa)
+    local v = MySQL.single.await('SELECT modello FROM veicoli WHERE targa = ?', { targa })
+    if not v then return 0 end
+    local m = VEI.GetVeicoloCatalogo(v.modello)
+    return m and m.prezzo or 0
+end)

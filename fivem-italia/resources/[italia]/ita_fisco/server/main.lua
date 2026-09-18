@@ -212,25 +212,33 @@ CreateThread(function()
     while true do
         Wait(FISCO.Tributi.imu.periodicitaMinuti * 60000)
 
+        -- L'imposta segue chi RISULTA intestatario al catasto, non chi
+        -- possiede: se il compratore non ha presentato la voltura, la
+        -- cartella arriva ancora a chi ha venduto. In Italia è così, e
+        -- ita_catasto è il posto dove si rimedia.
         local immobili = MySQL.query.await([[
-            SELECT id, codice, nome, proprietario, rendita_catastale
-            FROM immobili WHERE proprietario IS NOT NULL
+            SELECT i.id, i.codice, i.nome, i.rendita_catastale,
+                   COALESCE(s.intestato_a, i.proprietario) AS soggetto,
+                   i.proprietario
+            FROM immobili i
+            LEFT JOIN catasto_schede s ON s.immobile_id = i.id
+            WHERE i.proprietario IS NOT NULL
         ]]) or {}
 
-        -- Il primo immobile di ciascun proprietario è abitazione principale: esente IMU
+        -- Il primo immobile di ciascun soggetto è abitazione principale: esente IMU
         local contati = {}
         local periodo = ('%s-S%d'):format(os.date('%Y'), tonumber(os.date('%m')) <= 6 and 1 or 2)
 
         for _, imm in ipairs(immobili) do
-            contati[imm.proprietario] = (contati[imm.proprietario] or 0) + 1
+            contati[imm.soggetto] = (contati[imm.soggetto] or 0) + 1
 
             local tari = FISCO.Tributi.tari.importoBase
-            Erario.IscriviTributo(imm.proprietario, 'tari', ('%s/%s'):format(periodo, imm.codice), tari, 20)
+            Erario.IscriviTributo(imm.soggetto, 'tari', ('%s/%s'):format(periodo, imm.codice), tari, 20)
 
-            if contati[imm.proprietario] > 1 or not FISCO.Tributi.imu.esenteAbitazionePrincipale then
+            if contati[imm.soggetto] > 1 or not FISCO.Tributi.imu.esenteAbitazionePrincipale then
                 local imu = math.floor((imm.rendita_catastale or 0) * FISCO.Tributi.imu.aliquota)
                 if imu > 0 then
-                    Erario.IscriviTributo(imm.proprietario, 'imu', ('%s/%s'):format(periodo, imm.codice), imu, 20)
+                    Erario.IscriviTributo(imm.soggetto, 'imu', ('%s/%s'):format(periodo, imm.codice), imu, 20)
                 end
             end
         end

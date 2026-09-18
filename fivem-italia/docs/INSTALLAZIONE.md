@@ -55,6 +55,7 @@ mysql -u aurea -p aurea < sql/10_protezionecivile.sql
 mysql -u aurea -p aurea < sql/11_mercato.sql
 mysql -u aurea -p aurea < sql/12_illegale.sql
 mysql -u aurea -p aurea < sql/13_ambiente_igiene.sql
+mysql -u aurea -p aurea < sql/14_territorio.sql
 ```
 
 Aggiungono le tabelle dei moduli introdotti dopo — armadio dei completi,
@@ -69,7 +70,9 @@ pensioni, malattia e infortuni, i cantieri con i titoli edilizi, e il
 volontariato di protezione civile, poi le bollette doganali, i decreti di
 intercettazione, gli atti notarili e la vetrina immobiliare, quindi i
 prestiti fra privati, le bische, le corse e la vigilanza privata, e
-infine l'igiene degli esercizi e il registro dei rifiuti. Usano `CREATE
+infine l'igiene degli esercizi e il registro dei rifiuti, e da ultimo il
+catasto, i poderi agricoli, la parrocchia, le misure di prevenzione
+patrimoniali, le quote di pesca e le corse ferroviarie. Usano `CREATE
 TABLE IF NOT EXISTS` e `ADD COLUMN IF NOT EXISTS`, quindi rieseguirli non
 fa danni.
 

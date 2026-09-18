@@ -72,6 +72,50 @@ L('vigilanza', {
     },
 })
 
+L('agricoltore', {
+    etichetta = 'Azienda agricola',
+    tipo = 'civile',
+    gradi = {
+        [0] = { etichetta = 'Bracciante',     stipendio = 8500 },
+        [1] = { etichetta = 'Coltivatore',    stipendio = 12500, permessi = { 'coltiva' } },
+        [2] = { etichetta = 'Conduttore',     stipendio = 16500, permessi = { 'coltiva', 'affitta_podere' } },
+        [3] = { etichetta = 'Titolare',       stipendio = 21000, permessi = { 'coltiva', 'affitta_podere', 'pac', 'assumi', 'licenzia', 'cassa' } },
+    },
+})
+
+L('clero', {
+    etichetta = 'Parrocchia',
+    tipo = 'civile',
+    gradi = {
+        [0] = { etichetta = 'Sacrestano',     stipendio = 7500,  permessi = { 'mensa' } },
+        [1] = { etichetta = 'Diacono',        stipendio = 11000, permessi = { 'mensa', 'rito' } },
+        [2] = { etichetta = 'Parroco',        stipendio = 15000, permessi = { 'mensa', 'rito', 'confessione', 'assumi', 'cassa' } },
+    },
+})
+
+L('pescatore', {
+    etichetta = 'Pesca professionale',
+    tipo = 'civile',
+    gradi = {
+        [0] = { etichetta = 'Mozzo',          stipendio = 9000 },
+        [1] = { etichetta = 'Pescatore',      stipendio = 13000, permessi = { 'cala' } },
+        [2] = { etichetta = 'Comandante',     stipendio = 18000, permessi = { 'cala', 'armatore' } },
+        [3] = { etichetta = 'Armatore',       stipendio = 23000, permessi = { 'cala', 'armatore', 'assumi', 'licenzia', 'cassa' } },
+    },
+})
+
+L('ferroviere', {
+    etichetta = 'Ferrovie',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Manovratore',    stipendio = 10500 },
+        [1] = { etichetta = 'Capotreno',      stipendio = 14500, permessi = { 'capotreno' } },
+        [2] = { etichetta = 'Macchinista',    stipendio = 19000, permessi = { 'capotreno', 'macchinista' } },
+        [3] = { etichetta = 'Capo deposito',  stipendio = 24000, permessi = { 'capotreno', 'macchinista', 'assumi', 'licenzia', 'cassa' } },
+    },
+})
+
 L('corriere', {
     etichetta = 'Corriere espresso',
     tipo = 'civile',

@@ -237,6 +237,10 @@ AUREA.Callback.Registra('not:firma', function(src, rispondi, idNotaio, accetta)
         { 'compravendita', p.immobile, p.venditore, p.compratore, p.prezzo,
           q.registro + q.ipocatastali, q.onorario, p.nomeNotaio, p.primaCasa and 1 or 0 })
 
+    -- Il notaio trasferisce la proprietà, non aggiorna il catasto: quella
+    -- è la voltura, e la presenta chi ha comprato.
+    TriggerEvent('aurea:notaio:trasferito', p.immobile, p.nomeImmobile, p.venditore, p.compratore)
+
     local messaggio = ('%s trasferito.\nPrezzo %s · imposte %s · onorario %s.')
         :format(p.nomeImmobile, U.Euro(p.prezzo),
                 U.Euro(q.registro + q.ipocatastali), U.Euro(q.onorario))

@@ -527,6 +527,11 @@ AUREA.Callback.Registra('edi:consegna', function(src, rispondi)
     cantieri[c.lotto] = nil
     TriggerClientEvent('edi:cantiereChiuso', -1, c.lotto)
 
+    -- L'opera è finita, l'immobile no: finché non lo accatasti non
+    -- esiste per nessuno. Ci pensa ita_catasto, che raccoglie da qui.
+    TriggerEvent('aurea:edilizia:consegnato', c.lotto, l.nome, l.destinazione,
+        l.volumetria, c.direttore, c.impresa)
+
     AUREA.Log('economia', 'info', g, ('ha consegnato il cantiere %s (rischio finale %d)'):format(c.lotto, c.rischio))
 
     rispondi(true, ('Opera consegnata. In cassa %s%s. Collaudo %s.')

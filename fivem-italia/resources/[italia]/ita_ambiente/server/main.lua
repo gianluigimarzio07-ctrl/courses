@@ -215,6 +215,14 @@ AUREA.Callback.Registra('amb:stato', function(src, rispondi)
 end)
 
 exports('MeteoCorrente', function() return Ambiente.meteo end)
+
+--- La stagione corrente. Serve a chi deve sapere cosa si può seminare:
+--- il calendario c'era già, ma nessuno poteva leggerlo da fuori.
+exports('StagioneCorrente', function()
+    local mese = tonumber(os.date('%m'))
+    local id, dati = AMB.StagioneDelMese(mese)
+    return id, dati and dati.etichetta or id
+end)
 exports('OraCorrente', function() return Ambiente.ore, Ambiente.minuti end)
 exports('EventoAttivo', function() return Ambiente.eventoAttivo end)
 

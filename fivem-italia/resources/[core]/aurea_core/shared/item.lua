@@ -38,6 +38,7 @@ I('visura',           { etichetta = 'Visura camerale',     peso = 20, impilabile
 I('fattura',          { etichetta = 'Fattura',             peso = 5,  impilabile = false, unico = true, usabile = true, categoria = 'documenti' })
 I('verbale',          { etichetta = 'Verbale di contestazione', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti' })
 I('tesserino_stampa', { etichetta = 'Tesserino da giornalista', peso = 5, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Iscrizione all\'ordine. Apre porte e ne chiude altre.' })
+I('biglietto_treno',  { etichetta = 'Biglietto ferroviario', peso = 3, usabile = true, categoria = 'documenti', descrizione = 'Va obliterato prima di salire. Senza, è sanzione.' })
 I('giornale',         { etichetta = 'Quotidiano',          peso = 60, impilabile = true,  usabile = true, categoria = 'documenti', descrizione = 'L\'edizione del giorno. Si legge, e a volte fa arrabbiare qualcuno.' })
 
 -- ---------------------------------------------------------------------------
@@ -87,6 +88,15 @@ I('formaggio_fresco', { etichetta = 'Formaggio fresco', peso = 700, categoria = 
 I('caffe_verde',      { etichetta = 'Caffè verde', peso = 500, categoria = 'materiali' })
 I('caffe_tostato',    { etichetta = 'Caffè tostato', peso = 480, categoria = 'materiali' })
 I('farina_00',        { etichetta = 'Farina 00', peso = 1000, categoria = 'materiali' })
+-- Agricoltura: sementi, concime e quello che esce dal campo
+I('seme_grano',       { etichetta = 'Semente di grano duro', peso = 400, categoria = 'materiali' })
+I('seme_pomodoro',    { etichetta = 'Piantine di San Marzano', peso = 300, categoria = 'materiali' })
+I('seme_olivo',       { etichetta = 'Barbatelle di olivo', peso = 900, categoria = 'materiali' })
+I('seme_vite',        { etichetta = 'Barbatelle di vite', peso = 900, categoria = 'materiali' })
+I('seme_foraggio',    { etichetta = 'Semente da foraggio', peso = 350, categoria = 'materiali' })
+I('concime',          { etichetta = 'Concime', peso = 2000, categoria = 'materiali', descrizione = 'Restituisce al suolo quello che il raccolto ha portato via.' })
+I('grano',            { etichetta = 'Grano duro', peso = 1000, categoria = 'materiali' })
+I('foraggio',         { etichetta = 'Foraggio', peso = 1400, categoria = 'materiali' })
 I('impasto_pizza',    { etichetta = 'Panetto di impasto', peso = 280, categoria = 'materiali', degrada = 720 })
 I('pomodoro_san_marzano', { etichetta = 'Pomodoro San Marzano', peso = 800, categoria = 'materiali', degrada = 5760 })
 I('tessuto_pregiato', { etichetta = 'Tessuto pregiato', peso = 600, categoria = 'materiali' })
@@ -115,6 +125,14 @@ I('gilet_alta_visibilita', { etichetta = 'Gilet ad alta visibilità', peso = 200
 --  PESCA, CACCIA, CAVA E RACCOLTA
 -- ---------------------------------------------------------------------------
 I('canna_pesca',      { etichetta = 'Canna da pesca', peso = 1400, impilabile = false, unico = true, usabile = true, categoria = 'attrezzi' })
+-- Pesca professionale: la rete e quello che ci finisce dentro
+I('rete_pesca',       { etichetta = 'Rete da pesca', peso = 12000, impilabile = false, unico = true, categoria = 'attrezzi', descrizione = 'Si consuma a ogni calata e va rammendata.' })
+I('pesce_azzurro',    { etichetta = 'Sarde', peso = 400, categoria = 'cibo', degrada = 600 })
+I('branzino',         { etichetta = 'Branzino', peso = 900, categoria = 'cibo', degrada = 600 })
+I('orata',            { etichetta = 'Orata', peso = 850, categoria = 'cibo', degrada = 600 })
+I('dentice',          { etichetta = 'Dentice', peso = 1400, categoria = 'cibo', degrada = 600 })
+I('gambero_rosso',    { etichetta = 'Gamberi rossi', peso = 300, categoria = 'cibo', degrada = 420 })
+I('tonno_rosso',      { etichetta = 'Tonno rosso', peso = 9000, impilabile = false, unico = true, categoria = 'cibo', degrada = 900, descrizione = 'Soggetto a quota internazionale. Ogni esemplare è registrato.' })
 I('esca_semplice',    { etichetta = 'Esca',           peso = 30, categoria = 'materiali' })
 I('esca_pregiata',    { etichetta = 'Esca artificiale', peso = 40, categoria = 'materiali' })
 I('piccone',          { etichetta = 'Piccone',        peso = 3200, impilabile = false, unico = true, usabile = true, categoria = 'attrezzi' })
