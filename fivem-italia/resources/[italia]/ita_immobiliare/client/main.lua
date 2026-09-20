@@ -180,18 +180,29 @@ local function stima()
                     titolo = 'Stima', testo = 'Il tuo grado non abilita alla stima.' })
             end
 
+            local voci = {
+                { id = 'x', disattivata = true, icona = '🏷', titolo = 'Valore di listino',
+                  descrizione = AUREA.Util.Euro(v.listino) },
+                { id = 'x', disattivata = true, icona = '📊', titolo = 'Media dei rogiti su questo tipo',
+                  descrizione = v.mercato and AUREA.Util.Euro(v.mercato)
+                      or 'Nessun atto registrato: il mercato non ha ancora detto niente.' },
+                { id = 'x', disattivata = true, icona = '🧾', titolo = 'Rendita catastale',
+                  descrizione = AUREA.Util.Euro(v.rendita or 0) },
+            }
+
+            if v.decoro then
+                voci[#voci + 1] = {
+                    id = 'x', disattivata = true, icona = '🏢',
+                    titolo = ('Stato del palazzo — %s'):format(v.condominio or 'condominio'),
+                    descrizione = ('Decoro %d su 100: sulla stima pesa %+d%%.\nQuello che il condominio non ha rifatto si vede qui.')
+                        :format(v.decoro, v.scartoDecoro or 0),
+                }
+            end
+
             exports.aurea_ui:Menu({
                 titolo = ('Stima — %s'):format(v.nome),
                 sottotitolo = 'Valori di riferimento',
-                voci = {
-                    { id = 'x', disattivata = true, icona = '🏷', titolo = 'Valore di listino',
-                      descrizione = AUREA.Util.Euro(v.listino) },
-                    { id = 'x', disattivata = true, icona = '📊', titolo = 'Media dei rogiti su questo tipo',
-                      descrizione = v.mercato and AUREA.Util.Euro(v.mercato)
-                          or 'Nessun atto registrato: il mercato non ha ancora detto niente.' },
-                    { id = 'x', disattivata = true, icona = '🧾', titolo = 'Rendita catastale',
-                      descrizione = AUREA.Util.Euro(v.rendita or 0) },
-                },
+                voci = voci,
             })
         end)
     end)

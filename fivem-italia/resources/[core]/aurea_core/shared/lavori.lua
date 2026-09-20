@@ -211,7 +211,10 @@ L('polizia', {
         [0] = { etichetta = 'Agente',                 stipendio = 15000, permessi = { 'fermo', 'multa', 'perquisizione', 'mdt' } },
         [1] = { etichetta = 'Assistente',             stipendio = 17500, permessi = { 'fermo', 'multa', 'perquisizione', 'mdt', 'sequestro' } },
         [2] = { etichetta = 'Sovrintendente',         stipendio = 20500, permessi = { 'fermo', 'multa', 'perquisizione', 'mdt', 'sequestro', 'arresto' } },
-        [3] = { etichetta = 'Ispettore',              stipendio = 25000, permessi = { 'fermo', 'multa', 'perquisizione', 'mdt', 'sequestro', 'arresto', 'armeria', 'indagine' } },
+        -- 'tulps': le licenze di polizia (passaporto, porto d'armi, DASPO,
+        -- licenza di pubblico spettacolo). In Questura le tiene la
+        -- Divisione Polizia Amministrativa, non chi sta in volante.
+        [3] = { etichetta = 'Ispettore',              stipendio = 25000, permessi = { 'fermo', 'multa', 'perquisizione', 'mdt', 'sequestro', 'arresto', 'armeria', 'indagine', 'tulps' } },
         [4] = { etichetta = 'Commissario',            stipendio = 32000, permessi = { 'tutti' } },
         [5] = { etichetta = 'Questore',               stipendio = 45000, permessi = { 'tutti' } },
     },
@@ -276,7 +279,11 @@ L('agenzia_entrate', {
     servizio = true,
     gradi = {
         [0] = { etichetta = 'Operatore',       stipendio = 13000, permessi = { 'consulta_fisco' } },
-        [1] = { etichetta = 'Funzionario',     stipendio = 19000, permessi = { 'consulta_fisco', 'accertamento' } },
+        -- 'riscossione': l'Agenzia delle Entrate accerta, l'Agenzia
+        -- Entrate-Riscossione esige. Sono due cose diverse e lo sono
+        -- anche qui: chi ha questo permesso può iscrivere a ruolo,
+        -- rateizzare, chiedere il fermo e il pignoramento.
+        [1] = { etichetta = 'Funzionario',     stipendio = 19000, permessi = { 'consulta_fisco', 'accertamento', 'riscossione' } },
         [2] = { etichetta = 'Direttore',       stipendio = 28000, permessi = { 'tutti' } },
     },
 })
@@ -288,6 +295,118 @@ L('motorizzazione', {
     gradi = {
         [0] = { etichetta = 'Esaminatore',     stipendio = 14000, permessi = { 'esame_patente', 'immatricola' } },
         [1] = { etichetta = 'Direttore',       stipendio = 22000, permessi = { 'tutti' } },
+    },
+})
+
+-- La Prefettura — Ufficio Territoriale del Governo.
+--
+-- In Italia non è un posto dove si va volentieri: è dove finisce il
+-- ricorso contro una multa, dove si decide se ti sospendono la patente,
+-- e dove si tiene l'elenco di chi può fare il buttafuori. Tre cose che
+-- sembrano scollegate e invece stanno tutte sullo stesso tavolo.
+L('prefettura', {
+    etichetta = 'Prefettura — U.T.G.',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Istruttore',      stipendio = 14000, permessi = { 'ricorsi' } },
+        [1] = { etichetta = 'Viceprefetto',    stipendio = 24000, permessi = { 'ricorsi', 'ordinanze', 'elenco_prefettizio' } },
+        [2] = { etichetta = 'Prefetto',        stipendio = 38000, permessi = { 'tutti' } },
+    },
+})
+
+-- Ispettorato Nazionale del Lavoro.
+L('ispettorato', {
+    etichetta = 'Ispettorato del Lavoro',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Ispettore',       stipendio = 16000, permessi = { 'accesso_ispettivo' } },
+        [1] = { etichetta = 'Ispettore capo',  stipendio = 23000, permessi = { 'accesso_ispettivo', 'sospensione_attivita' } },
+        [2] = { etichetta = 'Direttore',       stipendio = 30000, permessi = { 'tutti' } },
+    },
+})
+
+-- Camera di Commercio: il Registro delle Imprese.
+L('camera_commercio', {
+    etichetta = 'Camera di Commercio',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Addetto al registro', stipendio = 12500, permessi = { 'registro_imprese' } },
+        [1] = { etichetta = 'Conservatore',    stipendio = 21000, permessi = { 'tutti' } },
+    },
+})
+
+-- Soprintendenza Archeologia, Belle Arti e Paesaggio.
+L('soprintendenza', {
+    etichetta = 'Soprintendenza',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Funzionario archeologo', stipendio = 15000, permessi = { 'scavo', 'perizia' } },
+        [1] = { etichetta = 'Soprintendente',  stipendio = 26000, permessi = { 'tutti' } },
+    },
+})
+
+-- ---------------------------------------------------------------------------
+--  ENTI E ATTIVITÀ PRIVATE
+-- ---------------------------------------------------------------------------
+
+-- SIAE. Non è un ente pubblico e non è un'azienda come le altre: è un
+-- ente che incassa per conto di chi la musica l'ha scritta, e manda i
+-- suoi a controllare che tu il permesso ce l'abbia.
+L('siae', {
+    etichetta = 'S.I.A.E.',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Mandatario',      stipendio = 13000, permessi = { 'permessi_musica' } },
+        [1] = { etichetta = 'Ispettore',       stipendio = 18000, permessi = { 'permessi_musica', 'ispezione' } },
+        [2] = { etichetta = 'Direttore di sede', stipendio = 25000, permessi = { 'tutti' } },
+    },
+})
+
+-- Concessionaria autostradale.
+L('autostrade', {
+    etichetta = 'Concessionaria autostradale',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Esattore',        stipendio = 11000, permessi = { 'casello' } },
+        [1] = { etichetta = 'Ausiliario della viabilità', stipendio = 15000, permessi = { 'casello', 'viabilita' } },
+        [2] = { etichetta = 'Capo tratta',     stipendio = 21000, permessi = { 'tutti' } },
+    },
+})
+
+-- Il locale notturno. L'addetto ai servizi di controllo — il buttafuori —
+-- non è un mestiere che si fa e basta: serve l'iscrizione all'elenco
+-- tenuto dalla Prefettura, ed è il motivo per cui questo lavoro e la
+-- Prefettura si parlano.
+L('locale_notturno', {
+    etichetta = 'Locale notturno',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Guardaroba',      stipendio = 9500 },
+        [1] = { etichetta = 'Barman',          stipendio = 12000, permessi = { 'bar' } },
+        [2] = { etichetta = 'Addetto ai servizi di controllo', stipendio = 14000, permessi = { 'bar', 'filtro' } },
+        [3] = { etichetta = 'PR',              stipendio = 13000, permessi = { 'bar', 'serata' } },
+        [4] = { etichetta = 'Gestore',         stipendio = 24000, permessi = { 'tutti' } },
+    },
+})
+
+-- Sezione del Tiro a Segno Nazionale. Esiste per una ragione sola: il
+-- certificato di idoneità al maneggio delle armi, senza il quale la
+-- Questura il porto d'armi non lo rilascia e l'istituto di vigilanza
+-- non può far girare nessuno armato.
+L('tsn', {
+    etichetta = 'Tiro a Segno Nazionale',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Istruttore',      stipendio = 13000, permessi = { 'lezione' } },
+        [1] = { etichetta = 'Direttore di tiro', stipendio = 19000, permessi = { 'tutti' } },
     },
 })
 

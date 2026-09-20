@@ -69,6 +69,19 @@ R('474',  { articolo = 'art. 474 c.p.',   nome = 'Introduzione di prodotti con s
 R('452q', { articolo = 'art. 452-quaterdecies c.p.', nome = 'Attività organizzate per il traffico illecito di rifiuti', gravita = 4, pena = 95, ammenda = 400000 })
 R('256',  { articolo = 'art. 256 D.Lgs. 152/2006', nome = 'Gestione non autorizzata di rifiuti', gravita = 2, pena = 22, ammenda = 65000 })
 
+-- Beni culturali
+--
+-- Titolo VIII-bis del codice penale, entrato in vigore nel 2022: prima di
+-- allora scavare di notte in un sito archeologico era poco più di una
+-- contravvenzione. Adesso è furto aggravato di una cosa dello Stato.
+R('518b', { articolo = 'art. 518-bis c.p.', nome = 'Furto di beni culturali',      gravita = 3, pena = 55,  ammenda = 150000 })
+R('518q', { articolo = 'art. 518-quater c.p.', nome = 'Ricettazione di beni culturali', gravita = 3, pena = 60, ammenda = 200000 })
+R('518u', { articolo = 'art. 518-undecies c.p.', nome = 'Uscita o esportazione illecite di beni culturali', gravita = 3, pena = 65, ammenda = 240000 })
+R('518t', { articolo = 'art. 518-terdecies c.p.', nome = 'Attività illecite di scavo', gravita = 2, pena = 30, ammenda = 85000 })
+
+-- Lavoro
+R('603bis', { articolo = 'art. 603-bis c.p.', nome = 'Intermediazione illecita e sfruttamento del lavoro', gravita = 4, pena = 90, ammenda = 350000 })
+
 -- Intercettazioni e indagini
 R('617',  { articolo = 'art. 617 c.p.',   nome = 'Intercettazione abusiva di comunicazioni', gravita = 3, pena = 45, ammenda = 120000 })
 R('326',  { articolo = 'art. 326 c.p.',   nome = 'Rivelazione di segreti d\'ufficio', gravita = 3, pena = 42, ammenda = 110000 })
@@ -109,6 +122,8 @@ CDS('80',    { articolo = 'art. 80 c.14 CdS',  nome = 'Revisione scaduta',      
 CDS('181',   { articolo = 'art. 181 CdS',      nome = 'Mancata esposizione del bollo',      importo = 4200,   punti = 0, sospensione = 0 })
 CDS('189',   { articolo = 'art. 189 c.6 CdS',  nome = 'Omissione di soccorso',              importo = 300000, punti = 10, sospensione = 365, arresto = 60 })
 CDS('9bis',  { articolo = 'art. 9-bis CdS',    nome = 'Gareggiamento in velocità',          importo = 400000, punti = 10, sospensione = 365, arresto = 90, sequestro = true })
+CDS('176',   { articolo = 'art. 176 c.11 CdS', nome = 'Mancato pagamento del pedaggio',     importo = 8700,   punti = 0, sospensione = 0 })
+CDS('147',   { articolo = 'art. 147 CdS',      nome = 'Violazione ai passaggi a livello',   importo = 240000, punti = 6, sospensione = 0 })
 
 --- Restituisce l'infrazione per eccesso di velocità dato il delta km/h
 ---@param delta number quanti km/h sopra il limite

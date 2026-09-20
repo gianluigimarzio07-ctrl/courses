@@ -54,6 +54,20 @@ AUREA.Callback.Registra('mus:accendi', function(src, rispondi, dati)
 
     TriggerClientEvent('mus:accendi', -1, stereo[id], 0)
 
+    -- Pubblica esecuzione.
+    --
+    -- Mettere musica in casa propria non interessa a nessuno. Metterla
+    -- dentro un esercizio aperto al pubblico è un'altra cosa e si chiama
+    -- pubblica esecuzione: i diritti d'autore si pagano, e chi li incassa
+    -- è la SIAE.
+    --
+    -- Qui si dice solo che è successo, e dove. Se quel punto sia o no
+    -- dentro un locale — e se quel locale abbia il permesso — lo decide
+    -- ita_siae, che è l'unico a saperlo.
+    TriggerEvent('aurea:siae:esecuzione', g.citizenid,
+        { x = coord.x, y = coord.y, z = coord.z },
+        dati.brano or 'esecuzione da collegamento esterno', tipo)
+
     -- Volume alto di notte: i vicini chiamano
     if stereo[id].volume >= MUS.Regole.volumeMolesto and inOraSilenzio()
        and math.random(100) <= MUS.Regole.probabilitaSegnalazione then

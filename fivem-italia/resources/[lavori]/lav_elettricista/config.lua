@@ -44,6 +44,14 @@ ELE.Guasti = {
           oggetto = 'componenti_elettronici', quantita = 3 },
     },
 
+    -- Fin dove arriva il buio di una cabina.
+    --
+    -- Non serve solo ai lampioni. Dentro questo raggio la corrente non
+    -- c'è per NESSUN impianto: telecamere, autovelox, varchi ZTL,
+    -- centrali d'allarme. È il motivo per cui un guasto in centro alle
+    -- tre di notte non è mai soltanto un guasto.
+    raggioZona = 420.0,
+
     -- Quanti guasti aperti al massimo insieme
     massimoAperti = 3,
     -- Se nessuno interviene, dopo un po' interviene la ditta esterna

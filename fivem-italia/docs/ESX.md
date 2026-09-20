@@ -21,7 +21,7 @@ Ci sono due risposte, e sono due strade diverse. Se ne prende **una sola**.
 | Cosa fa la risorsa | espone l'oggetto `ESX` costruito su AUREA | tiene AUREA agganciata a ESX |
 | es_extended vero installato | **no** (è sostituito) | **sì** |
 | I tuoi script `esx_*` | funzionano | funzionano |
-| Le 78 risorse AUREA | funzionano | funzionano |
+| Le risorse AUREA | funzionano | funzionano |
 | Denaro | centesimi interi, niente si perde | euro ESX, sotto il centesimo si arrotonda |
 | Selezione personaggio | `aurea_spawn`, con anagrafe italiana | quella di ESX |
 | Migrazione da un server ESX esistente | va rifatta | **nessuna** |
@@ -223,7 +223,7 @@ metatable per quell'oggetto e per nessun altro. Il Giocatore creato in
 questa modalità ha metodi del denaro che parlano con `xPlayer`, mentre
 tutto il resto del framework resta identico.
 
-Le 78 risorse AUREA continuano a chiamare `g:Aggiungi` come hanno sempre
+Le risorse AUREA continuano a chiamare `g:Aggiungi` come hanno sempre
 fatto. **Nessuna di loro sa che sotto c'è ESX, e nessuna va modificata.**
 
 Resta un limite onesto da conoscere: ESX non emette un evento su ogni
@@ -294,9 +294,9 @@ corretto. Se invece sparisce, il tuo `submit` sta chiamando `close`.
 
 ## Una cosa che vale la pena dire
 
-Questo ponte esiste perché riscrivere 78 risorse in idioma ESX avrebbe
-voluto dire più di trecento file che divergono dal giorno dopo, e due
-codebase da mantenere per sempre.
+Questo ponte esiste perché riscrivere in idioma ESX tutte le risorse di
+AUREA avrebbe voluto dire centinaia di file che divergono dal giorno
+dopo, e due codebase da mantenere per sempre.
 
 Un solo adattatore fa la stessa cosa in circa duemila righe, e ha una
 proprietà che le trecento non avrebbero: **non può desincronizzarsi**,

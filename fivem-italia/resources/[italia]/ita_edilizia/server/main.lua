@@ -233,6 +233,18 @@ AUREA.Callback.Registra('edi:apri', function(src, rispondi, lottoId, abusivo)
             :format(table.concat(motivi or {}, '; ')))
     end
 
+    -- E l'iscrizione al Registro delle Imprese. Il DURC dice che i
+    -- contributi li versi; il REA dice che l'impresa esiste davvero. Un
+    -- cantiere vuole tutte e due, e in Italia non è una formalità: è la
+    -- prima cosa che chiede la stazione appaltante.
+    local okReg, iscritta, perche = pcall(function()
+        return exports.ita_registroimprese:IscrittaAlRegistro(g.citizenid)
+    end)
+    if okReg and iscritta == false then
+        return rispondi(false, ('Cantiere non apribile: %s. Sportello della Camera di Commercio.')
+            :format(perche or 'impresa non iscritta'))
+    end
+
     if permesso then
         MySQL.update.await('UPDATE edilizia_permessi SET consumato = 1 WHERE id = ?', { permesso.id })
     end

@@ -120,10 +120,11 @@ FER.Sbarre = {
     codaSecondi = 15,
     -- Raggio entro cui un veicolo è "sul passaggio"
     raggio = 12.0,
-    -- La violazione
-    articolo = 'art. 147 CdS',
-    sanzione = 240000,
-    punti = 6,
+
+    -- La violazione. Non è scritta qui: sta in `reati.lua` come tutte
+    -- le altre del codice della strada, sotto il codice '147'. Averla
+    -- in due posti voleva dire due importi diversi per lo stesso fatto.
+    infrazione = '147',
 }
 
 FER.Treno = {

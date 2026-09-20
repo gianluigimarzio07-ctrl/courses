@@ -138,8 +138,6 @@ AddEventHandler('aurea:lavoro:cambiato', function(src, lavoro)
     end
 end)
 
-exports('FrequenzaDi', function(src) return frequenze[src] end)
-
 -- ---------------------------------------------------------------------------
 --  Telefonate
 --

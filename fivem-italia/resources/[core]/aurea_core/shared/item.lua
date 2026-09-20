@@ -128,8 +128,8 @@ I('canna_pesca',      { etichetta = 'Canna da pesca', peso = 1400, impilabile = 
 -- Pesca professionale: la rete e quello che ci finisce dentro
 I('rete_pesca',       { etichetta = 'Rete da pesca', peso = 12000, impilabile = false, unico = true, categoria = 'attrezzi', descrizione = 'Si consuma a ogni calata e va rammendata.' })
 I('pesce_azzurro',    { etichetta = 'Sarde', peso = 400, categoria = 'cibo', degrada = 600 })
-I('branzino',         { etichetta = 'Branzino', peso = 900, categoria = 'cibo', degrada = 600 })
-I('orata',            { etichetta = 'Orata', peso = 850, categoria = 'cibo', degrada = 600 })
+-- branzino e orata stanno più sotto, con la pesca sportiva: sono lo
+-- stesso pesce e devono avere una definizione sola.
 I('dentice',          { etichetta = 'Dentice', peso = 1400, categoria = 'cibo', degrada = 600 })
 I('gambero_rosso',    { etichetta = 'Gamberi rossi', peso = 300, categoria = 'cibo', degrada = 420 })
 I('tonno_rosso',      { etichetta = 'Tonno rosso', peso = 9000, impilabile = false, unico = true, categoria = 'cibo', degrada = 900, descrizione = 'Soggetto a quota internazionale. Ogni esemplare è registrato.' })
@@ -250,6 +250,17 @@ I('ansiolitico',      { etichetta = 'Ansiolitico', peso = 30, usabile = true, ca
 I('disinfettante',    { etichetta = 'Disinfettante', peso = 180, usabile = true, categoria = 'sanita' })
 I('biglietto',        { etichetta = 'Titolo di viaggio', peso = 3, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Va obliterato salendo.' })
 I('tagliando_sosta',  { etichetta = 'Tagliando di sosta', peso = 3, impilabile = false, unico = true, usabile = true, categoria = 'documenti', descrizione = 'Si espone sul cruscotto.' })
+
+-- ---------------------------------------------------------------------------
+--  BENI CULTURALI
+--
+--  Un reperto archeologico non è un oggetto come gli altri: appartiene
+--  allo Stato dal momento in cui esce da terra, chiunque l'abbia tirato
+--  fuori. Tenerselo non è avarizia, è un reato.
+-- ---------------------------------------------------------------------------
+I('metal_detector',   { etichetta = 'Metal detector', peso = 2600, impilabile = false, unico = true, usabile = true, categoria = 'attrezzi', descrizione = 'Legale comprarlo. Quello che ci fai dipende da dove lo accendi.' })
+I('trowel',           { etichetta = 'Cazzuola da scavo', peso = 400, categoria = 'attrezzi', descrizione = 'Lo strumento dell\'archeologo. E anche del tombarolo.' })
+I('reperto_archeologico', { etichetta = 'Reperto archeologico', peso = 1800, impilabile = false, unico = true, categoria = 'illegale', descrizione = 'Appartiene allo Stato. Va denunciato entro ventiquattr\'ore.' })
 
 -- ---------------------------------------------------------------------------
 --  RISTORAZIONE  (materie prime; i piatti finiti stanno più su, fra i cibi)

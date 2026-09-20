@@ -306,11 +306,12 @@ AUREA.Callback.Registra('fer:forzato', function(src, rispondi, plId)
 
     local targa = (GetVehicleNumberPlateText(v) or ''):gsub('%s+$', '')
 
+    local infrazione = AUREA.Infrazioni[FER.Sbarre.infrazione]
     exports.ita_codicestrada:EmettiVerbale({
         citizenid = g.citizenid, targa = targa,
-        articolo = FER.Sbarre.articolo,
+        articolo = infrazione.articolo,
         descrizione = 'Attraversamento di passaggio a livello con barriere chiuse',
-        importo = FER.Sbarre.sanzione, punti = FER.Sbarre.punti,
+        importo = infrazione.importo, punti = infrazione.punti,
         origine = 'semaforo', agente = 'rilevamento automatico', luogo = pl.nome,
     })
 

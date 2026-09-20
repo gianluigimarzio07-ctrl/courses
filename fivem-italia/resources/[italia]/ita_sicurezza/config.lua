@@ -52,6 +52,10 @@ SIC.Giuramento = {
     lavoriAbilitati = { 'polizia', 'carabinieri' },
     -- Requisiti
     richiedePortoArmi = true,
+    -- Il certificato di idoneità al maneggio delle armi, che rilascia il
+    -- Tiro a Segno Nazionale. Non è lo stesso del porto d'armi: uno dice
+    -- che puoi portarla, l'altro che sai usarla.
+    richiedeCertificatoTSN = true,
     gravitaOstativa = 3,          -- un reato di questa gravità nel casellario blocca
     -- Durata del decreto, in minuti
     validitaMinuti = 480,
@@ -75,6 +79,12 @@ SIC.Piantonamento = {
     minutiPerTurno = 12,
     -- Quante guardie contano su uno stesso obiettivo
     massimePerObiettivo = 2,
+
+    -- Indennità per chi piantona un obiettivo rimasto senza linea
+    -- d'allarme. Quando salta la corrente la centrale operativa non vede
+    -- più niente di quel punto: l'unico presidio che resta è una persona
+    -- lì davanti, e si paga di conseguenza.
+    indennitaSenzaLinea = 0.60,
 }
 
 SIC.Obiettivi = {

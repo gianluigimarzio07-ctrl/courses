@@ -221,3 +221,7 @@ exports('PatenteGet', Patente.Get)
 exports('PatenteHaCategoria', Patente.HaCategoria)
 exports('PatenteDecurta', Patente.Decurta)
 exports('PatenteSospendi', Patente.Sospendi)
+
+-- I punti di un verbale annullato in sede di ricorso vanno restituiti:
+-- ita_prefettura chiede questo quando il Prefetto accoglie.
+exports('PatenteRestituisci', Patente.Restituisci)

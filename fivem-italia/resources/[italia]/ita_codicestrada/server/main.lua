@@ -21,6 +21,26 @@ local function velocitaServer(netId)
     return math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z) * 3.6, entita
 end
 
+-- ---------------------------------------------------------------------------
+--  Impianti senza corrente
+--
+--  Un autovelox è una macchina attaccata alla rete elettrica, e un varco
+--  ZTL è una telecamera attaccata alla stessa rete. Se la cabina che li
+--  alimenta è guasta non rilevano niente: non perché il server li spenga
+--  per gentilezza, ma perché non hanno corrente.
+--
+--  Chiamata protetta: lav_elettricista può essere fermo, e in quel caso
+--  la corrente c'è sempre.
+-- ---------------------------------------------------------------------------
+local function alBuio(coord)
+    if not coord then return nil end
+    local ok, cabina, zona = pcall(function()
+        return exports.lav_elettricista:PuntoAlBuio(coord)
+    end)
+    if not ok then return nil end
+    return cabina, zona
+end
+
 --- Risale al proprietario della targa; se non è un veicolo immatricolato,
 --- il verbale va al conducente.
 local function intestatario(targa, conducente)
@@ -60,6 +80,13 @@ RegisterNetEvent('cds:rilevamento', function(dati)
         end
         if not postazione then
             AUREA.Log('anticheat', 'allarme', src, ('rilevamento su postazione inesistente: %s'):format(tostring(dati.postazione)))
+            return
+        end
+
+        -- Postazione senza corrente: nessun rilevamento, nessun verbale.
+        local cabina, zona = alBuio(postazione.coord)
+        if cabina then
+            AUREA.Log('multe', 'info', nil, ('%s non ha rilevato: %s senza corrente'):format(postazione.nome, zona or cabina))
             return
         end
 
@@ -161,6 +188,19 @@ RegisterNetEvent('cds:ztlTransito', function(dati)
 
     local targa = (dati.targa or ''):gsub('%s+', ''):upper()
     if targa == '' then return end
+
+    -- Varco al buio: la telecamera non legge la targa, quindi il transito
+    -- non esiste. Non viene nemmeno registrato: un varco spento non
+    -- produce un transito "autorizzato", non produce niente.
+    local cabinaBuio, zonaBuio = alBuio(dati.coord)
+    if cabinaBuio then
+        AUREA.Log('multe', 'info', nil, ('varco %s cieco: %s senza corrente'):format(
+            zona.nome, zonaBuio or cabinaBuio))
+        return TriggerClientEvent('cds:ztlEsito', src, {
+            nome = ('%s — varco fuori servizio'):format(zona.nome),
+            attiva = false, autorizzato = true,
+        })
+    end
 
     -- Giorno della settimana in gioco (1 = lunedì)
     local giorno = tonumber(os.date('%u'))

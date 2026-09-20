@@ -97,11 +97,12 @@ CreateThread(function()
                 CreateThread(function()
                     local ok = AUREA.Callback.Attendi('fer:forzato', vicino.id)
                     if ok then
+                        local infrazione = AUREA.Infrazioni[FER.Sbarre.infrazione]
                         exports.aurea_ui:Notifica({
                             tipo = 'errore', icona = '🚆', durata = 18000,
-                            titolo = FER.Sbarre.articolo,
+                            titolo = infrazione.articolo,
                             testo = ('Passaggio a livello con barriere chiuse: %s e %d punti.\nÈ la violazione che uccide più gente di tutte.')
-                                :format(AUREA.Util.Euro(FER.Sbarre.sanzione), FER.Sbarre.punti) })
+                                :format(AUREA.Util.Euro(infrazione.importo), infrazione.punti) })
                     end
                 end)
             end

@@ -22,6 +22,27 @@ local function agente(g, permesso)
     return true
 end
 
+--- Il mediatore abilitato.
+---
+--- Dal 2010 il ruolo degli agenti d'affari in mediazione non esiste più
+--- come albo a sé: è una sezione del Registro delle Imprese. Significa
+--- che chi media senza impresa iscritta non è un agente con una pendenza
+--- burocratica — è un abusivo, e la provvigione non gli spetta
+--- (art. 1755 c.c. presuppone il mediatore, non chiunque presenti due
+--- persone).
+---
+--- Chiamata protetta: se ita_registroimprese è fermo, si media lo stesso.
+local function mediatoreAbilitato(g)
+    if not g then return false, 'sessione non valida' end
+    local ok, iscritta, perche = pcall(function()
+        return exports.ita_registroimprese:IscrittaAlRegistro(g.citizenid)
+    end)
+    if ok and iscritta == false then
+        return false, perche or 'impresa non iscritta al Registro'
+    end
+    return true
+end
+
 local function immobile(id)
     return MySQL.single.await('SELECT * FROM immobili WHERE id = ?', { id })
 end
@@ -142,6 +163,12 @@ end)
 AUREA.Callback.Registra('imm:visita', function(src, rispondi, idAnnuncio, visitatoreSrc)
     local g = AUREA.GetPlayer(src)
     if not agente(g, 'visita') then return rispondi(false, 'La visita la accompagna un agente abilitato.') end
+
+    local abilitato, perche = mediatoreAbilitato(g)
+    if not abilitato then
+        return rispondi(false, ('Non risulti mediatore abilitato: %s. Si sistema alla Camera di Commercio.')
+            :format(perche))
+    end
 
     local v = AUREA.GetPlayer(tonumber(visitatoreSrc))
     if not v then return rispondi(false, 'Il visitatore non è collegato.') end
@@ -341,10 +368,28 @@ AUREA.Callback.Registra('imm:stima', function(src, rispondi, idImmobile)
     if not i then return rispondi(nil) end
 
     local mercato = valoreDiMercato(i.tipo)
+
+    -- Il palazzo conta. Un appartamento identico in un condominio tenuto
+    -- bene vale di più, e in uno con la facciata che cade vale di meno:
+    -- ita_condominio tiene il numero, qui si applica alla stima.
+    --
+    -- Chiamata protetta: un immobile che non sta in nessun condominio, o
+    -- un server senza ita_condominio, valgono quello che valgono.
+    local decoro, moltiplicatore, nomeCondominio
+    local okC, d, m, n = pcall(function()
+        return exports.ita_condominio:DecoroDi(i.id)
+    end)
+    if okC and d then decoro, moltiplicatore, nomeCondominio = d, m, n end
+
+    if mercato and moltiplicatore then mercato = mercato * moltiplicatore end
+
     rispondi({
         nome = i.nome, tipo = i.tipo, listino = i.prezzo,
         mercato = mercato and math.floor(mercato) or nil,
         rendita = i.rendita_catastale,
+        decoro = decoro,
+        condominio = nomeCondominio,
+        scartoDecoro = moltiplicatore and math.floor((moltiplicatore - 1) * 100) or nil,
     })
 end)
 

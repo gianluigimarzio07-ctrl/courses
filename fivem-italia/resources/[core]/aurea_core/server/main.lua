@@ -419,6 +419,22 @@ CreateThread(function()
                 local contributi = math.floor(lordo * C.Stipendi.aliquotaContributiva)
                 local netto = lordo - ritenuta - contributi
 
+                -- Pignoramento presso terzi.
+                --
+                -- Quando c'è un atto sullo stipendio non è il lavoratore a
+                -- pagare: è il datore di lavoro che trattiene e versa
+                -- all'agente della riscossione. Il limite è un quinto
+                -- (art. 545 c.p.c.), e lo fa rispettare chi trattiene,
+                -- non chi subisce.
+                --
+                -- Chiamata protetta: se ita_riscossione è fermo, non si
+                -- trattiene niente.
+                local okP, trattenuta = pcall(function()
+                    return exports.ita_riscossione:QuotaPignorabile(g.citizenid, netto)
+                end)
+                trattenuta = okP and math.max(0, math.floor(tonumber(trattenuta) or 0)) or 0
+                netto = netto - trattenuta
+
                 g:Aggiungi('banca', netto, ('Stipendio %s'):format(AUREA.EtichettaLavoro(g.lavoro.nome, g.lavoro.grado)))
                 TriggerEvent('aurea:fisco:ritenuta', g.citizenid, ritenuta, 'irpef')
                 TriggerEvent('aurea:fisco:ritenuta', g.citizenid, contributi, 'inps')
@@ -429,8 +445,11 @@ CreateThread(function()
                 TriggerClientEvent('aurea:ui:notifica', g.source, {
                     tipo = 'successo',
                     titolo = 'Stipendio accreditato',
-                    testo = ('Netto %s · IRPEF %s · contributi %s')
-                        :format(U.Euro(netto), U.Euro(ritenuta), U.Euro(contributi)),
+                    testo = trattenuta > 0
+                        and ('Netto %s · IRPEF %s · contributi %s · pignorato %s')
+                            :format(U.Euro(netto), U.Euro(ritenuta), U.Euro(contributi), U.Euro(trattenuta))
+                        or ('Netto %s · IRPEF %s · contributi %s')
+                            :format(U.Euro(netto), U.Euro(ritenuta), U.Euro(contributi)),
                 })
             end
         end

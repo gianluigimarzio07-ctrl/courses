@@ -22,6 +22,23 @@ end
 
 exports('AgentiInServizio', agentiInServizio)
 
+-- ---------------------------------------------------------------------------
+--  La corrente
+--
+--  L'antirapina è un impianto elettrico come tutti gli altri. Se la cabina
+--  che alimenta la zona è guasta, la segnalazione alla centrale parte in
+--  ritardo e le telecamere non registrano niente.
+--
+--  Chiamata protetta: se lav_elettricista è fermo, la corrente c'è.
+-- ---------------------------------------------------------------------------
+local function alBuio(coord)
+    local ok, cabina, zona = pcall(function()
+        return exports.lav_elettricista:PuntoAlBuio(coord)
+    end)
+    if not ok then return nil end
+    return cabina, zona
+end
+
 --- Verifica tutte le condizioni per avviare un colpo.
 local function verifica(g, bersaglio)
     local livello = RAP.Livelli[bersaglio.livello]
@@ -100,31 +117,52 @@ AUREA.Callback.Registra('rap:avvia', function(src, rispondi, idBersaglio, masche
         end
     end
 
+    local cabinaBuio, zonaBuio = alBuio(bersaglio.coord)
+
     inCorso[bersaglio.id] = {
         promotore = g.citizenid,
         avviata = os.time(),
         fase = 1,
         partecipanti = partecipanti,
         mascherato = mascherato == true,
+        -- Quello che conta è se la corrente manca ADESSO, quando si entra:
+        -- se l'elettricista ripara mentre il colpo è in corso, le
+        -- telecamere restano cieche su quello che è già successo.
+        alBuio = cabinaBuio ~= nil,
         coord = { x = bersaglio.coord.x, y = bersaglio.coord.y, z = bersaglio.coord.z },
     }
 
-    -- La centrale riceve l'allarme
-    TriggerEvent('aurea:112:allerta', 'rapina',
-        { x = bersaglio.coord.x, y = bersaglio.coord.y, z = bersaglio.coord.z },
-        ('Allarme antirapina: %s'):format(bersaglio.nome),
-        bersaglio.nome)
+    -- La centrale riceve l'allarme. Al buio ci mette di più.
+    local function daiAllarme()
+        TriggerEvent('aurea:112:allerta', 'rapina',
+            { x = bersaglio.coord.x, y = bersaglio.coord.y, z = bersaglio.coord.z },
+            ('Allarme antirapina: %s'):format(bersaglio.nome),
+            bersaglio.nome)
 
-    exports.aurea_ui:NotificaEnte('carabinieri', {
-        tipo = 'errore', icona = '🚨', durata = 20000,
-        titolo = 'RAPINA IN CORSO',
-        testo = ('%s — allarme scattato. Intervento immediato.'):format(bersaglio.nome),
-    }, true)
-    exports.aurea_ui:NotificaEnte('polizia', {
-        tipo = 'errore', icona = '🚨', durata = 20000,
-        titolo = 'RAPINA IN CORSO',
-        testo = ('%s — allarme scattato. Intervento immediato.'):format(bersaglio.nome),
-    }, true)
+        local testo = cabinaBuio
+            and ('%s — allarme ricevuto in ritardo (linea di riserva, zona %s senza corrente).')
+                :format(bersaglio.nome, zonaBuio or 'ignota')
+            or ('%s — allarme scattato. Intervento immediato.'):format(bersaglio.nome)
+
+        for _, ente in ipairs({ 'carabinieri', 'polizia' }) do
+            exports.aurea_ui:NotificaEnte(ente, {
+                tipo = 'errore', icona = '🚨', durata = 20000,
+                titolo = 'RAPINA IN CORSO',
+                testo = testo,
+            }, true)
+        end
+    end
+
+    if cabinaBuio then
+        AUREA.Log('giustizia', 'allarme', g, ('colpo su %s con la zona %s al buio: allarme ritardato di %ds')
+            :format(bersaglio.nome, zonaBuio or cabinaBuio, RAP.Regole.ritardoAllarmeAlBuio))
+        CreateThread(function()
+            Wait(RAP.Regole.ritardoAllarmeAlBuio * 1000)
+            daiAllarme()
+        end)
+    else
+        daiAllarme()
+    end
 
     if g.organizzazione.tag ~= 'nessuna' then
         exports.ita_famiglie:CaloreOrganizzazione(g.organizzazione.tag, livello.calore, 'rapina')
@@ -198,10 +236,17 @@ AUREA.Callback.Registra('rap:concludi', function(src, rispondi, idBersaglio, com
             ('Rapina ai danni di %s'):format(bersaglio.nome))
     end
 
-    -- Le telecamere: senza volto coperto si viene identificati subito
-    local probabilita = rapina.mascherato
-        and RAP.Regole.probabilitaIdentificazioneMascherato
-        or RAP.Regole.probabilitaIdentificazione
+    -- Le telecamere: senza volto coperto si viene identificati subito.
+    -- Senza corrente non c'è registrazione da acquisire, e il volto
+    -- coperto diventa quasi superfluo.
+    local probabilita
+    if rapina.alBuio then
+        probabilita = RAP.Regole.probabilitaIdentificazioneAlBuio
+    elseif rapina.mascherato then
+        probabilita = RAP.Regole.probabilitaIdentificazioneMascherato
+    else
+        probabilita = RAP.Regole.probabilitaIdentificazione
+    end
 
     if math.random(100) <= probabilita then
         local nomi = {}
@@ -220,8 +265,11 @@ AUREA.Callback.Registra('rap:concludi', function(src, rispondi, idBersaglio, com
     else
         exports.aurea_ui:NotificaEnte('carabinieri', {
             tipo = 'info', icona = '📹', durata = 14000,
-            titolo = 'Filmati acquisiti',
-            testo = ('%s — soggetti a volto coperto, identificazione non possibile.'):format(bersaglio.nome),
+            titolo = rapina.alBuio and 'Nessun filmato' or 'Filmati acquisiti',
+            testo = rapina.alBuio
+                and ('%s — impianto senza alimentazione all\'ora del fatto: non c\'è registrazione.')
+                    :format(bersaglio.nome)
+                or ('%s — soggetti a volto coperto, identificazione non possibile.'):format(bersaglio.nome),
         }, true)
     end
 

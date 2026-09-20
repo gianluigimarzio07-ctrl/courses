@@ -56,6 +56,7 @@ mysql -u aurea -p aurea < sql/11_mercato.sql
 mysql -u aurea -p aurea < sql/12_illegale.sql
 mysql -u aurea -p aurea < sql/13_ambiente_igiene.sql
 mysql -u aurea -p aurea < sql/14_territorio.sql
+mysql -u aurea -p aurea < sql/15_stato.sql
 ```
 
 Aggiungono le tabelle dei moduli introdotti dopo — armadio dei completi,
@@ -401,6 +402,14 @@ Manca la quinta migrazione: esegui `sql/07_telefono.sql`.
 **`Unknown table 'previdenza_posizioni'`, `edilizia_cantieri` o `pc_volontari`.**
 Mancano le migrazioni successive: esegui `sql/08_previdenza.sql`,
 `sql/09_edilizia.sql` e `sql/10_protezionecivile.sql`.
+
+**`Unknown table 'prefettura_ricorsi'`, `riscossione_ruoli`, `condomini`,
+`scorte_sangue` o `autostrade_transiti`.**
+Manca l'ultima migrazione: esegui `sql/15_stato.sql`. Aggiunge le tabelle
+dei ricorsi al Prefetto, delle licenze di polizia, del Tiro a Segno, della
+riscossione, dell'Ispettorato del Lavoro, del Registro delle Imprese,
+della SIAE, dei locali notturni, dei beni culturali, del condominio, delle
+donazioni di sangue e dei pedaggi autostradali.
 
 **Il montante contributivo resta a zero.**
 Il montante cresce con le buste paga, e le buste paga arrivano ogni 30

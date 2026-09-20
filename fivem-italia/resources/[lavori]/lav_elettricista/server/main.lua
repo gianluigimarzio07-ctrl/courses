@@ -60,6 +60,40 @@ exports('ProvocaGuasto', function(idCabina, causa) apriGuasto(idCabina, causa or
 exports('ZonaAlBuio', function(idCabina) return guasti[idCabina] ~= nil end)
 
 -- ---------------------------------------------------------------------------
+--  Chi è al buio, per punto
+--
+--  `ZonaAlBuio` risponde su una cabina, e va bene per chi sa già di che
+--  cabina dipende. Ma un autovelox, un varco, una centralina d'allarme
+--  sanno solo dove stanno: non sanno da quale cabina prendono corrente.
+--
+--  Questo export risponde a quella domanda. Restituisce l'id della cabina
+--  guasta che alimenta quel punto e il nome della zona, oppure nil se lì
+--  la corrente c'è.
+-- ---------------------------------------------------------------------------
+local function comeVettore(coord)
+    if coord == nil then return nil end
+    if type(coord) == 'vector3' then return coord end
+    if type(coord) == 'table' then
+        local x, y, z = coord.x or coord[1], coord.y or coord[2], coord.z or coord[3]
+        if x and y then return vector3(x + 0.0, y + 0.0, (z or 0.0) + 0.0) end
+    end
+    return nil
+end
+
+exports('PuntoAlBuio', function(coord)
+    local p = comeVettore(coord)
+    if not p then return nil end
+
+    for id in pairs(guasti) do
+        local c = ELE.GetCabina(id)
+        if c and #(p - c.coord) <= ELE.Guasti.raggioZona then
+            return id, c.zona
+        end
+    end
+    return nil
+end)
+
+-- ---------------------------------------------------------------------------
 --  Turno
 -- ---------------------------------------------------------------------------
 AUREA.Callback.Registra('ele:guasti', function(src, rispondi)

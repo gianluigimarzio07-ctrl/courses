@@ -246,6 +246,18 @@ fivem-italia/
 | `ita_antimafia` | Accertamento patrimoniale, sproporzione fra redditi e beni, confisca di prevenzione, riutilizzo sociale |
 | `ita_pesca` | Pesca professionale con quote condivise, mercato ittico a prezzo variabile, vendita in nero, controlli |
 | `ita_ferrovie` | Linee regionali con orario e ritardo che pesa sul compenso, biglietti da obliterare, passaggi a livello |
+| `ita_prefettura` | Ricorso al Prefetto e al Giudice di Pace contro i verbali, ordinanza-ingiunzione al doppio, silenzio-accoglimento se l'ufficio non decide, elenco prefettizio degli addetti ai servizi di controllo |
+| `ita_questura` | Licenze di polizia: passaporto negato con procedimenti pendenti, porto d'armi, licenza di pubblico spettacolo, DASPO |
+| `ita_tsn` | Tiro a Segno Nazionale: lezioni con punteggio tirato dal server e certificato di idoneità al maneggio delle armi, senza il quale la Questura non rilascia niente |
+| `ita_riscossione` | Agente della riscossione: ruoli, rateizzazione con decadenza, preavviso di fermo, fermo del veicolo, pignoramento del conto e dello stipendio (un quinto, trattenuto in busta paga) |
+| `ita_ispettorato` | Accesso ispettivo, maxisanzione per lavoro nero, sospensione dell'attività che impedisce di mettersi in servizio, caporalato |
+| `ita_registroimprese` | Camera di Commercio: numero REA, visura camerale pubblica, compagine sociale, diritto annuale e sospensione dal Registro |
+| `ita_siae` | Permessi per pubblica esecuzione, borderò che si riempie da solo quando accendi uno stereo in un locale, ispezioni e verbali |
+| `ita_discoteca` | Locali notturni: licenza art. 68 TULPS, permesso SIAE, buttafuori iscritto in Prefettura, capienza, DASPO alla porta |
+| `ita_beniculturali` | Siti archeologici, metal detector, scavo clandestino, denuncia del rinvenimento con premio, sequestro e mercato antiquario |
+| `ita_condominio` | Tabella millesimale calcolata dalla rendita catastale, assemblea con le maggioranze vere, quote, decreto ingiuntivo, decoro del palazzo che pesa sul valore degli appartamenti |
+| `ita_sangue` | Centro trasfusionale: gruppi sanguigni, scorte condivise fra tutti, trasfusioni compatibili e reazioni emolitiche |
+| `ita_autostrade` | Caselli, pedaggio sulla distanza fra ingresso e uscita, Telepass, sbarra forzata (art. 176 CdS) e insoluti che finiscono a ruolo |
 
 ### `[lavori]`
 

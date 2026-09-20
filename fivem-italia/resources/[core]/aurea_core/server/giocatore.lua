@@ -151,6 +151,31 @@ end
 function Giocatore:ImpostaServizio(inServizio)
     local l = AUREA.GetLavoro(self.lavoro.nome)
     if not l.servizio then return false end
+
+    -- Sospensione dell'attività imprenditoriale.
+    --
+    -- Quando l'Ispettorato del Lavoro sospende un'attività, quell'attività
+    -- non si svolge: non è una multa, è una serranda abbassata. Qui vuol
+    -- dire che nessuno di quel lavoro può mettersi in servizio finché il
+    -- provvedimento non è revocato.
+    --
+    -- Chiamata protetta: se ita_ispettorato è fermo, non c'è nessuna
+    -- sospensione da rispettare.
+    if inServizio then
+        local ok, sospesa, motivo = pcall(function()
+            return exports.ita_ispettorato:AttivitaSospesa(self.lavoro.nome)
+        end)
+        if ok and sospesa then
+            TriggerClientEvent('aurea:ui:notifica', self.source, {
+                tipo = 'errore', icona = '⛔', durata = 16000,
+                titolo = 'Attività sospesa',
+                testo = ('L\'Ispettorato del Lavoro ha sospeso questa attività: %s')
+                    :format(motivo or 'provvedimento in corso'),
+            })
+            return false
+        end
+    end
+
     self.lavoro.servizio = inServizio and true or false
     self:Sincronizza()
     TriggerEvent('aurea:servizio:cambiato', self.source, self.lavoro.nome, self.lavoro.servizio)

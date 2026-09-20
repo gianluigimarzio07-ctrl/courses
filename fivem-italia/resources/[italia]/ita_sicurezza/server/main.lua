@@ -65,6 +65,19 @@ AUREA.Callback.Registra('sic:giura', function(src, rispondi, aspiranteSrc)
         end
     end
 
+    -- Il porto d'armi da solo non basta: una guardia giurata deve saper
+    -- maneggiare l'arma, e chi lo certifica è il Tiro a Segno Nazionale.
+    -- È la stessa carta che serve alla Questura, chiesta da un altro
+    -- ufficio per un'altra ragione.
+    if SIC.Giuramento.richiedeCertificatoTSN then
+        local okT, certificato = pcall(function()
+            return exports.ita_tsn:CertificatoValido(a.citizenid)
+        end)
+        if not okT or certificato ~= true then
+            return rispondi(false, 'Manca il certificato di idoneità al maneggio delle armi: si prende al Tiro a Segno Nazionale.')
+        end
+    end
+
     local ok, precedenti = pcall(function()
         return exports.ita_giustizia:Precedenti(a.citizenid, false)
     end)
@@ -135,6 +148,45 @@ AUREA.Callback.Registra('sic:piantona', function(src, rispondi, obiettivoId)
         :format(o.nome, math.floor(SIC.Piantonamento.raggio)))
 end)
 
+-- ---------------------------------------------------------------------------
+--  Obiettivi senza linea d'allarme
+--
+--  Un impianto antirapina collegato alla centrale operativa è un impianto
+--  elettrico. Quando salta la cabina che alimenta la zona, quel punto
+--  smette di essere sorvegliato a distanza: resta solo chi ci sta davanti.
+--
+--  L'istituto lo sa subito, perché quello che vede in centrale è la linea
+--  che cade. E chi è di turno lì si becca l'indennità, perché da quel
+--  momento il presidio è lui.
+-- ---------------------------------------------------------------------------
+local function obiettivoSenzaLinea(o)
+    if not o then return false end
+    local ok, cabina = pcall(function()
+        return exports.lav_elettricista:PuntoAlBuio(o.coord)
+    end)
+    return ok and cabina ~= nil
+end
+
+AddEventHandler('aurea:elettricita:blackout', function(_, attivo)
+    if not attivo then return end
+
+    local colpiti = {}
+    for _, o in ipairs(SIC.Obiettivi) do
+        if obiettivoSenzaLinea(o) then colpiti[#colpiti + 1] = o.nome end
+    end
+    if #colpiti == 0 then return end
+
+    exports.aurea_ui:NotificaLavoro(SIC.Lavoro, {
+        tipo = 'errore', icona = '🛡', durata = 20000,
+        titolo = 'Linea d\'allarme caduta',
+        testo = ('La centrale non vede più: %s. Finché non torna la corrente l\'unico presidio è sul posto.')
+            :format(table.concat(colpiti, ', ')),
+    }, false)
+
+    AUREA.Log('giustizia', 'avviso', nil,
+        ('impianti antirapina senza linea: %s'):format(table.concat(colpiti, ', ')))
+end)
+
 --- ita_rapine chiede a noi se un obiettivo è presidiato.
 exports('Presidiato', function(obiettivoId)
     local n = 0
@@ -163,16 +215,27 @@ CreateThread(function()
                     testo = ('Ti sei allontanato da %s. Il turno non matura.'):format(o.nome) })
             elseif os.time() - p.da >= SIC.Piantonamento.minutiPerTurno * 60 then
                 p.da = os.time()
-                g:Aggiungi('banca', SIC.Piantonamento.compensoPerTurno, ('presidio %s'):format(o.nome))
+
+                -- Obiettivo senza linea d'allarme: il turno vale di più,
+                -- perché in quel momento la guardia È l'impianto.
+                local senzaLinea = obiettivoSenzaLinea(o)
+                local compenso = senzaLinea
+                    and math.floor(SIC.Piantonamento.compensoPerTurno
+                                   * (1 + SIC.Piantonamento.indennitaSenzaLinea))
+                    or SIC.Piantonamento.compensoPerTurno
+
+                g:Aggiungi('banca', compenso, ('presidio %s'):format(o.nome))
                 pcall(function()
                     exports.aurea_azienda:VersaInCassa(SIC.Lavoro,
-                        math.floor(SIC.Piantonamento.compensoPerTurno * 0.25), 'quota istituto')
+                        math.floor(compenso * 0.25), 'quota istituto')
                 end)
                 TriggerClientEvent('aurea:ui:notifica', g.source, {
                     tipo = 'successo', icona = '🛡', durata = 10000,
                     titolo = 'Turno maturato',
-                    testo = ('%s per il presidio di %s.')
-                        :format(U.Euro(SIC.Piantonamento.compensoPerTurno), o.nome) })
+                    testo = senzaLinea
+                        and ('%s per il presidio di %s, indennità compresa: l\'impianto è senza linea.')
+                            :format(U.Euro(compenso), o.nome)
+                        or ('%s per il presidio di %s.'):format(U.Euro(compenso), o.nome) })
             end
         end
     end

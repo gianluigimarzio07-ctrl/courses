@@ -74,6 +74,16 @@ AUREA.Callback.Registra('gar:preleva', function(src, rispondi, targa, idGarage)
         avvisi[#avvisi + 1] = 'SENZA ASSICURAZIONE (art. 193 CdS: sanzione e sequestro)'
     end
 
+    -- Il preavviso di fermo non impedisce di circolare, il fermo sì (e
+    -- quello lo blocca già lo stato del veicolo). Ma chi esce con un
+    -- preavviso addosso è giusto che lo sappia: ha poco tempo.
+    local okM, misura, importo = pcall(function()
+        return exports.ita_riscossione:MisuraSuVeicolo(targa)
+    end)
+    if okM and misura == 'preavviso_fermo' then
+        avvisi[#avvisi + 1] = ('PREAVVISO DI FERMO per %s a ruolo'):format(AUREA.Util.Euro(importo or 0))
+    end
+
     rispondi(true, #avvisi > 0 and ('Attenzione: %s.'):format(table.concat(avvisi, ', ')) or nil, {
         modello = v.modello,
         proprieta = v.proprieta and json.decode(v.proprieta) or nil,

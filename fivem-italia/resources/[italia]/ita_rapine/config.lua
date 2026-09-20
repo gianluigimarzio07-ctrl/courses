@@ -132,6 +132,22 @@ RAP.Regole = {
     -- di essere identificati
     probabilitaIdentificazione = 70,
     probabilitaIdentificazioneMascherato = 15,
+
+    -- Blackout.
+    --
+    -- Una centralina antirapina ha un gruppo di continuità: senza corrente
+    -- non muore, ma la linea verso l'istituto di vigilanza passa dal
+    -- combinatore telefonico di riserva, che è lento. L'allarme parte lo
+    -- stesso — dopo questi secondi.
+    --
+    -- Sono il motivo per cui conviene far saltare la cabina prima, e il
+    -- motivo per cui a qualcuno converrebbe accorgersi che una cabina è
+    -- saltata proprio adesso.
+    ritardoAllarmeAlBuio = 45,
+
+    -- Al buio anche le telecamere non registrano, quindi identificare
+    -- chi ha fatto il colpo è molto più difficile.
+    probabilitaIdentificazioneAlBuio = 10,
 }
 
 --- Bersaglio più vicino a una posizione.
