@@ -2,131 +2,123 @@
 #
 #  AUREA · Italia Roleplay — preparazione della cartella del server
 #
-#  Scarica le due cose che AUREA non può contenere e che senza il server
-#  non parte:
+#  Le risorse ci sono già tutte. Quelle di base — mapmanager, spawnmanager,
+#  baseevents e oxmysql — stanno in resources/[base]/ e sono incluse nel
+#  pacchetto: vedi il LEGGIMI lì dentro per da dove vengono, con che licenza
+#  e perché pma-voice e screenshot-basic non ci sono.
 #
-#    · le risorse di sistema di FiveM (mapmanager, chat, spawnmanager,
-#      sessionmanager, basic-gamemode, hardcap) che stanno in cfx-server-data
-#    · oxmysql, l'unica dipendenza esterna del framework
+#  Quello che manca, e che questo script scarica, è una cosa sola:
+#  l'ESEGUIBILE DI FXSERVER. È il programma che fa girare il server, pesa
+#  qualche centinaio di megabyte e Cfx.re ne pubblica una versione nuova
+#  quasi ogni settimana. Congelarne una copia qui dentro vorrebbe dire
+#  consegnare qualcosa di già vecchio.
 #
-#  Va lanciato UNA VOLTA, dentro questa cartella:
+#  GTA V non c'entra e non serve: il gioco ce l'ha ogni giocatore sul
+#  proprio computer. Un server FiveM non lo contiene.
 #
+#  Uso:
 #      chmod +x installa.sh
 #      ./installa.sh
 #
-#  Non tocca nulla di AUREA: se una risorsa esiste già, la salta.
-#
 set -euo pipefail
 
-CFX_ZIP='https://github.com/citizenfx/cfx-server-data/archive/refs/heads/master.zip'
-OX_ZIP='https://github.com/overextended/oxmysql/releases/latest/download/oxmysql.zip'
+ARTEFATTI='https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/'
 
 qui="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-risorse="$qui/resources"
 
-verde() { printf '\033[32m%s\033[0m\n' "$*"; }
+verde()  { printf '\033[32m%s\033[0m\n' "$*"; }
 giallo() { printf '\033[33m%s\033[0m\n' "$*"; }
-rosso() { printf '\033[31m%s\033[0m\n' "$*"; }
+rosso()  { printf '\033[31m%s\033[0m\n' "$*"; }
 
-if [[ ! -d "$risorse" ]] || [[ ! -f "$qui/server.cfg" ]]; then
+if [[ ! -d "$qui/resources" ]] || [[ ! -f "$qui/server.cfg" ]]; then
     rosso "Questo script va lanciato dentro la cartella di AUREA (quella con server.cfg e resources/)."
     exit 1
 fi
 
-for strumento in curl unzip; do
+# ---------------------------------------------------------------------------
+#  Controllo di quello che dovrebbe già esserci
+# ---------------------------------------------------------------------------
+echo
+verde '[1/2] Controllo delle risorse di base'
+
+mancanti=()
+for r in mapmanager spawnmanager baseevents oxmysql; do
+    [[ -d "$qui/resources/[base]/$r" ]] || mancanti+=("$r")
+done
+
+if (( ${#mancanti[@]} )); then
+    rosso "      mancano da resources/[base]/: ${mancanti[*]}"
+    rosso '      il pacchetto è incompleto. Riscarica AUREA.'
+    exit 1
+fi
+verde '      ci sono tutte.'
+
+# ---------------------------------------------------------------------------
+#  L'eseguibile di FXServer
+# ---------------------------------------------------------------------------
+echo
+verde '[2/2] Eseguibile di FXServer'
+
+if [[ -f "$qui/../run.sh" ]] || [[ -f "$qui/run.sh" ]] || [[ -f "$qui/FXServer" ]]; then
+    giallo '      già presente, salto.'
+    echo
+    verde 'Tutto pronto.'
+    exit 0
+fi
+
+for strumento in curl tar; do
     command -v "$strumento" >/dev/null 2>&1 || { rosso "Manca $strumento. Installalo e riprova."; exit 1; }
 done
 
-tmp="$(mktemp -d)"
-trap 'rm -rf "$tmp"' EXIT
+echo "      cerco l'ultima build su Cfx.re..."
 
-# ---------------------------------------------------------------------------
-#  1. Risorse di sistema di FiveM
-# ---------------------------------------------------------------------------
-echo
-verde '[1/2] Risorse di sistema di FiveM (cfx-server-data)'
-
-if [[ -d "$risorse/[managers]" ]] || [[ -d "$risorse/[system]" ]]; then
-    giallo '      già presenti, salto.'
-else
-    echo '      scarico...'
-    curl -fsSL "$CFX_ZIP" -o "$tmp/cfx.zip"
-    unzip -q "$tmp/cfx.zip" -d "$tmp/cfx"
-
-    sorgente="$(find "$tmp/cfx" -maxdepth 2 -type d -name resources | head -n 1)"
-    if [[ -z "$sorgente" ]]; then
-        rosso '      archivio inatteso: non trovo la cartella resources/.'
-        exit 1
-    fi
-
-    # Si copia solo quello che non c'è già: AUREA non viene toccata
-    for cartella in "$sorgente"/*; do
-        nome="$(basename "$cartella")"
-        if [[ -e "$risorse/$nome" ]]; then
-            giallo "      $nome esiste già, salto"
-        else
-            cp -R "$cartella" "$risorse/"
-            echo "      + $nome"
-        fi
-    done
-    verde '      fatto.'
-fi
-
-# ---------------------------------------------------------------------------
-#  2. oxmysql
-# ---------------------------------------------------------------------------
-echo
-verde '[2/2] oxmysql'
-
-if [[ -d "$risorse/oxmysql" ]]; then
-    giallo '      già presente, salto.'
-else
-    echo '      scarico l ultima release...'
-    curl -fsSL "$OX_ZIP" -o "$tmp/oxmysql.zip"
-    unzip -q "$tmp/oxmysql.zip" -d "$tmp/ox"
-
-    # La release può avere o non avere una cartella radice
-    if [[ -f "$tmp/ox/fxmanifest.lua" ]]; then
-        mv "$tmp/ox" "$risorse/oxmysql"
-    else
-        interna="$(find "$tmp/ox" -maxdepth 2 -name fxmanifest.lua -print -quit)"
-        if [[ -z "$interna" ]]; then
-            rosso '      archivio inatteso: non trovo fxmanifest.lua.'
-            exit 1
-        fi
-        mv "$(dirname "$interna")" "$risorse/oxmysql"
-    fi
-    verde '      fatto.'
-fi
-
-# ---------------------------------------------------------------------------
-#  Controllo finale
-# ---------------------------------------------------------------------------
-echo
-verde 'Verifica'
-
-manca=0
-for r in mapmanager chat spawnmanager sessionmanager basic-gamemode hardcap oxmysql; do
-    if find "$risorse" -maxdepth 3 -type d -name "$r" | grep -q .; then
-        echo "      ✓ $r"
-    else
-        rosso "      ✗ $r NON trovata"
-        manca=1
-    fi
-done
-
-echo
-if [[ $manca -eq 0 ]]; then
-    verde 'Tutto a posto. Restano tre cose da fare a mano, in server.cfg:'
-    echo '  · sv_licenseKey      — la chiave da https://keymaster.fivem.net'
-    echo '  · mysql_connection_string — utente, password e nome del database'
-    echo '  · add_principal      — la tua license, per avere i permessi da fondatore'
+pagina="$(curl -fsSL "$ARTEFATTI" 2>/dev/null || true)"
+if [[ -z "$pagina" ]]; then
+    rosso '      non riesco a raggiungere runtime.fivem.net.'
     echo
-    echo 'E il database, se non lo hai ancora importato:'
-    echo '  mysql -u root -p -e "CREATE DATABASE aurea CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"'
-    echo '  mysql -u root -p aurea < sql/01_schema.sql'
-    echo '  mysql -u root -p aurea < sql/02_dati_iniziali.sql'
-else
-    rosso 'Qualcosa non è arrivato. Controlla la connessione e rilancia lo script.'
+    echo '      Scaricalo a mano: apri'
+    echo "          $ARTEFATTI"
+    echo '      prendi la build più recente contrassegnata come consigliata,'
+    echo '      scompatta fx.tar.xz in una cartella accanto a questa e avvia'
+    echo '      il server da lì con:'
+    echo
+    echo "          ./run.sh +exec $qui/server.cfg"
     exit 1
 fi
+
+percorso="$(printf '%s' "$pagina" | grep -oE '\./[0-9]+-[0-9a-f]+/fx\.tar\.xz' | head -n 1 || true)"
+if [[ -z "$percorso" ]]; then
+    rosso '      la pagina degli artefatti non ha il formato atteso.'
+    echo "      Scaricalo a mano da $ARTEFATTI"
+    exit 1
+fi
+
+destinazione="$qui/../fxserver"
+mkdir -p "$destinazione"
+
+echo "      scarico ${percorso#./}"
+curl -fL --progress-bar "${ARTEFATTI}${percorso#./}" -o "$destinazione/fx.tar.xz"
+
+echo '      scompatto...'
+tar -xJf "$destinazione/fx.tar.xz" -C "$destinazione"
+rm -f "$destinazione/fx.tar.xz"
+chmod +x "$destinazione/run.sh" 2>/dev/null || true
+
+echo
+verde 'Tutto pronto.'
+echo
+echo 'Restano due cose da fare a mano, e non le può fare uno script:'
+echo
+echo '  1. il database:'
+echo '       mysql -u utente -p nome_database < sql/01_schema.sql'
+echo '       mysql -u utente -p nome_database < sql/02_dati_iniziali.sql'
+echo '     poi metti la stringa di connessione in server.cfg.'
+echo
+echo '  2. la chiave del server: generala su https://keymaster.fivem.net'
+echo '     e incollala in sv_licenseKey dentro server.cfg.'
+echo
+echo 'Poi si avvia così:'
+echo
+echo "     cd $(cd "$destinazione" 2>/dev/null && pwd || echo '../fxserver')"
+echo "     ./run.sh +exec $qui/server.cfg"
+echo

@@ -6,6 +6,14 @@ cui i moduli si parlano fra loro, e in cui le regole italiane — codice della
 strada, fisco, giustizia, sanità — sono la meccanica di gioco, non
 un'ambientazione dipinta sopra.
 
+**È pronto all'uso.** Dentro ci sono tutte le risorse, comprese quelle di
+base su cui FiveM si appoggia — `mapmanager`, `spawnmanager`, `baseevents` e
+`oxmysql` — che stanno in `resources/[base]/`. Non c'è niente da andare a
+cercare in giro e niente da compilare al primo avvio: si scarica l'eseguibile
+di FXServer con `./installa.sh`, si importa il database, si avvia. (GTA V
+resta sul computer di ogni giocatore, come sempre: un server FiveM non
+contiene il gioco.)
+
 ---
 
 ## Che cosa lo rende diverso
@@ -313,7 +321,7 @@ Per far convivere AUREA con l'ecosistema ESX, **[docs/ESX.md](docs/ESX.md)**.
 In breve:
 
 ```bash
-# 1. Risorse di sistema di FiveM e oxmysql — una volta sola
+# 1. Eseguibile di FXServer — una volta sola
 ./installa.sh          # su Windows: installa.bat
 
 # 2. Database
@@ -328,10 +336,36 @@ mysql -u root -p aurea < sql/02_dati_iniziali.sql
 ./run.sh +exec server.cfg
 ```
 
-Il passo 1 non è saltabile: `mapmanager`, `chat`, `spawnmanager`,
-`sessionmanager`, `basic-gamemode`, `hardcap` e `oxmysql` non appartengono ad
-AUREA e non stanno nel pacchetto. Senza, il server si ferma su
-`Couldn't find resource oxmysql` e non parte nulla.
+### Che cosa c'è già nel pacchetto
+
+Le risorse ci sono **tutte**, comprese quelle che non sono nostre. Stanno in
+`resources/[base]/`, incluse così com'erano, senza modifiche:
+
+| | |
+|---|---|
+| `mapmanager`, `spawnmanager`, `baseevents` | le risorse di base di Cfx.re |
+| `oxmysql` | l'accesso al database, unica dipendenza vera del framework |
+
+Provenienza e licenze sono in **[resources/\[base\]/LEGGIMI.md](resources/%5Bbase%5D/LEGGIMI.md)**.
+`chat`, `sessionmanager` e `hardcap` non stanno lì perché arrivano dentro
+l'eseguibile, in `citizen/system_resources/`, e si trovano da sole.
+
+Tre assenze sono volute, e il LEGGIMI spiega perché per esteso:
+`basic-gamemode` accende l'autospawn e ti farebbe nascere in strada mentre
+stai ancora scegliendo il personaggio; `pma-voice` si contende con
+`aurea_voce` la stessa native della portata vocale, e il suo README chiede
+espressamente di non toccarla da altri script; `screenshot-basic` non la
+chiama nessuno, perché il fermo immagine di `aurea_telecamere` non è
+un'immagine ma l'elenco di chi era inquadrato, messo agli atti dal server.
+
+Quello che il passo 1 scarica è **soltanto l'eseguibile di FXServer**: pesa
+qualche centinaio di megabyte, Cfx.re ne pubblica una versione nuova quasi
+ogni settimana, e congelarne una copia qui dentro vorrebbe dire consegnare
+qualcosa di già vecchio. Se ce l'hai già, lo script se ne accorge e lo salta.
+
+GTA V non c'entra e non serve: il gioco ce l'ha ogni giocatore sul proprio
+computer, con la propria copia, e il client FiveM lo usa da lì. Un server
+FiveM non contiene il gioco — nemmeno un pezzo.
 
 ---
 
@@ -506,5 +540,9 @@ AUREA e non stanno nel pacchetto. Senza, il server si ferma su
 
 ## Licenza
 
-Codice originale scritto per questo progetto. Le dipendenze esterne
-(`oxmysql`) mantengono le rispettive licenze.
+Codice originale scritto per questo progetto, con una sola eccezione:
+`resources/[base]/` contiene risorse di terze parti incluse senza modifiche,
+ciascuna con la propria licenza — LGPL-3.0 per `oxmysql`, Cfx.re asset pack
+per `mapmanager`, `spawnmanager` e `baseevents`. I testi originali sono
+dentro le rispettive cartelle e vanno lasciati dove sono. Il dettaglio è in
+**[resources/\[base\]/LEGGIMI.md](resources/%5Bbase%5D/LEGGIMI.md)**.

@@ -8,10 +8,11 @@ Guida completa dal server vuoto alla prima connessione.
 
 | Componente | Versione minima | Note |
 |---|---|---|
-| FXServer | build 7290+ | canale `latest` o `recommended` |
+| FXServer | build 7290+ | canale `latest` o `recommended`; è l'unica cosa da scaricare |
 | MariaDB | 10.6 | in alternativa MySQL 8.0 |
-| oxmysql | 2.7+ | unica dipendenza esterna |
+| oxmysql | 2.7+ | unica dipendenza esterna, **inclusa** in `resources/[base]/` |
 | RAM | 4 GB | 8 GB consigliati sopra i 40 slot |
+| Spazio su disco | ~2 GB | 3 MB il pacchetto, il resto è l'eseguibile |
 
 Il server richiede **OneSync abilitato** (già impostato in `server.cfg`):
 diverse meccaniche leggono le entità lato server e senza OneSync non
@@ -80,19 +81,62 @@ fa danni.
 
 ---
 
-## 3. Quello che AUREA non contiene
+## 3. Quello che c'è già, e l'unica cosa che manca
 
-Nella cartella di AUREA mancano due cose, e non per dimenticanza: non sono
-sue e non si possono ridistribuire dentro il pacchetto.
+Il pacchetto è completo. Le risorse ci sono tutte, comprese quelle che non
+abbiamo scritto noi: stanno in `resources/[base]/`, incluse così com'erano,
+senza modifiche.
 
-1. **Le risorse di sistema di FiveM** — `mapmanager`, `chat`, `spawnmanager`,
-   `sessionmanager`, `basic-gamemode`, `hardcap`. Stanno in
-   [cfx-server-data](https://github.com/citizenfx/cfx-server-data).
-2. **oxmysql**, l'unico strato di accesso al database che AUREA usa, e serve
-   la **release già compilata**: il repository sorgente da solo non funziona.
+| Risorsa | Licenza | Serve a |
+|---|---|---|
+| `mapmanager` | Cfx.re asset pack | Avvia la mappa e il tipo di gioco |
+| `spawnmanager` | Cfx.re asset pack | Emette `playerSpawned`, che `aurea_spawn` ascolta |
+| `baseevents` | Cfx.re asset pack | Eventi di morte e di uscita dal veicolo, per `aurea_medico` |
+| `oxmysql` | LGPL-3.0 | L'accesso al database. Senza, non parte niente |
 
-Le scarica entrambe lo script incluso. Va lanciato una volta sola, dentro la
-cartella di AUREA:
+Provenienza esatta e testi di licenza sono in
+[`resources/[base]/LEGGIMI.md`](../resources/%5Bbase%5D/LEGGIMI.md). Se una ti
+serve più aggiornata, cancella la cartella e mettici la versione nuova: AUREA
+non ne tocca il contenuto.
+
+**`chat`, `sessionmanager`, `hardcap`** non sono lì e non mancano: arrivano
+dentro l'eseguibile di FXServer, in `citizen/system_resources/`. `server.cfg`
+le avvia e si trovano da sole.
+
+### Tre assenze volute
+
+**`basic-gamemode`.** Fa due righe: accende l'autospawn e fa rinascere il
+giocatore appena parte la mappa. In AUREA la nascita passa dalla selezione
+del personaggio di `aurea_spawn`, e l'autospawn la scavalcherebbe — ti
+ritroveresti in strada mentre stai ancora scegliendo chi essere. In AUREA il
+tipo di gioco è AUREA.
+
+**`pma-voice`.** È la scelta abituale nei server italiani e non c'è niente
+che non vada, ma qui litigherebbe con `aurea_voce`, che regola la portata
+della voce con `NetworkSetTalkerProximity`. Il README di pma-voice chiede
+espressamente di non toccare quella native da altri script, perché gli rompe
+il conteggio delle distanze: accese insieme si contendono la stessa manopola.
+Se pma-voice ti serve — ha la radio a canali e il submix, che noi non
+abbiamo — installala in `resources/[base]/` e togli `ensure aurea_voce` da
+`server.cfg`. Una delle due, mai tutte e due.
+
+**`screenshot-basic`.** Non la chiama nessuno. Il "fermo immagine" della
+videosorveglianza non è un'immagine: è il server che legge chi era inquadrato
+e lo mette agli atti in `telecamere_fermi`, come elenco di persone. Per il
+roleplay investigativo è anche più utile, perché è una prova che si cita e si
+allega a un fascicolo. In più screenshot-basic si distribuisce come sorgente
+e si compila all'avvio con `yarn` e `webpack`: metterla nel pacchetto
+vorrebbe dire far scaricare mezzo npm al primo avvio per qualcosa che non
+viene usato.
+
+### L'unica cosa che manca: l'eseguibile
+
+L'eseguibile di FXServer è il programma che fa girare il server. Pesa qualche
+centinaio di megabyte e Cfx.re ne pubblica una versione nuova quasi ogni
+settimana: una copia congelata qui dentro sarebbe già vecchia il giorno dopo.
+
+Lo scarica lo script incluso, da lanciare una volta sola dentro la cartella
+di AUREA:
 
 ```bash
 # Linux / macOS
@@ -105,40 +149,59 @@ REM Windows — doppio clic, oppure da prompt
 installa.bat
 ```
 
-Non tocca nulla di AUREA: se una risorsa c'è già, la salta. Alla fine
-controlla che tutte e sette le risorse ci siano e te lo dice.
+Prima controlla che `resources/[base]/` sia completa e te lo dice; poi, se
+l'eseguibile non c'è, lo prende da Cfx.re. Se c'è già, lo salta. Su Windows
+il download resta manuale, e lo script ti dice esattamente dove cliccare:
+servirebbe PowerShell con permessi che non è detto tu voglia dare a uno
+script scaricato.
 
-Se preferisci farlo a mano:
+A mano, se preferisci:
 
 ```bash
-# risorse di sistema
-curl -L https://github.com/citizenfx/cfx-server-data/archive/refs/heads/master.zip -o cfx.zip
-unzip cfx.zip && cp -R cfx-server-data-master/resources/* resources/
-
-# oxmysql (release compilata, non i sorgenti)
-curl -L https://github.com/overextended/oxmysql/releases/latest/download/oxmysql.zip -o ox.zip
-unzip ox.zip -d resources/oxmysql
+# Linux — build consigliata da https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/
+mkdir -p ../fxserver && cd ../fxserver
+curl -LO 'https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/<build>/fx.tar.xz'
+tar -xJf fx.tar.xz && chmod +x run.sh
 ```
+
+Su Windows si scarica `server.zip` da
+`https://runtime.fivem.net/artifacts/fivem/build_server_windows/master/` e si
+scompatta in una cartella accanto a quella di AUREA.
+
+**GTA V non c'entra e non serve.** Il gioco ce l'ha ogni giocatore sul proprio
+computer, con la propria copia regolarmente acquistata, e il client FiveM lo
+usa da lì. Un server FiveM non contiene e non distribuisce il gioco — nemmeno
+un pezzo.
 
 ---
 
-## 4. Copia delle risorse
+## 4. Dove sta la cartella
 
-Copia il contenuto di `resources/` nella cartella `resources/` del tuo
-FXServer, mantenendo le cartelle fra parentesi quadre:
+La cartella di AUREA **è già** la cartella dati del server: non c'è niente da
+copiare da nessuna parte.
 
 ```
-server-data/
+aurea/                        ← questa cartella
+├── server.cfg
+├── installa.sh · installa.bat
+├── sql/
 └── resources/
-    ├── oxmysql/
+    ├── [base]/               ← mapmanager, spawnmanager, baseevents, oxmysql
     ├── [core]/
     ├── [essenziali]/
     ├── [italia]/
-    └── [admin]/
+    ├── [lavori]/
+    ├── [admin]/
+    └── [esx]/                ← facoltativa, vedi docs/ESX.md
+
+fxserver/                     ← accanto, la scarica installa.sh
+└── run.sh
 ```
 
 Le parentesi quadre non sono decorative: FXServer usa quella convenzione per
-caricare ricorsivamente le sottocartelle.
+caricare ricorsivamente le sottocartelle. Spostare una risorsa da un gruppo
+all'altro è indifferente; toglierla dal suo gruppo e lasciarla fuori da
+`resources/` no — non verrebbe più trovata.
 
 ---
 
@@ -368,14 +431,32 @@ Il database non è in `utf8mb4`. Va ricreato: cambiare charset a tabelle già
 popolate non recupera i dati già corrotti.
 
 **`Couldn't find resource oxmysql` e poi tutto a cascata.**
-Questo è il primo errore che vedrai se salti il passo 3. `aurea_core` dipende
-da oxmysql, e tutto il resto dipende da `aurea_core`: manca una risorsa e non
-parte niente. Lancia `./installa.sh` (o `installa.bat`) e riavvia.
+oxmysql è nel pacchetto, in `resources/[base]/`: se questo errore compare, la
+cartella è stata svuotata o il pacchetto è arrivato incompleto. `aurea_core`
+dipende da oxmysql e tutto il resto dipende da `aurea_core`, quindi manca
+quella e non parte niente. Lancia `./installa.sh` (o `installa.bat`): la
+prima cosa che fa è dirti quali risorse di base mancano.
 
-**`Couldn't find resource mapmanager` / `chat` / `spawnmanager` / `hardcap`.**
-Stessa causa: mancano le risorse di sistema di FiveM. Le scarica lo stesso
-script. In alternativa, la strada canonica di FiveM è partire da
-cfx-server-data e mettere la cartella di AUREA dentro il suo `resources/`.
+**`Couldn't find resource mapmanager` / `spawnmanager` / `baseevents`.**
+Stessa causa e stesso controllo: stanno tutte in `resources/[base]/`.
+
+**`Couldn't find resource pma-voice` / `screenshot-basic`.**
+Queste non ci sono apposta (il perché è al punto 3). Se il messaggio compare,
+stai usando un `server.cfg` che non è il nostro, oppure una risorsa di terze
+parti le ha dichiarate in `dependencies`: in quel caso installale tu in
+`resources/[base]/`, tenendo conto che pma-voice vuole `ensure aurea_voce`
+tolto.
+
+**`Couldn't find resource chat` / `sessionmanager` / `hardcap`.**
+Queste invece non stanno in `resources/` e non ci devono stare: arrivano
+dentro l'eseguibile di FXServer. Se non le trova, stai avviando il server da
+un eseguibile incompleto o troppo vecchio — riscarica gli artifacts.
+
+**Rinasco in strada senza aver scelto il personaggio.**
+Da qualche parte è partita `basic-gamemode`, che accende l'autospawn e
+scavalca `aurea_spawn`. In `server.cfg` di AUREA non c'è: controlla di non
+avere un secondo file di configurazione, o una `resources/[gamemodes]/`
+rimasta da un'installazione precedente.
 
 **`No such command sv_projectDesc` oppure `No such command locale`.**
 Sono avvisi innocui e non impediscono l'avvio: quel comando non esiste nella

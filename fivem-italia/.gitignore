@@ -1,0 +1,46 @@
+# La cartella di AUREA sta dentro un repository nato per progetti Python, e
+# il .gitignore della radice esclude nomi che lì sono artefatti di build ma
+# qui sono codice da consegnare: `dist/`, `lib/`, `build/`, `bin/`, `web/`...
+#
+# Senza queste righe, `git add` si porta via in silenzio i due file da cui
+# dipende tutto il server — resources/[base]/oxmysql/dist/build.js, che È la
+# risorsa, e resources/[base]/oxmysql/lib/MySQL.lua, che ogni script server
+# di AUREA carica come '@oxmysql/lib/MySQL.lua'. Il pacchetto sembrerebbe
+# completo e all'avvio non partirebbe niente.
+#
+# Le regole annidate hanno la precedenza su quelle della radice per tutto
+# quello che sta sotto questa cartella.
+!dist/
+!lib/
+!build/
+!bin/
+!share/
+!var/
+!target/
+!parts/
+!downloads/
+!eggs/
+
+# Quello che invece qui non ci deve stare davvero.
+
+# Le istantanee di aurea_backup: contengono i dati personali dei giocatori.
+resources/[admin]/aurea_backup/copie/*.json
+
+# L'eseguibile di FXServer, se qualcuno lo scompatta qui dentro invece che
+# accanto. Lo scarica installa.sh e non si versiona.
+/fxserver/
+/run.sh
+/FXServer
+/citizen/
+/alpine/
+fx.tar.xz
+server.zip
+
+# Le cache del server a runtime.
+/cache/
+/logs/
+/svadhesive/
+
+# Gli archivi che si generano dai sorgenti.
+AUREA-Italia-Roleplay.zip
+fivem-italia*.zip
