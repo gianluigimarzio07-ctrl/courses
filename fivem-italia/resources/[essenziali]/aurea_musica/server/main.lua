@@ -131,3 +131,32 @@ AddEventHandler('playerDropped', function()
         end
     end
 end)
+
+-- ---------------------------------------------------------------------------
+--  Rumore, per chi lo misura
+--
+--  L'A.R.P.A. non deduce il rumore da una tabella: va lì con il
+--  fonometro e legge quello che c'è. Questo export gli dice se in quel
+--  punto sta davvero suonando qualcosa, e quanto forte — perché un
+--  campionamento che ignora lo stereo acceso a venti metri non è un
+--  campionamento.
+-- ---------------------------------------------------------------------------
+exports('StereoVicino', function(coord, raggio)
+    if type(coord) ~= 'table' and type(coord) ~= 'vector3' then return false end
+
+    local p = coord
+    if type(coord) == 'table' then
+        p = vector3((coord.x or 0.0) + 0.0, (coord.y or 0.0) + 0.0, (coord.z or 0.0) + 0.0)
+    end
+    raggio = tonumber(raggio) or MUS.Regole.distanzaMassima
+
+    local piuAlto = 0
+    for _, s in pairs(stereo) do
+        local sua = vector3(s.coord.x, s.coord.y, s.coord.z)
+        if #(p - sua) <= raggio and (s.volume or 0) > piuAlto then
+            piuAlto = s.volume
+        end
+    end
+
+    return piuAlto > 0, piuAlto
+end)

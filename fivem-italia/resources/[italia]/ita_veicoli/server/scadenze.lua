@@ -167,3 +167,45 @@ RegisterNetEvent('vei:sinistro', function(targa, danniStimati)
         testo = ('Classe di merito peggiorata a %d. Il prossimo premio RCA sarà più alto.'):format(proprieta.classeMerito),
     })
 end)
+
+-- ---------------------------------------------------------------------------
+--  Classe di merito, dall'esterno
+--
+--  L'evento qui sopra serve a chi si fa male da solo: il conducente
+--  dichiara il danno al proprio veicolo e la classe peggiora.
+--
+--  Ma quando il sinistro è fra due persone, chi ha torto lo decide una
+--  constatazione amichevole, non il client di chi ha sbattuto. Per
+--  quello ita_sinistri ha bisogno di poter peggiorare la classe di una
+--  targa precisa, senza passare da un evento di rete e senza che quella
+--  persona sia collegata.
+-- ---------------------------------------------------------------------------
+exports('PeggioraClasseMerito', function(targa, passi)
+    targa = tostring(targa or ''):upper():gsub('%s+', '')
+    local v = MySQL.single.await('SELECT proprieta FROM veicoli WHERE targa = ?', { targa })
+    if not v then return nil end
+
+    local proprieta = v.proprieta and json.decode(v.proprieta) or {}
+    proprieta.classeMerito = math.min(11,
+        (proprieta.classeMerito or VEI.Assicurazione.classeIngresso) + (tonumber(passi) or 2))
+    proprieta.sinistri = (proprieta.sinistri or 0) + 1
+
+    MySQL.update.await('UPDATE veicoli SET proprieta = ? WHERE targa = ?',
+        { json.encode(proprieta), targa })
+    return proprieta.classeMerito
+end)
+
+--- La copertura di una targa: serve a sapere chi paga, prima di pagare.
+exports('CoperturaDi', function(targa)
+    targa = tostring(targa or ''):upper():gsub('%s+', '')
+    local v = MySQL.single.await([[
+        SELECT assicurazione_tipo, assicurazione_scadenza FROM veicoli WHERE targa = ?
+    ]], { targa })
+    if not v then return 'nessuna' end
+
+    local scaduta = not v.assicurazione_scadenza
+        or (v.assicurazione_scadenza / 1000) < os.time()
+    if scaduta then return 'nessuna' end
+
+    return v.assicurazione_tipo
+end)

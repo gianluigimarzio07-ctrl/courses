@@ -24,4 +24,5 @@ dependencies {
     'aurea_armi',
     'ita_giustizia',
     'ita_fisco',
+    'ita_tabaccheria',
 }

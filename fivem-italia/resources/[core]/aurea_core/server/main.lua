@@ -409,6 +409,15 @@ CreateThread(function()
         for _, g in pairs(AUREA.Giocatori) do
             local grado = AUREA.GetGrado(g.lavoro.nome, g.lavoro.grado)
             local lordo = grado.stipendio or 0
+
+            -- Chi sciopera non lavora, e chi non lavora non è pagato.
+            -- L'indennità gliela dà il fondo del sindacato, ed è molto
+            -- meno: è la ragione per cui uno sciopero costa a chi lo fa.
+            local okS, inSciopero = pcall(function()
+                return exports.ita_sindacato:Aderente(g.citizenid, g.lavoro.nome)
+            end)
+            if okS and inSciopero then lordo = 0 end
+
             if lordo > 0 and not g.metadata.detenuto then
                 -- Ritenuta IRPEF alla fonte, girata all'erario dal modulo fiscale
                 local aliquota = lordo >= 25000 and 0.27 or 0.23

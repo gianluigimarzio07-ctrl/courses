@@ -99,10 +99,31 @@ AUREA.Callback.Registra('que:passaportoChiedi', function(src, rispondi)
         end
     end
 
-    if not g:SottraiOvunque(QUE.Passaporto.costo, 'passaporto') then
-        return rispondi(false, ('Servono %s fra contributo e bollo.'):format(U.Euro(QUE.Passaporto.costo)))
+    -- Il contrassegno. In Italia il passaporto non si paga allo
+    -- sportello: si paga in tabaccheria, e allo sportello si consegna
+    -- il contrassegno. Senza, la pratica non si apre nemmeno — ed è il
+    -- motivo per cui ita_tabaccheria esiste.
+    --
+    -- Chiamata protetta: se quella risorsa è ferma, si paga qui e
+    -- basta, come si faceva prima.
+    local okBollo, consumato = pcall(function()
+        return exports.ita_tabaccheria:ConsumaBollo(g.citizenid,
+            QUE.Passaporto.contrassegno, 'rilascio del passaporto')
+    end)
+
+    if okBollo and consumato == false then
+        return rispondi(false, ('Manca il contrassegno da %s. Si compra in tabaccheria, non qui.')
+            :format(U.Euro(QUE.Passaporto.contrassegno)))
     end
-    TriggerEvent('aurea:fisco:incasso', 'diritti_questura', QUE.Passaporto.costo, g.citizenid)
+
+    local dovuto = (okBollo and consumato)
+        and (QUE.Passaporto.costo - QUE.Passaporto.contrassegno)
+        or QUE.Passaporto.costo
+
+    if dovuto > 0 and not g:SottraiOvunque(dovuto, 'passaporto') then
+        return rispondi(false, ('Servono altri %s di contributo amministrativo.'):format(U.Euro(dovuto)))
+    end
+    TriggerEvent('aurea:fisco:incasso', 'diritti_questura', dovuto, g.citizenid)
 
     local numero = ('YA%s'):format(U.Random(7, '0123456789'))
     MySQL.query.await([[

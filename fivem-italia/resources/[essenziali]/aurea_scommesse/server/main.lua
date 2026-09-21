@@ -160,21 +160,24 @@ end)
 -- ---------------------------------------------------------------------------
 --  Esito e pagamento
 -- ---------------------------------------------------------------------------
-AUREA.Callback.Registra('sco:dichiara', function(src, rispondi, idEvento, esito)
-    local g = AUREA.GetPlayer(src)
-    if not g then return rispondi(false) end
-
+-- ---------------------------------------------------------------------------
+--  Liquidazione
+--
+--  Il pagamento vero e proprio sta qui e non dentro il callback, perché
+--  non tutti gli eventi li chiude una persona: ita_calcio apre un evento
+--  su ogni partita e ne dichiara l'esito da solo, quando la partita
+--  finisce. Se la liquidazione vivesse solo nel callback, quelle
+--  scommesse resterebbero aperte per sempre.
+--
+--  Restituisce ok, messaggio, quanti pagati.
+-- ---------------------------------------------------------------------------
+local function liquida(idEvento, esito, chi)
     local e = evento(idEvento)
-    if not e then return rispondi(false, 'Evento inesistente.') end
-    if e.stato == 'pagato' then return rispondi(false, 'Già liquidato.') end
-
-    local suo = e.organizzatore == g.citizenid
-    if not suo and not AUREA.HaGruppo(src, SCO.Organizzatori.gruppoEsente) then
-        return rispondi(false, 'Non sei tu ad aver aperto questo evento.')
-    end
+    if not e then return false, 'Evento inesistente.' end
+    if e.stato == 'pagato' then return false, 'Già liquidato.' end
 
     local ammessi = json.decode(e.esiti) or {}
-    if not U.Contiene(ammessi, esito) then return rispondi(false, 'Esito non previsto.') end
+    if not U.Contiene(ammessi, esito) then return false, 'Esito non previsto.' end
 
     local perEsito, totale, quante = monte(idEvento)
 
@@ -190,7 +193,7 @@ AUREA.Callback.Registra('sco:dichiara', function(src, rispondi, idEvento, esito)
         if e.cauzione > 0 then
             AUREA.Denaro.AggiungiOffline(e.organizzatore, 'banca', tonumber(e.cauzione), 'restituzione cauzione')
         end
-        return rispondi(true, 'Troppe poche giocate: rimborsate tutte.')
+        return true, 'Troppe poche giocate: rimborsate tutte.', 0
     end
 
     local monteVincente = perEsito[esito] or 0
@@ -238,8 +241,45 @@ AUREA.Callback.Registra('sco:dichiara', function(src, rispondi, idEvento, esito)
         testo = ('%s → %s. Pagati %d giocatori.'):format(e.titolo, esito, pagati),
     })
 
-    AUREA.Log('economia', 'info', g, ('scommesse: evento %d chiuso su "%s", monte %s')
-        :format(idEvento, esito, U.Euro(totale)))
+    AUREA.Log('economia', 'info', nil, ('scommesse: evento %d chiuso su "%s" da %s, monte %s')
+        :format(idEvento, esito, chi or 'sistema', U.Euro(totale)))
 
-    rispondi(true, ('Esito registrato. Pagati %d vincitori su un monte di %s.'):format(pagati, U.Euro(totale)))
+    return true, ('Esito registrato. Pagati %d vincitori su un monte di %s.')
+        :format(pagati, U.Euro(totale)), pagati
+end
+
+exports('Liquida', liquida)
+
+--- Apre un evento per conto del sistema. Lo usa ita_calcio per le
+--- partite di campionato: un banco senza organizzatore umano, che
+--- nessuno può manipolare perché nessuno lo possiede.
+exports('ApriEvento', function(titolo, esiti)
+    if type(titolo) ~= 'string' or type(esiti) ~= 'table' or #esiti < 2 then return nil end
+
+    return MySQL.insert.await([[
+        INSERT INTO scommesse_eventi (organizzatore, titolo, esiti, cauzione, stato)
+        VALUES ('SISTEMA', ?, ?, 0, 'aperto')
+    ]], { titolo:sub(1, 96), json.encode(esiti) })
+end)
+
+AUREA.Callback.Registra('sco:dichiara', function(src, rispondi, idEvento, esito)
+    local g = AUREA.GetPlayer(src)
+    if not g then return rispondi(false) end
+
+    local e = evento(idEvento)
+    if not e then return rispondi(false, 'Evento inesistente.') end
+
+    -- Gli eventi del sistema non li chiude una persona: li chiude
+    -- quello che li ha aperti, quando succede.
+    if e.organizzatore == 'SISTEMA' then
+        return rispondi(false, 'Questo evento lo liquida il sistema al termine della manifestazione.')
+    end
+
+    local suo = e.organizzatore == g.citizenid
+    if not suo and not AUREA.HaGruppo(src, SCO.Organizzatori.gruppoEsente) then
+        return rispondi(false, 'Non sei tu ad aver aperto questo evento.')
+    end
+
+    local ok, messaggio = liquida(idEvento, esito, g:NomeCompleto())
+    rispondi(ok, messaggio)
 end)

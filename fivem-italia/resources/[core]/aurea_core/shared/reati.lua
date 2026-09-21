@@ -69,6 +69,14 @@ R('474',  { articolo = 'art. 474 c.p.',   nome = 'Introduzione di prodotti con s
 R('452q', { articolo = 'art. 452-quaterdecies c.p.', nome = 'Attività organizzate per il traffico illecito di rifiuti', gravita = 4, pena = 95, ammenda = 400000 })
 R('256',  { articolo = 'art. 256 D.Lgs. 152/2006', nome = 'Gestione non autorizzata di rifiuti', gravita = 2, pena = 22, ammenda = 65000 })
 
+-- Ordine pubblico
+R('588',  { articolo = 'art. 588 c.p.',   nome = 'Rissa',                          gravita = 2, pena = 24,  ammenda = 60000 })
+
+-- Frode
+R('642',  { articolo = 'art. 642 c.p.',   nome = 'Fraudolento danneggiamento dei beni assicurati', gravita = 3, pena = 40, ammenda = 120000 })
+R('640',  { articolo = 'art. 640 c.p.',   nome = 'Truffa',                         gravita = 2, pena = 30,  ammenda = 80000 })
+R('544t', { articolo = 'art. 544-ter c.p.', nome = 'Maltrattamento di animali',    gravita = 2, pena = 28,  ammenda = 70000 })
+
 -- Beni culturali
 --
 -- Titolo VIII-bis del codice penale, entrato in vigore nel 2022: prima di
@@ -123,6 +131,7 @@ CDS('181',   { articolo = 'art. 181 CdS',      nome = 'Mancata esposizione del b
 CDS('189',   { articolo = 'art. 189 c.6 CdS',  nome = 'Omissione di soccorso',              importo = 300000, punti = 10, sospensione = 365, arresto = 60 })
 CDS('9bis',  { articolo = 'art. 9-bis CdS',    nome = 'Gareggiamento in velocità',          importo = 400000, punti = 10, sospensione = 365, arresto = 90, sequestro = true })
 CDS('176',   { articolo = 'art. 176 c.11 CdS', nome = 'Mancato pagamento del pedaggio',     importo = 8700,   punti = 0, sospensione = 0 })
+CDS('86',    { articolo = 'art. 86 CdS',      nome = 'Trasporto abusivo di persone',       importo = 173000, punti = 0, sospensione = 0, sequestro = true })
 CDS('147',   { articolo = 'art. 147 CdS',      nome = 'Violazione ai passaggi a livello',   importo = 240000, punti = 6, sospensione = 0 })
 
 --- Restituisce l'infrazione per eccesso di velocità dato il delta km/h

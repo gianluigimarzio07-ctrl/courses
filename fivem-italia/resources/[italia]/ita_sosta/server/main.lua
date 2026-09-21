@@ -195,13 +195,31 @@ AUREA.Callback.Registra('sos:sanziona', function(src, rispondi, targa)
 
     sanzionati[targa] = os.time()
 
-    MySQL.insert.await([[
-        INSERT INTO multe (citizenid, targa, articolo, descrizione, importo, punti, agente, stato)
-        VALUES (?, ?, ?, ?, ?, 0, ?, 'da_pagare')
-    ]], {
-        proprietario, targa, SOS.Sanzione.articolo, SOS.Sanzione.descrizione,
-        SOS.Sanzione.importo, g:NomeCompleto(),
+    -- Il verbale lo emette ita_codicestrada, come tutti gli altri.
+    --
+    -- Prima questa riga scriveva direttamente in `multe` e sbagliava tre
+    -- cose insieme: la colonna si chiama `punti_decurtati` e non `punti`,
+    -- `origine` e `scadenza` sono obbligatorie e mancavano, e lo stato
+    -- 'da_pagare' non esiste nell'enum (i valori sono aperta, pagata,
+    -- ricorso, annullata, ruolo). Risultato: nessun preavviso di sosta è
+    -- mai finito nel database, e in /multe non compariva niente.
+    --
+    -- Passando dall'export si eredita anche tutto il resto: lo sconto
+    -- entro i cinque giorni, il passaggio a ruolo, e da lì la cartella.
+    local verbaleId = exports.ita_codicestrada:EmettiVerbale({
+        citizenid = proprietario,
+        targa = targa,
+        articolo = SOS.Sanzione.articolo,
+        descrizione = ('%s — %s'):format(SOS.Sanzione.descrizione, zona.nome),
+        importo = SOS.Sanzione.importo,
+        punti = 0,
+        origine = 'sosta',
+        agente = g:NomeCompleto(),
+        luogo = zona.nome,
     })
+    if not verbaleId then
+        return rispondi(false, 'Il verbale non è stato accettato dal sistema sanzionatorio.')
+    end
 
     -- All'ausiliario spetta una quota, il resto va al Comune
     local quota = math.floor(SOS.Sanzione.importo * SOS.Sanzione.quotaAusiliario)

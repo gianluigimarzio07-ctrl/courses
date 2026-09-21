@@ -951,6 +951,16 @@ AUREA.Callback.Registra('dro:contesta', function(src, rispondi, bersaglioSrc, co
     exports.ita_giustizia:ApriFascicolo(soggetto.citizenid, codiceReato, g:NomeCompleto(),
         tostring(nota or ''):sub(1, 200))
 
+    -- Art. 75 D.P.R. 309/1990.
+    --
+    -- Detenere per uso personale non è reato: è un illecito
+    -- amministrativo, e chi lo commette non finisce davanti a un
+    -- giudice ma davanti al Prefetto, che lo convoca e lo manda al
+    -- Ser.D. Qui si dice solo che è successo e quante dosi c'erano:
+    -- se sia uso personale lo decide ita_serd, che è l'unico che tiene
+    -- il conto delle volte precedenti.
+    TriggerEvent('aurea:serd:segnalazione', soggetto.citizenid, sequestrate, g:NomeCompleto())
+
     AUREA.Log('giustizia', 'info', g,
         ('ha contestato %s a %s, sequestrate %d dosi'):format(codiceReato, soggetto.citizenid, sequestrate))
 

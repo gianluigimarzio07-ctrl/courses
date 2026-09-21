@@ -57,6 +57,7 @@ mysql -u aurea -p aurea < sql/12_illegale.sql
 mysql -u aurea -p aurea < sql/13_ambiente_igiene.sql
 mysql -u aurea -p aurea < sql/14_territorio.sql
 mysql -u aurea -p aurea < sql/15_stato.sql
+mysql -u aurea -p aurea < sql/16_servizi.sql
 ```
 
 Aggiungono le tabelle dei moduli introdotti dopo — armadio dei completi,
@@ -410,6 +411,14 @@ dei ricorsi al Prefetto, delle licenze di polizia, del Tiro a Segno, della
 riscossione, dell'Ispettorato del Lavoro, del Registro delle Imprese,
 della SIAE, dei locali notturni, dei beni culturali, del condominio, delle
 donazioni di sangue e dei pedaggi autostradali.
+
+**`Unknown table 'rimozioni'`, `sinistri`, `dichiarazioni`, `lotto_giocate`
+o `vertenze`.**
+Manca `sql/16_servizi.sql`. Aggiunge le tabelle del carro attrezzi, dei
+sinistri con constatazione amichevole, dei controlli A.R.P.A.,
+dell'antiriciclaggio, delle dichiarazioni dei redditi, del Ser.D., del
+veterinario, della tabaccheria, del taxi, del campionato di calcio e
+delle vertenze sindacali.
 
 **Il montante contributivo resta a zero.**
 Il montante cresce con le buste paga, e le buste paga arrivano ogni 30

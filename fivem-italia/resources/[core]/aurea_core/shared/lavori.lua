@@ -227,8 +227,10 @@ L('guardia_finanza', {
     servizio = true,
     gradi = {
         [0] = { etichetta = 'Finanziere',   stipendio = 16000, permessi = { 'fermo', 'multa', 'mdt', 'verifica_fiscale' } },
-        [1] = { etichetta = 'Brigadiere',   stipendio = 19000, permessi = { 'fermo', 'multa', 'mdt', 'verifica_fiscale', 'sequestro' } },
-        [2] = { etichetta = 'Maresciallo',  stipendio = 23000, permessi = { 'fermo', 'multa', 'mdt', 'verifica_fiscale', 'sequestro', 'arresto', 'congelamento_conti' } },
+        -- 'uif': le segnalazioni di operazione sospetta. Le riceve il
+        -- Nucleo Speciale di Polizia Valutaria, non la pattuglia.
+        [1] = { etichetta = 'Brigadiere',   stipendio = 19000, permessi = { 'fermo', 'multa', 'mdt', 'verifica_fiscale', 'sequestro', 'uif' } },
+        [2] = { etichetta = 'Maresciallo',  stipendio = 23000, permessi = { 'fermo', 'multa', 'mdt', 'verifica_fiscale', 'sequestro', 'arresto', 'congelamento_conti', 'uif' } },
         [3] = { etichetta = 'Capitano',     stipendio = 34000, permessi = { 'tutti' } },
     },
 })
@@ -393,6 +395,107 @@ L('locale_notturno', {
         [2] = { etichetta = 'Addetto ai servizi di controllo', stipendio = 14000, permessi = { 'bar', 'filtro' } },
         [3] = { etichetta = 'PR',              stipendio = 13000, permessi = { 'bar', 'serata' } },
         [4] = { etichetta = 'Gestore',         stipendio = 24000, permessi = { 'tutti' } },
+    },
+})
+
+-- A.R.P.A. — l'agenzia regionale per la protezione dell'ambiente.
+--
+-- Non fa multe da sola: misura. Poi il numero che ha misurato diventa
+-- una prescrizione, e se la prescrizione non la ottemperi diventa altro.
+L('arpa', {
+    etichetta = 'A.R.P.A.',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Tecnico',         stipendio = 15000, permessi = { 'campionamento' } },
+        [1] = { etichetta = 'Tecnico capo',    stipendio = 21000, permessi = { 'campionamento', 'prescrizione' } },
+        [2] = { etichetta = 'Direttore',       stipendio = 28000, permessi = { 'tutti' } },
+    },
+})
+
+-- Ser.D. — il servizio per le dipendenze. È un presidio sanitario, non
+-- un ufficio di polizia: qui non si punisce, si prova a smettere.
+L('serd', {
+    etichetta = 'Ser.D.',
+    tipo = 'istituzione',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Operatore',       stipendio = 14000, permessi = { 'colloquio' } },
+        [1] = { etichetta = 'Responsabile',    stipendio = 23000, permessi = { 'tutti' } },
+    },
+})
+
+-- C.A.F. e patronato. Un mestiere che in Italia esiste perché la
+-- dichiarazione dei redditi da soli non la sa fare quasi nessuno.
+L('caf', {
+    etichetta = 'C.A.F. e patronato',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Operatore',       stipendio = 11500, permessi = { 'assistenza' } },
+        [1] = { etichetta = 'Responsabile del visto', stipendio = 18000, permessi = { 'assistenza', 'visto' } },
+        [2] = { etichetta = 'Titolare',        stipendio = 24000, permessi = { 'tutti' } },
+    },
+})
+
+-- Il perito assicurativo. Decide quanto vale un danno, e dalla sua
+-- stima dipende quanto paga la compagnia e quanto sale il premio.
+L('perito', {
+    etichetta = 'Perito assicurativo',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Perito',          stipendio = 16000, permessi = { 'perizia' } },
+        [1] = { etichetta = 'Perito capo',     stipendio = 23000, permessi = { 'perizia', 'liquidazione' } },
+        [2] = { etichetta = 'Ispettore di sinistri', stipendio = 29000, permessi = { 'tutti' } },
+    },
+})
+
+-- Ambulatorio veterinario.
+L('veterinario', {
+    etichetta = 'Ambulatorio veterinario',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Assistente',      stipendio = 11000 },
+        [1] = { etichetta = 'Veterinario',     stipendio = 20000, permessi = { 'visita', 'vaccino', 'microchip' } },
+        [2] = { etichetta = 'Direttore sanitario', stipendio = 27000, permessi = { 'tutti' } },
+    },
+})
+
+-- Tabaccheria. Monopolio di Stato: il tabaccaio non vende, riscuote per
+-- conto dello Stato e tiene l'aggio.
+L('tabaccaio', {
+    etichetta = 'Tabaccheria',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Addetto',         stipendio = 10500, permessi = { 'banco' } },
+        [1] = { etichetta = 'Titolare',        stipendio = 18000, permessi = { 'tutti' } },
+    },
+})
+
+-- Sindacato.
+L('sindacato', {
+    etichetta = 'Sindacato',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Delegato',        stipendio = 11000, permessi = { 'vertenza' } },
+        [1] = { etichetta = 'Segretario',      stipendio = 19000, permessi = { 'vertenza', 'sciopero' } },
+        [2] = { etichetta = 'Segretario generale', stipendio = 26000, permessi = { 'tutti' } },
+    },
+})
+
+-- Aviazione civile.
+L('pilota', {
+    etichetta = 'Aviazione civile',
+    tipo = 'civile',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Addetto di scalo', stipendio = 12000, permessi = { 'scalo' } },
+        [1] = { etichetta = 'Pilota',          stipendio = 22000, permessi = { 'scalo', 'volo' } },
+        [2] = { etichetta = 'Comandante',      stipendio = 31000, permessi = { 'tutti' } },
     },
 })
 

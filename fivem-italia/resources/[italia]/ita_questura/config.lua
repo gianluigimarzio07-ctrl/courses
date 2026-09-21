@@ -52,7 +52,11 @@ QUE.Sportello = {
 --  Passaporto
 -- ---------------------------------------------------------------------------
 QUE.Passaporto = {
-    costo = 11600,          -- contributo amministrativo + bollo
+    costo = 11600,          -- contributo amministrativo + contrassegno
+
+    -- Il contrassegno telematico: si compra in tabaccheria e si porta
+    -- qui. Lo sportello non lo vende, esattamente come nella realtà.
+    contrassegno = 7350,
     giorniValidita = 3650,
     secondiIstruttoria = 25,
 

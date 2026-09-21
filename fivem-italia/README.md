@@ -258,6 +258,17 @@ fivem-italia/
 | `ita_condominio` | Tabella millesimale calcolata dalla rendita catastale, assemblea con le maggioranze vere, quote, decreto ingiuntivo, decoro del palazzo che pesa sul valore degli appartamenti |
 | `ita_sangue` | Centro trasfusionale: gruppi sanguigni, scorte condivise fra tutti, trasfusioni compatibili e reazioni emolitiche |
 | `ita_autostrade` | Caselli, pedaggio sulla distanza fra ingresso e uscita, Telepass, sbarra forzata (art. 176 CdS) e insoluti che finiscono a ruolo |
+| `ita_carroattrezzi` | Rimozione forzata art. 159 CdS, depositeria con diurnaria che gira da sola, riscatto e alienazione |
+| `ita_sinistri` | Constatazione amichevole che vale solo con due firme, perizia sul danno reale, liquidazione, frode assicurativa |
+| `ita_arpa` | Campionamenti su emissioni, scarichi, rumore, amianto e suolo; prescrizioni a termine che raddoppiano se scadono |
+| `ita_antiriciclaggio` | Adeguata verifica, frazionamento su finestra mobile, segnalazioni all'UIF, congelamento a termine |
+| `ita_caf` | Dichiarazione precompilata, scaglioni IRPEF, detrazioni prese da quello che il server già sa, conguaglio e controllo formale |
+| `ita_serd` | Art. 75 D.P.R. 309/1990: uso personale segnalato al Prefetto, programma terapeutico che archivia il procedimento |
+| `ita_veterinario` | Visite, vaccinazioni con scadenza, maltrattamento di animali (art. 544-ter c.p.) con sequestro |
+| `ita_tabaccheria` | Monopolio di Stato: tabacchi, gratta e vinci, Lotto con estrazioni vere e quote vere, valori bollati |
+| `ita_taxi` | Licenza comunale a contingente, tassametro misurato dal server, supplementi, trasporto abusivo |
+| `ita_calcio` | Campionato che gira da solo, tessera del tifoso, biglietti, tafferugli in curva e DASPO |
+| `ita_sindacato` | Vertenze per mestiere, adesioni che contano, sciopero che costa a entrambe le parti, arretrati da accordo |
 
 ### `[lavori]`
 

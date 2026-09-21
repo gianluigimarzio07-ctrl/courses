@@ -108,12 +108,30 @@ AUREA.Callback.Registra('banca:versa', function(src, rispondi, euro)
         return rispondi(false, ('Il massimale per operazione è %s.'):format(U.Euro(BANCA.Commissioni.massimaleOperazione)))
     end
 
+    -- Antiriciclaggio, PRIMA di eseguire.
+    --
+    -- Prima qui c'era una soglia secca che notificava la Finanza dopo il
+    -- versamento: serviva contro chi versa centomila euro in una volta,
+    -- cioè contro nessuno. ita_antiriciclaggio guarda anche l'adeguata
+    -- verifica, le somme congelate e il frazionamento su finestra mobile
+    -- — e può dire di no.
+    --
+    -- Chiamata protetta: se quella risorsa è ferma resta la vecchia
+    -- soglia, che è poco ma è meglio di niente.
+    local okAml, ammessa, motivo = pcall(function()
+        return exports.ita_antiriciclaggio:Valuta(g.citizenid, importo, 'versamento', false)
+    end)
+
+    if okAml and ammessa == false then
+        return rispondi(false, tostring(motivo or 'Operazione non eseguibile.'))
+    end
+
     if not g:Sottrai('contanti', importo, 'versamento in conto') then
         return rispondi(false, 'Non hai questi contanti.')
     end
     g:Aggiungi('banca', importo, 'versamento in conto')
 
-    if importo >= BANCA.Commissioni.sogliaAntiriciclaggio then
+    if not okAml and importo >= BANCA.Commissioni.sogliaAntiriciclaggio then
         exports.aurea_ui:NotificaLavoro('guardia_finanza', {
             tipo = 'avviso', icona = '💼', durata = 12000,
             titolo = 'Segnalazione operazione sospetta',
