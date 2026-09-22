@@ -26,8 +26,10 @@
 
 NAU = {}
 
-NAU.Lavori = { 'guardia_finanza' }
-NAU.LavoriSoccorso = { 'guardia_finanza', '118', 'vigili_fuoco' }
+-- In mare l'autorità è la Capitaneria. La finanza resta perché il
+-- contrabbando via mare è materia sua, ma il titolare è ita_capitaneria.
+NAU.Lavori = { 'capitaneria', 'guardia_finanza' }
+NAU.LavoriSoccorso = { 'capitaneria', 'guardia_finanza', '118', 'vigili_fuoco' }
 
 -- ---------------------------------------------------------------------------
 --  La costa

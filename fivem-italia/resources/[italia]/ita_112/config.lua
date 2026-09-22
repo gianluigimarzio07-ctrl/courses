@@ -53,6 +53,13 @@ NUE.Tipologie = {
 
     -- Soccorso tecnico
     { id = 'incendio',      etichetta = 'Incendio',                        ente = 'multiplo',    priorita = 'rosso', enti = { 'vigili_fuoco', '118' } },
+    -- Sul boschivo vanno anche i Forestali, e non per spegnere: per
+    -- vedere dov'è partito, mentre è ancora leggibile.
+    { id = 'incendio_bosco',etichetta = 'Incendio boschivo',               ente = 'multiplo',    priorita = 'rosso', enti = { 'vigili_fuoco', 'forestale' } },
+    { id = 'uomo_in_mare',  etichetta = 'Uomo in mare',                    ente = 'multiplo',    priorita = 'rosso', enti = { 'capitaneria', '118' } },
+    { id = 'natante',       etichetta = 'Natante in avaria o alla deriva', ente = 'capitaneria', priorita = 'giallo' },
+    { id = 'bracconaggio',  etichetta = 'Spari nel bosco o bracconaggio',  ente = 'forestale',   priorita = 'giallo' },
+    { id = 'rifiuti_abbandonati', etichetta = 'Rifiuti abbandonati',       ente = 'forestale',   priorita = 'verde' },
     { id = 'fuga_gas',      etichetta = 'Fuga di gas o sostanze',          ente = 'vigili_fuoco',priorita = 'rosso' },
     { id = 'persona_bloccata', etichetta = 'Persona bloccata o intrappolata', ente = 'multiplo', priorita = 'giallo', enti = { 'vigili_fuoco', '118' } },
     { id = 'crollo',        etichetta = 'Crollo o dissesto',               ente = 'vigili_fuoco',priorita = 'giallo' },
@@ -87,6 +94,8 @@ NUE.Centrali = {
     { ente = '118',          nome = 'Centrale Operativa 118',          coord = vector3(305.4, -595.0, 43.3) },
     { ente = 'vigili_fuoco', nome = 'Comando Vigili del Fuoco',        coord = vector3(1193.5, -1473.0, 34.9) },
     { ente = 'guardia_finanza', nome = 'Comando Guardia di Finanza',   coord = vector3(-608.9, -929.7, 23.9) },
+    { ente = 'capitaneria',  nome = 'Capitaneria di Porto',            coord = vector3(-1604.9, -1069.0, 13.1) },
+    { ente = 'forestale',    nome = 'Comando Carabinieri Forestali',   coord = vector3(-433.5, 6172.3, 31.5) },
 }
 
 --- Restituisce gli enti competenti per una tipologia.

@@ -137,6 +137,8 @@ C.Emergenze = {
     ['115'] = 'vigili_fuoco',
     ['117'] = 'guardia_finanza',
     ['118'] = '118',
+    ['1530'] = 'capitaneria',    -- emergenza in mare
+    ['1515'] = 'forestale',      -- emergenza ambientale e incendi boschivi
 }
 
 -- ---------------------------------------------------------------------------

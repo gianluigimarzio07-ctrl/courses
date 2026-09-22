@@ -212,6 +212,21 @@ AUREA.Callback.Registra('edi:apri', function(src, rispondi, lottoId, abusivo)
         return rispondi(false, 'Devi essere sul lotto.')
     end
 
+    -- Il vincolo su soprassuolo percorso dal fuoco, art. 10 L. 353/2000.
+    --
+    -- Questo controllo viene prima di tutti gli altri, e non è un ordine
+    -- casuale: il vincolo non si supera con un permesso. È fatto apposta
+    -- per non potersi superare, perché serve a togliere il guadagno a chi
+    -- brucia un bosco per edificarci sopra. Se il permesso bastasse,
+    -- bruciare converrebbe ancora.
+    local okV, vincolato, motivoV = pcall(function()
+        return exports.ita_forestale:TerrenoVincolato(l.coord)
+    end)
+    if okV and vincolato then
+        return rispondi(false, ('Su questo lotto non si edifica: %s')
+            :format(motivoV or 'terreno vincolato dai Carabinieri Forestali.'))
+    end
+
     local permesso = MySQL.single.await([[
         SELECT * FROM edilizia_permessi
         WHERE lotto = ? AND consumato = 0 AND scade_il > NOW()

@@ -235,6 +235,48 @@ L('guardia_finanza', {
     },
 })
 
+-- La Capitaneria di Porto è Marina Militare, non una polizia come le altre:
+-- in mare comanda lei, e a terra la sua autorità finisce sulla banchina.
+-- Per questo i gradi sono quelli navali e i permessi parlano di natanti.
+L('capitaneria', {
+    etichetta = 'Capitaneria di Porto — Guardia Costiera',
+    tipo = 'forze_ordine',
+    ente = 'capitaneria',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Sottocapo',              stipendio = 15000, permessi = { 'fermo', 'multa', 'mdt', 'controllo_natante' } },
+        [1] = { etichetta = 'Secondo Capo',           stipendio = 17500, permessi = { 'fermo', 'multa', 'mdt', 'controllo_natante', 'sequestro' } },
+        [2] = { etichetta = 'Capo di 1ª classe',      stipendio = 20500, permessi = { 'fermo', 'multa', 'mdt', 'controllo_natante', 'sequestro', 'sar' } },
+        -- 'ordinanza': le ordinanze di sicurezza balneare e di interdizione
+        -- allo specchio acqueo. Le firma il Comandante del porto, e per
+        -- delega chi ha il grado di ufficiale.
+        [3] = { etichetta = 'Guardiamarina',          stipendio = 25000, permessi = { 'fermo', 'multa', 'mdt', 'controllo_natante', 'sequestro', 'sar', 'arresto', 'ordinanza' } },
+        [4] = { etichetta = 'Tenente di Vascello',    stipendio = 32000, permessi = { 'tutti' } },
+        [5] = { etichetta = 'Comandante del Porto',   stipendio = 45000, permessi = { 'tutti' } },
+    },
+})
+
+-- I Carabinieri Forestali sono l'ex Corpo Forestale dello Stato, confluito
+-- nell'Arma nel 2017. Fanno polizia giudiziaria come i colleghi, ma la
+-- materia è un'altra: boschi, fauna, rifiuti, vincoli.
+L('forestale', {
+    etichetta = 'Carabinieri Forestali',
+    tipo = 'forze_ordine',
+    ente = 'forestale',
+    servizio = true,
+    gradi = {
+        [0] = { etichetta = 'Carabiniere forestale',  stipendio = 15000, permessi = { 'fermo', 'multa', 'mdt', 'vigilanza_venatoria' } },
+        [1] = { etichetta = 'Appuntato',              stipendio = 17500, permessi = { 'fermo', 'multa', 'mdt', 'vigilanza_venatoria', 'sequestro' } },
+        [2] = { etichetta = 'Brigadiere',             stipendio = 20000, permessi = { 'fermo', 'multa', 'mdt', 'vigilanza_venatoria', 'sequestro', 'arresto' } },
+        -- 'vincolo': l'apposizione del vincolo decennale sul soprassuolo
+        -- percorso dal fuoco, art. 10 L. 353/2000. È un atto che blocca il
+        -- terreno per dieci anni, e non lo firma un appuntato.
+        [3] = { etichetta = 'Maresciallo',            stipendio = 24000, permessi = { 'fermo', 'multa', 'mdt', 'vigilanza_venatoria', 'sequestro', 'arresto', 'vincolo' } },
+        [4] = { etichetta = 'Tenente',                stipendio = 33000, permessi = { 'tutti' } },
+        [5] = { etichetta = 'Comandante di Gruppo',   stipendio = 45000, permessi = { 'tutti' } },
+    },
+})
+
 L('118', {
     etichetta = 'Emergenza Sanitaria 118',
     tipo = 'soccorso',

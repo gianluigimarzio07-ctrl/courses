@@ -155,10 +155,11 @@ PES.Mercato = {
 --  Controlli
 -- ---------------------------------------------------------------------------
 PES.Controlli = {
-    lavoro = 'guardia_costiera',
-    -- La Guardia Costiera in AUREA è un reparto della Capitaneria: nel
-    -- server la fanno i carabinieri e la guardia di finanza in mare
-    lavoriAmmessi = { 'carabinieri', 'guardia_finanza' },
+    lavoro = 'capitaneria',
+    -- La Guardia Costiera è il reparto operativo della Capitaneria, e in
+    -- AUREA sta in ita_capitaneria. Carabinieri e finanza restano
+    -- ammessi: in mare fanno polizia giudiziaria come a terra.
+    lavoriAmmessi = { 'capitaneria', 'carabinieri', 'guardia_finanza' },
     sanzioneSenzaLicenza = 250000,
     sanzioneFuoriQuota = 320000,
     reato = '256',

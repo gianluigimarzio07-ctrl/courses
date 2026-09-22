@@ -101,8 +101,12 @@ TEL.Emergenze = {
     { numero = '115', nome = 'Vigili del Fuoco',       ente = 'vigili_fuoco' },
     { numero = '117', nome = 'Guardia di Finanza',     ente = 'guardia_finanza' },
     { numero = '118', nome = 'Emergenza Sanitaria',    ente = '118' },
-    { numero = '1530',nome = 'Guardia Costiera',       ente = 'guardia_finanza' },
-    { numero = '1515',nome = 'Emergenza ambientale',   ente = 'vigili_fuoco' },
+    -- 1530 e 1515 sono i numeri veri della Guardia Costiera e dei
+    -- Carabinieri Forestali. Finché quei due corpi non c'erano, le
+    -- chiamate finivano alla finanza e ai vigili del fuoco: adesso vanno
+    -- dove devono andare.
+    { numero = '1530',nome = 'Guardia Costiera',       ente = 'capitaneria' },
+    { numero = '1515',nome = 'Emergenza ambientale',   ente = 'forestale' },
 }
 
 TEL.AvvisoEmergenze = 'Le chiamate infondate sono punite ai sensi dell\'art. 658 c.p.'

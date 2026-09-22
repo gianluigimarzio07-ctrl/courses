@@ -122,6 +122,26 @@ che è l'unica giustificazione che il fisco riconosce. E il bene confiscato
 non finisce all'asta: il Comune lo destina ad alloggio popolare, a mensa, a
 sede di associazione. La cosa tolta si deve vedere.
 
+**Bruciare un bosco non deve convenire.** È il problema che l'art. 10 della
+L. 353/2000 risolve meglio di qualsiasi multa, e qui funziona uguale. Un
+terreno senza alberi si edifica, un pascolo bruciato si recinta: finché
+bruciare conviene, qualcuno accende. Allora i Vigili del Fuoco spengono, i
+Carabinieri Forestali arrivano dopo e camminano il perimetro — quattro punti,
+distanti fra loro, perché una superficie non la si misura da fermi — e da
+quanto è durato il fuoco e da quanto hanno camminato esce il numero di
+ettari. Su quegli ettari un maresciallo appone il vincolo decennale, e da
+quel momento `ita_edilizia` non ci apre più un cantiere. Nemmeno con il
+permesso a costruire in mano: il vincolo è fatto apposta per non potersi
+comprare. Il terreno resta tuo e non vale più niente.
+
+**In mare comanda la Capitaneria.** L'ordinanza è un atto scritto che chiude
+un tratto d'acqua — niente balneazione, niente motore, niente reti — e vale
+per tutti, anche per chi non l'ha letta. E il soccorso non è «vai lì e
+raccoglilo»: il razzo a paracadute dice dov'eri quando l'hai sparato, non
+dove sei adesso, perché nel frattempo la corrente ti ha spostato. Per questo
+sopra il punto si apre una griglia di settori, ognuno da battere navigandolo,
+e finché restano settori bianchi la persona è ancora in acqua.
+
 **Un palazzo finito non è ancora un immobile.** Il cantiere si consegna e
 l'opera c'è, ma per il catasto non esiste: va accatastata, e da lì nasce la
 rendita su cui si paga l'IMU. Stessa cosa dopo un rogito: il notaio
@@ -233,6 +253,8 @@ fivem-italia/
 | `ita_scientifica` | Bossoli, sangue, impronte e residui sulla scena; banca dati biometrica alimentata dal fotosegnalamento; balistica e confronto in laboratorio |
 | `ita_carcere` | Peculio e deposito degli effetti, sopravvitto, lavoro retribuito, colloqui autorizzati, perquisizione e isolamento, evasione con attrezzi introdotti da fuori |
 | `ita_vigilfuoco` | Incendi che si propagano di focolaio in focolaio, autobotte con l'acqua che finisce, idranti, estricazione con le cesoie, fughe di gas, certificato di prevenzione incendi |
+| `ita_capitaneria` | Capitaneria di Porto: ordinanze che chiudono un tratto di mare e valgono per tutti, ricerca e soccorso a griglia di settori — il razzo dice dov'eri, non dove sei — controlli sottobordo e fermo amministrativo del natante |
+| `ita_forestale` | Carabinieri Forestali: rilievo camminato della superficie percorsa dal fuoco, accertamento sull'origine, e il vincolo decennale dell'art. 10 L. 353/2000 che toglie il movente a chi brucia per edificare. Più vigilanza venatoria e rifiuti nei fossi |
 | `ita_nautica` | Patente nautica con esame vero, dotazioni di sicurezza per fascia di distanza, ormeggi, noleggio, controlli della Guardia Costiera, soccorso in mare |
 | `ita_scuola` | Università con esami e sessioni, lauree ed esame di Stato: senza titolo non ti assumono medico né avvocato |
 | `ita_previdenza` | INPS e INAIL: montante contributivo, pensione di vecchiaia e anticipata, malattia con visita fiscale, infortunio sul lavoro con obbligo di denuncia, NASpI, DURC |

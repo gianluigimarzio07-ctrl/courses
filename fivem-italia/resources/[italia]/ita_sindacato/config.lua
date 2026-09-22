@@ -120,6 +120,7 @@ SIND.Sciopero = {
     -- servizi pubblici essenziali (L. 146/1990) e hanno la precettazione.
     nonScioperabili = {
         'carabinieri', 'polizia', 'guardia_finanza', '118', 'vigili_fuoco',
+    'capitaneria', 'forestale',
         'medico', 'penitenziaria', 'prefettura', 'giudice',
     },
 }

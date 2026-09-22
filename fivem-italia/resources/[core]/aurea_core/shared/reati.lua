@@ -69,6 +69,15 @@ R('474',  { articolo = 'art. 474 c.p.',   nome = 'Introduzione di prodotti con s
 R('452q', { articolo = 'art. 452-quaterdecies c.p.', nome = 'Attività organizzate per il traffico illecito di rifiuti', gravita = 4, pena = 95, ammenda = 400000 })
 R('256',  { articolo = 'art. 256 D.Lgs. 152/2006', nome = 'Gestione non autorizzata di rifiuti', gravita = 2, pena = 22, ammenda = 65000 })
 
+-- Boschi e fauna. L'incendio boschivo ha due articoli e non è un
+-- dettaglio: il 423-bis è uno dei reati più gravi del codice fuori dai
+-- delitti contro la persona, perché chi brucia un bosco lo fa quasi
+-- sempre per farci un affare. Il 449 è l'altra faccia — il fuoco acceso
+-- per disattenzione, che di boschi ne porta via altrettanti.
+R('423b', { articolo = 'art. 423-bis c.p.', nome = 'Incendio boschivo doloso', gravita = 4, pena = 90, ammenda = 320000 })
+R('449',  { articolo = 'art. 449 c.p.',   nome = 'Incendio colposo',          gravita = 2, pena = 24, ammenda = 70000 })
+R('734',  { articolo = 'art. 734 c.p.',   nome = 'Distruzione di bellezze naturali', gravita = 2, pena = 18, ammenda = 55000 })
+
 -- Ordine pubblico
 R('588',  { articolo = 'art. 588 c.p.',   nome = 'Rissa',                          gravita = 2, pena = 24,  ammenda = 60000 })
 

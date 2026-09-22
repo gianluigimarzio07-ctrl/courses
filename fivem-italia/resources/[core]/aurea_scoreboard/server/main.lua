@@ -13,6 +13,8 @@ local ENTI = {
     { lavoro = 'guardia_finanza', etichetta = 'Guardia di Finanza', icona = '💼' },
     { lavoro = '118',             etichetta = 'Emergenza 118',      icona = '🚑' },
     { lavoro = 'vigili_fuoco',    etichetta = 'Vigili del Fuoco',   icona = '🚒' },
+    { lavoro = 'capitaneria',     etichetta = 'Guardia Costiera',   icona = '⚓' },
+    { lavoro = 'forestale',       etichetta = 'Forestali',          icona = '🌲' },
     { lavoro = 'meccanico',       etichetta = 'Officine',           icona = '🔧' },
     { lavoro = 'tassista',        etichetta = 'Taxi',               icona = '🚕' },
     { lavoro = 'avvocato',        etichetta = 'Studi legali',       icona = '⚖' },

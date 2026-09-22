@@ -374,10 +374,22 @@ AUREA.Callback.Registra('nau:razzo', function(src, rispondi)
         }, true)
     end
 
-    TriggerEvent('aurea:112:allerta', 'persona_bloccata',
+    TriggerEvent('aurea:112:allerta', 'uomo_in_mare',
         { x = coord.x, y = coord.y, z = coord.z },
         ('Segnale di soccorso in mare a %.1f miglia.'):format(miglia),
         'razzo a paracadute avvistato')
+
+    -- Il razzo dice dov'eri quando l'hai sparato, non dove sei adesso: la
+    -- corrente ti sposta mentre i soccorsi arrivano. Per questo la
+    -- Capitaneria non ci manda un mezzo sul punto, ci apre sopra una
+    -- griglia di ricerca. Se ita_capitaneria non è installata resta il
+    -- segnale di prima, che sul punto esatto ci manda eccome.
+    pcall(function()
+        exports.ita_capitaneria:ApriRicerca(
+            { x = coord.x, y = coord.y },
+            ('Razzo a paracadute a %.1f miglia — %s'):format(miglia, g:NomeCompleto()),
+            g.citizenid)
+    end)
 
     -- La posizione va ai soccorritori, non a tutti
     for _, lavoro in ipairs(NAU.LavoriSoccorso) do

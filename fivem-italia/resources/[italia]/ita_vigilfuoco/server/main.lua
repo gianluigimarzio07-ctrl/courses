@@ -106,6 +106,16 @@ local function chiudi(inc, spento)
             ('Incendio %d (%s) autoestinto: nessun intervento'):format(inc.id, inc.tipologia))
     end
 
+    -- Un incendio boschivo non finisce quando si spegne: comincia
+    -- l'accertamento sull'origine, e quello non è materia dei Vigili del
+    -- Fuoco. Se ita_forestale non c'è, l'evento non lo ascolta nessuno e
+    -- non succede niente.
+    TriggerEvent('aurea:forestale:incendioChiuso', {
+        id = inc.id, tipologia = inc.tipologia, zona = inc.zona,
+        centro = inc.centro, spento = spento == true,
+        durataMinuti = math.floor((os.time() - inc.aperto) / 60),
+    })
+
     incendi[inc.id] = nil
 end
 
@@ -136,6 +146,10 @@ local function accendi(tipologia, coord, zona, focolaiIniziali)
         intervenuti = {},
         aperto = os.time(),
     }
+    -- Dove è partito. Serve a chi viene dopo di noi: i Carabinieri
+    -- Forestali rilevano la superficie percorsa dal fuoco sul punto
+    -- d'innesco, e senza questo dato non saprebbero dove andare.
+    inc.centro = vector3(coord.x, coord.y, coord.z)
 
     local quanti = focolaiIniziali or t.focolaiIniziali
     local centro = vector3(coord.x, coord.y, coord.z)
@@ -153,7 +167,8 @@ local function accendi(tipologia, coord, zona, focolaiIniziali)
     pubblica(inc)
 
     TriggerEvent('aurea:112:allerta',
-        tipologia == 'gas' and 'fuga_gas' or 'incendio',
+        tipologia == 'gas' and 'fuga_gas'
+            or (tipologia == 'boschivo' and 'incendio_bosco' or 'incendio'),
         { x = centro.x, y = centro.y, z = centro.z },
         ('%s. %s'):format(t.nome, t.descrizione),
         'segnalazione dei presenti')

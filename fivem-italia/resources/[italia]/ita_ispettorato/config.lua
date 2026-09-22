@@ -110,6 +110,7 @@ ISP.Caporalato = {
 --- danno. La legge italiana li esclude per la stessa ragione.
 ISP.NonSospendibili = {
     'carabinieri', 'polizia', 'guardia_finanza', '118', 'vigili_fuoco',
+    'capitaneria', 'forestale',
     'medico', 'giudice', 'penitenziaria', 'ispettorato', 'prefettura',
 }
 
