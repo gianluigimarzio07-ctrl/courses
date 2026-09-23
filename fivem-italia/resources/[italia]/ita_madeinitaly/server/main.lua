@@ -49,6 +49,16 @@ end
 
 --- La qualità nasce dalla maestria, dalle materie prime usate e dalla
 --- precisione dell'esecuzione. Non è mai deterministica del tutto.
+--- La certificazione ottenibile per un dato punteggio di qualità.
+--- La chiede ita_mercato per sapere quanto vale un lotto al banco: le
+--- soglie e i moltiplicatori sono qui, e duplicarli altrove vorrebbe dire
+--- avere due DOP con due prezzi diversi.
+exports('CertificazioneDi', function(qualita, filiera)
+    local c = MIT.CertificazionePer(tonumber(qualita) or 0, filiera)
+    return { id = c.id, etichetta = c.etichetta, moltiplicatore = c.moltiplicatore,
+             soglia = c.soglia }
+end)
+
 local function calcolaQualita(livello, qualitaMateriePrime, precisione, affinato)
     -- base: 30 punti, più 4 per livello di maestria
     local base = 30 + (livello - 1) * MIT.Maestria.bonusQualitaPerLivello

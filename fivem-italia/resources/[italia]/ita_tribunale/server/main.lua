@@ -103,6 +103,28 @@ AUREA.Callback.Registra('tri:scegli', function(src, rispondi, id, rito, difensor
     local difensore = difensoreSrc and AUREA.GetPlayer(tonumber(difensoreSrc)) or nil
     local dUfficio = false
 
+    -- Se l'imputato non si è portato un avvocato, si CHIAMA quello di
+    -- turno. Prima qui non si chiamava nessuno: comparivano le parole
+    -- «difensore d'ufficio», l'imputato pagava 450 € a un fantasma e il
+    -- processo andava avanti. In Italia il Consiglio dell'Ordine tiene un
+    -- elenco di reperibili, e chi è di turno si alza e viene.
+    --
+    -- Se ita_avvocatura non c'è, o se il turno è scoperto, resta il
+    -- vecchio fantasma: un processo non si ferma in attesa che qualcuno
+    -- accenda il computer.
+    if r.richiedeAvvocato and not difensore then
+        local okT, cid, srcDif, nomeDif = pcall(function()
+            return exports.ita_avvocatura:ConvocaDifensore(
+                g.citizenid, 'Tribunale — aula di udienza',
+                'Nomina d\'ufficio per dibattimento in corso')
+        end)
+        if okT and cid and srcDif then
+            difensore = AUREA.GetPlayer(srcDif)
+            u.ufficio = true
+            u.nomeConvocato = nomeDif
+        end
+    end
+
     if r.richiedeAvvocato and not difensore then
         if not TRI.Regole.difensoreUfficio then
             return rispondi(false, 'Serve un difensore. Chiamane uno.')
@@ -110,9 +132,31 @@ AUREA.Callback.Registra('tri:scegli', function(src, rispondi, id, rito, difensor
         dUfficio = true
     end
 
-    local onorario = difensore and TRI.Regole.onorarioAvvocato or (dUfficio and TRI.Regole.onorarioUfficio or 0)
-    if onorario > 0 and not g:SottraiOvunque(onorario, 'onorario difensivo') then
-        return rispondi(false, ('L\'onorario è di %s.'):format(U.Euro(onorario)))
+    -- Chi è ammesso al patrocinio a spese dello Stato non paga l'onorario:
+    -- lo liquida l'Erario al difensore. È il senso dell'ammissione, e il
+    -- controllo va fatto qui perché è qui che si mette mano al conto.
+    local okP, patrocinato = pcall(function()
+        return exports.ita_avvocatura:AmmessoAlPatrocinio(g.citizenid)
+    end)
+    patrocinato = okP and patrocinato == true
+
+    local onorario = 0
+    if not patrocinato then
+        onorario = difensore and TRI.Regole.onorarioAvvocato
+                   or (dUfficio and TRI.Regole.onorarioUfficio or 0)
+        if onorario > 0 and not g:SottraiOvunque(onorario, 'onorario difensivo') then
+            return rispondi(false, ('L\'onorario è di %s.'):format(U.Euro(onorario)))
+        end
+    end
+
+    if difensore then
+        -- L'incarico lo registra l'Ordine, che è l'unico a sapere se
+        -- l'onorario lo deve l'assistito o lo Stato — e a pagarlo.
+        local tipo = patrocinato and 'patrocinio' or (u.ufficio and 'ufficio' or 'fiducia')
+        pcall(function()
+            exports.ita_avvocatura:RegistraIncarico(
+                difensore.citizenid, g.citizenid, tipo, ('udienza %s'):format(tostring(id)))
+        end)
     end
 
     if difensore and onorario > 0 then
@@ -124,7 +168,11 @@ AUREA.Callback.Registra('tri:scegli', function(src, rispondi, id, rito, difensor
 
     u.rito = rito
     u.difensore = difensore and difensore.citizenid or nil
-    u.nomeDifensore = difensore and difensore:NomeCompleto() or (dUfficio and 'difensore d\'ufficio' or nil)
+    u.nomeDifensore = difensore
+        and (u.ufficio and ('avv. %s (d\'ufficio)'):format(difensore:NomeCompleto())
+                       or difensore:NomeCompleto())
+        or (dUfficio and 'difensore d\'ufficio' or nil)
+    u.patrocinato = patrocinato
 
     local giudice = AUREA.GetPlayerByCitizenId(u.giudice)
     if giudice then

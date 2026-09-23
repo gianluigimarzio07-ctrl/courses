@@ -122,6 +122,29 @@ che è l'unica giustificazione che il fisco riconosce. E il bene confiscato
 non finisce all'asta: il Comune lo destina ad alloggio popolare, a mensa, a
 sede di associazione. La cosa tolta si deve vedere.
 
+**Nessuno resta senza difesa, e la difesa non dipende da quanto hai.**
+Il difensore d'ufficio prima era un fantasma: comparivano le parole
+«difensore d'ufficio», l'imputato pagava 450 € a nessuno, e il processo
+andava avanti. Ora il Consiglio dell'Ordine tiene un turno di reperibilità, e
+chi è di turno viene chiamato davvero — una persona, che si alza e va in
+aula. Il turno si distribuisce: si chiama chi ha avuto meno incarichi. E
+sotto una soglia di reddito l'onorario lo paga l'Erario, con il reddito letto
+dal `reddito` dell'ultima dichiarazione — quella che ita_caf riempie al
+conguaglio. Da cui una conseguenza che mi piace: per farsi difendere gratis
+bisogna aver fatto la dichiarazione dei redditi. Chi non l'ha mai fatta non
+può dimostrare di essere povero.
+
+**Lo scontrino è una scommessa.** Al mercato rionale ci devi stare: apri il
+banco al tuo posteggio e i clienti arrivano da soli, uno alla volta, a un
+ritmo che dipende dall'ora — il mercato è un posto del mattino — e da quanta
+roba hai in mostra. Ognuno vuole qualcosa di preciso, e quanto paga dipende
+dalla qualità del lotto: un parmigiano DOP a 88 vale quasi il doppio di uno
+anonimo. Poi c'è la scelta, su ogni singola vendita: battere lo scontrino, o
+non batterlo. Non batterlo rende il 22% in più, ogni volta, subito. Solo che
+il registro tiene traccia di tutte e due, e quando entra il finanziere guarda
+la sessione intera — e la sanzione è tarata per costare più di quello che hai
+risparmiato. Chi evade poco passa liscio. Chi evade tutto ci rimette.
+
 **Bruciare un bosco non deve convenire.** È il problema che l'art. 10 della
 L. 353/2000 risolve meglio di qualsiasi multa, e qui funziona uguale. Un
 terreno senza alberi si edifica, un pascolo bruciato si recinta: finché
@@ -252,6 +275,8 @@ fivem-italia/
 | `ita_funebri` | Morte definitiva su richiesta, cerimonia, successione, cimitero |
 | `ita_scientifica` | Bossoli, sangue, impronte e residui sulla scena; banca dati biometrica alimentata dal fotosegnalamento; balistica e confronto in laboratorio |
 | `ita_carcere` | Peculio e deposito degli effetti, sopravvitto, lavoro retribuito, colloqui autorizzati, perquisizione e isolamento, evasione con attrezzi introdotti da fuori |
+| `ita_avvocatura` | Consiglio dell'Ordine: albo con requisito di condotta, turno delle difese d'ufficio con avvocati veri che vengono chiamati, patrocinio a spese dello Stato misurato sulla dichiarazione dei redditi, disciplinare con censura, sospensione e radiazione |
+| `ita_mercato` | Mercato rionale: posteggi in concessione con canone iscritto a ruolo, banco presidiato con clienti che arrivano da soli a ritmo d'orario, prezzo che segue qualità e certificazione, e lo scontrino che si può non battere |
 | `ita_vigilfuoco` | Incendi che si propagano di focolaio in focolaio, autobotte con l'acqua che finisce, idranti, estricazione con le cesoie, fughe di gas, certificato di prevenzione incendi |
 | `ita_capitaneria` | Capitaneria di Porto: ordinanze che chiudono un tratto di mare e valgono per tutti, ricerca e soccorso a griglia di settori — il razzo dice dov'eri, non dove sei — controlli sottobordo e fermo amministrativo del natante |
 | `ita_forestale` | Carabinieri Forestali: rilievo camminato della superficie percorsa dal fuoco, accertamento sull'origine, e il vincolo decennale dell'art. 10 L. 353/2000 che toglie il movente a chi brucia per edificare. Più vigilanza venatoria e rifiuti nei fossi |
